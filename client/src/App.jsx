@@ -1,13 +1,19 @@
 import './App.css'
+import Sidenav from './components/Common/Sidenav'
+import LayOut from './components/Layout/Layout'
+
 
 function App() {
-
-
   return (
-   <div className='text-red-700'>
-    first
-   </div>
+   <>
+   <LayOut/>
+  {/* <Header/> */}
+  {/* <Table/> */}
+  {/* <Task/> */}
+   </>
   )
 }
 
 export default App
+
+// #6A49F2
