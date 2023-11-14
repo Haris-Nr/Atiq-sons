@@ -1,27 +1,39 @@
 import React from "react";
 import { Layout, theme } from "antd";
-import Sidenav from "../Common/Sidenav";
 import Head from "../Common/Head";
+import Sidenav from "../Common/Sidenav";
+import Foot from "../Common/Foot";
+import CrumBread from "../Common/CrumBread";
+import { Outlet } from "react-router-dom";
 const { Content } = Layout;
+
 const LayOut = () => {
     const {
         token: { colorBgContainer },
     } = theme.useToken();
     return (
-        <Layout>
-            <Sidenav collapsed={collapsed}/>
+        <Layout className="min-h-screen">
+            <Head />
             <Layout>
-               <Head/>
-                <Content
+                <Sidenav colorBgContainer={colorBgContainer} />
+                <Layout
                     style={{
-                        margin: "24px 16px",
-                        padding: 24,
-                        minHeight: 280,
-                        background: colorBgContainer,
+                        padding: "0 24px 24px",
                     }}
                 >
-                    Content
-                </Content>
+                    <CrumBread />
+                    <Content
+                        style={{
+                            padding: 24,
+                            margin: 0,
+                            minHeight: 280,
+                            background: colorBgContainer,
+                        }}
+                    >
+                        <Outlet />
+                    </Content>
+                    <Foot />
+                </Layout>
             </Layout>
         </Layout>
     );

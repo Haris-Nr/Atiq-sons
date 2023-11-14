@@ -1,41 +1,51 @@
+/* eslint-disable react/prop-types */
+import { Menu } from "antd";
+import Sider from "antd/es/layout/Sider";
 import React from "react";
 import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
+    LaptopOutlined,
+    NotificationOutlined,
+    UserOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
-const { Sider } = Layout;
 
-const Sidenav = ({collapsed}) => {
-  return (
-    
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-                <div className="demo-logo-vertical" />
-                <Menu
-                    theme="dark"
-                    mode="inline"
-                    defaultSelectedKeys={["1"]}
-                    items={[
-                        {
-                            key: "1",
-                            icon: <UserOutlined />,
-                            label: "nav 1",
-                        },
-                        {
-                            key: "2",
-                            icon: <VideoCameraOutlined />,
-                            label: "nav 2",
-                        },
-                        {
-                            key: "3",
-                            icon: <UploadOutlined />,
-                            label: "nav 3",
-                        },
-                    ]}
-                />
-            </Sider>
-  );
+const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
+    (icon, index) => {
+        const key = String(index + 1);
+        return {
+            key: `sub${key}`,
+            icon: React.createElement(icon),
+            label: `subnav ${key}`,
+            children: new Array(4).fill(null).map((_, j) => {
+                const subKey = index * 4 + j + 1;
+                return {
+                    key: subKey,
+                    label: `option${subKey}`,
+                };
+            }),
+        };
+    }
+);
+
+const Sidenav = ({ colorBgContainer }) => {
+    return (
+        <Sider
+            width={200}
+            style={{
+                background: colorBgContainer,
+            }}
+        >
+            <Menu
+                mode="inline"
+                defaultSelectedKeys={["1"]}
+                defaultOpenKeys={["sub1"]}
+                style={{
+                    height: "100%",
+                    borderRight: 0,
+                }}
+                items={items2}
+            />
+        </Sider>
+    );
 };
 
 export default Sidenav;

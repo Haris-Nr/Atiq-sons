@@ -1,35 +1,30 @@
+import { Menu } from 'antd'
+import { Header } from 'antd/es/layout/layout'
 import React from 'react'
-import {
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-} from "@ant-design/icons";
-import { Layout, Button } from "antd";
-import { useDispatch, useSelector } from 'react-redux';
-const { Header } = Layout;
+
+const items1 = ["1", "2", "3"].map((key) => ({
+    key,
+    label: `nav ${key}`,
+}));
+
 const Head = () => {
-    // const [collapsed, setCollapsed] = useState(false);
-
-    const toggle = useSelector((state)=>state.)
-
+ 
   return (
     
-    <Header
-    style={{
-        padding: 0,
-        background: colorBgContainer,
-    }}
->
-    <Button
-        type="text"
-        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        onClick={() => setCollapsed(!collapsed)}
-        style={{
-            fontSize: "16px",
-            width: 64,
-            height: 64,
-        }}
-    />
-</Header>
+     <Header
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                }}
+            >
+                <div className="demo-logo" />
+                <Menu
+                    theme="dark"
+                    mode="horizontal"
+                    defaultSelectedKeys={["2"]}
+                    items={items1}
+                />
+            </Header>
 
   )
 }
