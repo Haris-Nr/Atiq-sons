@@ -1,51 +1,48 @@
-/* eslint-disable react/prop-types */
+import React, { useEffect, useState } from "react";
+import { AppstoreOutlined, ShopOutlined, ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Sider from "antd/es/layout/Sider";
-import React from "react";
-import {
-    LaptopOutlined,
-    NotificationOutlined,
-    UserOutlined,
-} from "@ant-design/icons";
-
-const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
-    (icon, index) => {
-        const key = String(index + 1);
-        return {
-            key: `sub${key}`,
-            icon: React.createElement(icon),
-            label: `subnav ${key}`,
-            children: new Array(4).fill(null).map((_, j) => {
-                const subKey = index * 4 + j + 1;
-                return {
-                    key: subKey,
-                    label: `option${subKey}`,
-                };
-            }),
-        };
-    }
-);
 
 const Sidenav = ({ colorBgContainer }) => {
-    return (
-        <Sider
-            width={200}
-            style={{
-                background: colorBgContainer,
-            }}
-        >
-            <Menu
-                mode="inline"
-                defaultSelectedKeys={["1"]}
-                defaultOpenKeys={["sub1"]}
-                style={{
-                    height: "100%",
-                    borderRight: 0,
-                }}
-                items={items2}
-            />
-        </Sider>
-    );
+  const location = useLocation();
+  const [selectedKeys, setSelectedKeys] = useState("/");
+
+  useEffect(() => {
+    const pathName = location.pathname;
+    setSelectedKeys(pathName);
+  }, [location.pathname]);
+
+  const navigate = useNavigate();
+
+  return (
+    <Sider>
+      <Menu
+        className="bottom-0 h-full "
+        mode="vertical"
+        onClick={(item) => {
+          navigate(item.key);
+        }}
+        selectedKeys={[selectedKeys]}
+      >
+        <Menu.Item key="/admin" icon={<AppstoreOutlined />}>
+       {/* <NavLink to="/admin"> Dashboard </NavLink>    */}
+       Dashboard
+        </Menu.Item>
+        <Menu.Item key="product" icon={<ShopOutlined />}>
+          Product
+        </Menu.Item>
+        <Menu.Item key="task" icon={<ShoppingCartOutlined />}>
+        {/* <NavLink to="task"> Task </NavLink> */}
+        Task
+        </Menu.Item>
+        <Menu.Item key="custom" icon={<UserOutlined />}>
+          Custom
+        </Menu.Item>
+      </Menu>
+    </Sider>
+  );
 };
 
 export default Sidenav;
+
