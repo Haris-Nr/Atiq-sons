@@ -1,6 +1,6 @@
-import { Avatar, Rate, Space, Table, Typography } from "antd";
+import { Space, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { getProduct, getOrders } from "../Api/index";
+import { getOrders } from "..";
 
 function Log() {
   const [loading, setLoading] = useState(false);

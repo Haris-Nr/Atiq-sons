@@ -1,21 +1,18 @@
 import React from "react";
-import { Layout, theme } from "antd";
-import Head from "../Common/Head";
-import Sidenav from "../Common/Sidenav";
-import Foot from "../Common/Foot";
-import CrumBread from "../Common/CrumBread";
+import { Layout } from "antd";
 import { Outlet } from "react-router-dom";
+import Head from "../common/Head";
+import Sidenav from "../common/Sidenav";
+import CrumBread from "../common/CrumBread";
+import Foot from "../common/Foot";
 const { Content } = Layout;
 
-const LayOut = () => {
-    const {
-        token: { colorBgContainer },
-    } = theme.useToken();
+const DashboardLayOut = () => {
     return (
         <Layout className="min-h-screen">
             <Head />
             <Layout>
-                <Sidenav colorBgContainer={colorBgContainer} />
+                <Sidenav />
                 <Layout
                     style={{
                         padding: "0 24px 24px",
@@ -27,7 +24,6 @@ const LayOut = () => {
                             padding: 24,
                             margin: 0,
                             minHeight: 280,
-                            background: colorBgContainer,
                         }}
                     >
                         <Outlet />
@@ -38,4 +34,4 @@ const LayOut = () => {
         </Layout>
     );
 };
-export default LayOut;
+export default DashboardLayOut;

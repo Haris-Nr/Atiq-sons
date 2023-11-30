@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { LockOutlined, MailOutlined} from "@ant-design/icons";
+import { LockOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import { Link } from "react-router-dom";
-import CustomInput from "../components/Forms/CustomInput";
 
-const Login = () => {
+const ResetPassword = () => {
   const [form] = Form.useForm();
   const [clientReady, setClientReady] = useState(false);
   // To disable submit button at the beginning.
@@ -17,22 +16,13 @@ const Login = () => {
   return (
     
       <div>
-        <h3 className="text-blue-800 font-bold text-lg pb-5">Login to Dashboard</h3>
+        <h3 className="text-blue-800 font-bold text-lg  pb-5">Reset Password</h3>
         <Form
           form={form}
-          name="loginForm"
+          style={{ maxWidth: 400 }}
+          name="resetPassword"
           onFinish={onFinish}
         >
-          <CustomInput
-            name="email"
-            placeholder="Enter Your Email"
-            prefix={< MailOutlined className="site-form-item-icon" />}
-            type="email"
-            required="true"
-            message="Please input your E-mail"
-            className="sm:text-lg"
-          />
-
 <Form.Item
       name="password"
       rules={[
@@ -43,19 +33,36 @@ const Login = () => {
       ]}
       hasFeedback
     >
-      <Input.Password placeholder="Enter Your Password" prefix={<LockOutlined className="site-form-item-icon" />} className="sm:text-lg"/>
+      <Input.Password placeholder="Enter Your Password" prefix={<LockOutlined className="site-form-item-icon" />} className="sm:text-lg" />
     </Form.Item>
 
-          <Form.Item className="text-right">
-            <Link className="login-form-forgot" to="/forgetpassword">
-              Forgot password
-            </Link>
-          </Form.Item>
+    <Form.Item
+      name="confirmPassword"
+      dependencies={['password']}
+      rules={[
+        {
+          required: true,
+          message: 'Please confirm your password!',
+        },
+        ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (!value || getFieldValue('password') === value) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('The new password that you entered do not match!'));
+            },
+          }),
+      ]}
+      hasFeedback
+    >
+      <Input.Password placeholder="Enter Your Confirm Password" prefix={<LockOutlined className="site-form-item-icon" />} className="sm:text-lg" />
+    </Form.Item>
           <Form.Item shouldUpdate>
             {() => (
+            <Link to="/">
               <Button
                 block
-                className="font-bold"
+                className="font-bold" 
                 htmlType="submit"
                 shape="round"
                 disabled={
@@ -65,17 +72,14 @@ const Login = () => {
                     .length
                 }
               >
-                Log In
+                Reset Password
               </Button>
+              </Link>
             )}
-          </Form.Item>
-          <Form.Item>
-          Don&#39;t have an account?&nbsp;
-            <Link to="/signup" className="text-blue-400 underline">register now!</Link>
           </Form.Item>
         </Form>
       </div>
   );
 };
 
-export default Login;
+export default ResetPassword;

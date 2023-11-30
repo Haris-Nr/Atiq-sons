@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { AppstoreOutlined, ShopOutlined, ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Sider from "antd/es/layout/Sider";
 
-const Sidenav = ({ colorBgContainer }) => {
+const Sidenav = () => {
   const location = useLocation();
   const [selectedKeys, setSelectedKeys] = useState("/");
 
@@ -26,14 +26,12 @@ const Sidenav = ({ colorBgContainer }) => {
         selectedKeys={[selectedKeys]}
       >
         <Menu.Item key="/admin" icon={<AppstoreOutlined />}>
-       {/* <NavLink to="/admin"> Dashboard </NavLink>    */}
        Dashboard
         </Menu.Item>
         <Menu.Item key="product" icon={<ShopOutlined />}>
           Product
         </Menu.Item>
         <Menu.Item key="task" icon={<ShoppingCartOutlined />}>
-        {/* <NavLink to="task"> Task </NavLink> */}
         Task
         </Menu.Item>
         <Menu.Item key="custom" icon={<UserOutlined />}>

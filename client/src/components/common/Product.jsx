@@ -1,8 +1,8 @@
 import { Avatar, Rate, Space, Table, Typography, Input } from "antd";
 import { useEffect, useState } from "react";
-import { getProduct } from "../Api/index";
 import { Link } from "react-router-dom";  
 import {SearchOutlined } from '@ant-design/icons'
+import { getProduct } from "..";
 
 
 const Product = () => {

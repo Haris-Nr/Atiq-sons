@@ -1,12 +1,3 @@
-// import React from 'react'
-
-// const Custom = () => {
-//   return (
-//     <div>Custom</div>
-//   )
-// }
-
-// export default Custom
 import React from 'react';
 import { DownOutlined } from '@ant-design/icons';
 import { Badge, Dropdown, Space, Table } from 'antd';

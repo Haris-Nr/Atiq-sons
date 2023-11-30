@@ -1,5 +1,3 @@
-
-
 import {
   DollarCircleOutlined,
   ShoppingCartOutlined,
@@ -8,8 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Card, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { getCustomers, getProduct, getOrders, getRevenue } from "../Api/index";
-// import {bulb} from "../../../public/avtar.jpg"
+import { getCustomers, getOrders, getProduct } from "..";
 
 
 function DashboardCard({ icon, title, value }) {
@@ -24,7 +21,7 @@ function DashboardCard({ icon, title, value }) {
   );
 }
 
-function Dashboard() {
+const  Dashboard = () => {
   const [orders, setOrders] = useState(0);
   const [product, setProduct] = useState(0);
   const [customers, setCustomers] = useState(0);
