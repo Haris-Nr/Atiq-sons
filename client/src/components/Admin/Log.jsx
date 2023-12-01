@@ -1,4 +1,4 @@
-import { Space, Table, Typography } from "antd";
+import { Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { getOrders } from "..";
 
@@ -14,41 +14,46 @@ function Log() {
     });
   }, []);
 
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "id",
+    },
+    {
+      title: "Name",
+      dataIndex: "Name",
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      title: "Dashboard",
+      dataIndex: "dashboard",
+      render: (value) => <span>{value}</span>,
+    },
+    {
+      title: "Login Time",
+      dataIndex: "login",
+    },
+    {
+      title: "LogOut Time",
+      dataIndex: "logout",
+    },
+  ]
+
   return (
-    <Space size={20} direction="vertical"  className="flex flex-col min-w-full py-2 overflow-x-auto sm:-mx-6 lg:-mx-8 sm:px-6 lg:px-8">
+    <div>
       <Typography.Title level={4}>Logs</Typography.Title>
-      <Table className="min-w-full text-sm font-light text-left"
+      <Table
         loading={loading}
-        columns={[
-          {
-            title: "ID",
-            dataIndex: "id",
-          },
-          {
-            title: "UserName",
-            dataIndex: "userName",
-            render: (value) => <span>${value}</span>,
-          },
-          {
-            title: "Work",
-            dataIndex: "work",
-            render: (value) => <span>${value}</span>,
-          },
-          {
-            title: "Login Time",
-            dataIndex: "login",
-          },
-          {
-            title: "LogOut Time",
-            dataIndex: "logout",
-          },
-        ]}
+        columns={columns}
         dataSource={dataSource}
         pagination={{
-          pageSize: 5,
+          pageSize: 8,
         }}
-      ></Table>
-    </Space>
+        scroll={{
+          x: 1500,
+        }}
+      />
+    </div>
   );
 }
 export default Log;

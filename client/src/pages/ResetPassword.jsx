@@ -14,55 +14,65 @@ const ResetPassword = () => {
     console.log("Received values of form: ", values);
   };
   return (
-    
-      <div>
-        <h3 className="text-blue-800 font-bold text-lg  pb-5">Reset Password</h3>
-        <Form
-          form={form}
-          style={{ maxWidth: 400 }}
-          name="resetPassword"
-          onFinish={onFinish}
-        >
-<Form.Item
-      name="password"
-      rules={[
-        {
-          required: true,
-          message: 'Please input your password!',
-        },
-      ]}
-      hasFeedback
-    >
-      <Input.Password placeholder="Enter Your Password" prefix={<LockOutlined className="site-form-item-icon" />} className="sm:text-lg" />
-    </Form.Item>
-
-    <Form.Item
-      name="confirmPassword"
-      dependencies={['password']}
-      rules={[
-        {
-          required: true,
-          message: 'Please confirm your password!',
-        },
-        ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error('The new password that you entered do not match!'));
+    <div>
+      <h3 className="text-blue-800 font-bold text-lg  pb-5">Reset Password</h3>
+      <Form
+        form={form}
+        name="resetPassword"
+        onFinish={onFinish}
+        size="large"
+        layout="vertical"
+      >
+        <Form.Item
+          name="password"
+          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: "Please enter your password!",
             },
-          }),
-      ]}
-      hasFeedback
-    >
-      <Input.Password placeholder="Enter Your Confirm Password" prefix={<LockOutlined className="site-form-item-icon" />} className="sm:text-lg" />
-    </Form.Item>
-          <Form.Item shouldUpdate>
-            {() => (
+          ]}
+        >
+          <Input.Password
+            placeholder="Enter Your Password"
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            className="sm:text-lg"
+          />
+        </Form.Item>
+        <Form.Item
+          name="confirmPassword"
+          hasFeedback
+          dependencies={["password"]}
+          rules={[
+            {
+              required: true,
+              message: "Please confirm your password!",
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  new Error("The new password that you entered do not match!")
+                );
+              },
+            }),
+          ]}
+        >
+          <Input.Password
+            placeholder="Enter Your Confirm Password"
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            className="sm:text-lg"
+          />
+        </Form.Item>
+        <Form.Item shouldUpdate>
+          {() => (
             <Link to="/">
               <Button
+              type="primary" 
                 block
-                className="font-bold" 
+                className="font-bold"
                 htmlType="submit"
                 shape="round"
                 disabled={
@@ -74,11 +84,11 @@ const ResetPassword = () => {
               >
                 Reset Password
               </Button>
-              </Link>
-            )}
-          </Form.Item>
-        </Form>
-      </div>
+            </Link>
+          )}
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 

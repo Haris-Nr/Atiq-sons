@@ -15,8 +15,9 @@ import Empolyee from "./components/Admin/Empolyee";
 import Custom from "./components/common/Custom";
 import Log from "./components/Admin/Log";
 import Task from "./components/common/Task";
-import Dashboard from "./components/Admin/Dashboard";
+import Dashboard from "./components/common/Dashboard";
 import Product from "./components/common/Product";
+import AddTask from "./components/Admin/TaskForm";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,12 +30,13 @@ const router = createBrowserRouter(
       </Route>
 
       <Route path="/:dashboard" element={<DashboardLayOut/>}>
-        <Route index element={<Empolyee/>}/>
+        <Route index element={<Dashboard/>}/>
+        <Route path="empolyee" element={<Empolyee/>}/>
         <Route path="custom" element={<Custom/>}/>
         <Route path="log" element={<Log/>}/>
         <Route path="task" element={<Task/>}/>
-        <Route path="dashboard" element={<Dashboard/>}/>
         <Route path="product" element={<Product/>}/>
+        <Route path="addTask" element={<AddTask/>}/>
       </Route>
     </Route>
   )

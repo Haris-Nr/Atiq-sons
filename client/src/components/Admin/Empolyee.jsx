@@ -1,6 +1,7 @@
-import { Avatar, Rate, Space, Table, Typography } from "antd";
+import { Avatar, Space, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { getCustomers } from "..";
+import { Link } from "react-router-dom";
 
 function Empolyee() {
   const [loading, setLoading] = useState(false);
@@ -14,55 +15,74 @@ function Empolyee() {
     });
   }, []);
 
-  return (
-    <Space size={20} direction="vertical" className="flex flex-col min-w-full py-2 overflow-x-auto sm:-mx-6 lg:-mx-8 sm:px-6 lg:px-8">
-      <Typography.Title level={4}>Empolyee</Typography.Title>
-      <Table className="min-w-full text-sm font-light text-left"
-        loading={loading}
-        columns={[
-          {
-            title: "Photo",
-            dataIndex: "image",
-            render: (link) => {
-              return <Avatar   src={link}  />;
-            },
-          },
-          {
-            title: "First Name",
-            dataIndex: "firstName",
-          },
-          {
-            title: "LastName",
-            dataIndex: "lastName",
-          },
-          {
-            title: "Email",
-            dataIndex: "email",
-          },
-          {
-            title: "Phone",
-            dataIndex: "phone",
-          },
+  const columns = [
+    {
+      title: "Id",
+      dataIndex: "image",
+      render: (link) => {
+        return <Avatar   src={link}  />;
+      },
+    },
+    {
+      title: "Name",
+      dataIndex: "firstName",
+    },
+    {
+      title: "Dashboard",
+      dataIndex: "lastName",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+    },
 
-          {
-            title: "address",
-            dataIndex: "address",
-            render: (address) => {
-              return (
-                <span className="">
-                  {address.address}, {address.city}
-                </span>
-              );
-            },
-          },
-        ]}
+    {
+      title: "address",
+      dataIndex: "address",
+      render: (address) => {
+        return (
+          <span className="">
+            {address.address}, {address.city}
+          </span>
+        );
+      },
+    },
+    {
+      title:"Status",
+      dataSource: "status",
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      render: () => {
+        return (
+          <Space size="middle">
+            <Link>Edit</Link>
+          </Space>
+        );
+      },
+    }
+  ]
+  return (
+    <div>
+      <Typography.Title level={4}>Empolyee</Typography.Title>
+      <Table
+        loading={loading}
+        columns={columns}
         responsive="stack"
         dataSource={dataSource}
         pagination={{
-          pageSize: 5,
+          pageSize: 8,
         }}
-      ></Table>
-    </Space>
+        scroll={{
+          x: 1500,
+        }}
+      />
+    </div>
   );
 }
 export default Empolyee;

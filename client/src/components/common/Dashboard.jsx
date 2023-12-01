@@ -7,6 +7,8 @@ import {
 import { Card, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { getCustomers, getOrders, getProduct } from "..";
+import AddProduct from "../Lahore/AddProduct";
+import TaskButton from "../Admin/TaskButton";
 
 
 function DashboardCard({ icon, title, value }) {
@@ -58,7 +60,7 @@ const  Dashboard = () => {
             }}
           />
         }
-        title={"Tasks"}
+        title="Tasks"
         value={orders}
       />
       <DashboardCard
@@ -106,7 +108,8 @@ const  Dashboard = () => {
         title={"Revenue"}
         value={revenue}
       />
-
+    <AddProduct/>
+    <TaskButton/>
       {/* <img src={bulb} alt="" /> */}
     </Space>
   </Space>

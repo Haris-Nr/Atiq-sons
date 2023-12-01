@@ -4,7 +4,6 @@ import { Button, Select, Form, Input } from "antd";
 import { Link } from "react-router-dom";
 import PhoneInput from "antd-phone-input";
 import { Option } from "antd/es/mentions";
-import CustomInput from "../components/Forms/CustomInput";
 
 const Signup = () => {
     const [form] = Form.useForm();
@@ -24,26 +23,51 @@ const Signup = () => {
                 form={form}
                 name="signupForm"
                 onFinish={onFinish}
+                size="large"
+                layout="vertical"
             >
-                <CustomInput
+                <Form.Item
                     name="fullname"
-                    placeholder="Enter your Full Name"
-                    prefix={<UserOutlined className="site-form-item-icon" />}
-                    type="text"
-                    required="true"
-                    message="Please input your Full Name"
-                    whitespace="true"
-                    className="sm:text-lg"
-                />
-                <CustomInput
+                    hasFeedback
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please enter your full name!",
+                        },
+                        {
+                            type: "text",
+                            message: "Enter a valid email!",
+                        },
+                        { whitespace: true },
+                    ]}
+                >
+                    <Input
+                        prefix={<UserOutlined className="site-form-item-icon" />}
+                        placeholder="Enter your Full Name"
+                        className="text-lg"
+                    />
+                </Form.Item>
+
+                <Form.Item
                     name="email"
-                    placeholder="Enter Your Email"
-                    prefix={<MailOutlined className="site-form-item-icon" />}
-                    type="email"
-                    required="true"
-                    message="Please input your E-mail"
-                    className="sm:text-lg"
-                />
+                    hasFeedback
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please enter your email!",
+                        },
+                        {
+                            type: "email",
+                            message: "Enter a valid email!",
+                        },
+                    ]}
+                >
+                    <Input
+                        prefix={<MailOutlined className="site-form-item-icon" />}
+                        placeholder="Enter your Email"
+                        className="text-lg"
+                    />
+                </Form.Item>
                 <Form.Item
                     name="password"
                     rules={[
@@ -84,7 +108,8 @@ const Signup = () => {
                 >
                     <Input.Password
                         placeholder="Enter Your Confirm Password"
-                        prefix={<LockOutlined className="site-form-item-icon" />} className="sm:text-lg"
+                        prefix={<LockOutlined className="site-form-item-icon" />}
+                        className="sm:text-lg"
                     />
                 </Form.Item>
                 <Form.Item
@@ -98,7 +123,6 @@ const Signup = () => {
                         international
                         defaultCountry="pk"
                         placeholder="Enter phone number"
-                      
                     />
                 </Form.Item>
                 <Form.Item
@@ -116,6 +140,7 @@ const Signup = () => {
                 <Form.Item shouldUpdate>
                     {() => (
                         <Button
+                        type="primary" 
                             block
                             className="font-bold"
                             htmlType="submit"

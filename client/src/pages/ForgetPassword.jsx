@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MailOutlined } from "@ant-design/icons";
-import { Button, Form } from "antd";
+import { Button, Form, Input } from "antd";
 import { Link } from "react-router-dom";
-import CustomInput from "../components/Forms/CustomInput";
 
 const ForgetPassword = () => {
     const [form] = Form.useForm();
@@ -15,28 +14,34 @@ const ForgetPassword = () => {
         console.log("Received values of form: ", values);
     };
     return (
-
         <div>
             <h3 className="text-blue-800 font-bold text-lg  pb-5">Forget Password</h3>
-            <Form
-                form={form}
-                name="forgetPassword"
-                onFinish={onFinish}
-            >
-                <CustomInput
+            <Form form={form} name="forgetPassword" onFinish={onFinish} size="large" layout="vertical">
+                <Form.Item
                     name="email"
-                    placeholder="Enter Your Email"
-                    prefix={<MailOutlined className="site-form-item-icon" />}
-                    type="email"
-                    required="true"
-                    message="Please input your Email"
-                    className="sm:text-lg"
-                />
-
+                    hasFeedback
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please enter your email!",
+                        },
+                        {
+                            type: "email",
+                            message: "Enter a valid email!",
+                        },
+                    ]}
+                >
+                    <Input
+                        prefix={<MailOutlined className="site-form-item-icon" />}
+                        placeholder="Enter your Email"
+                        className="sm:text-lg"
+                    />
+                </Form.Item>
                 <Form.Item shouldUpdate>
                     {() => (
                         <Link to="/resetpassword">
                             <Button
+                            type="primary" 
                                 block
                                 className="font-bold "
                                 htmlType="submit"

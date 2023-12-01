@@ -9,29 +9,25 @@ const { Content } = Layout;
 
 const DashboardLayOut = () => {
     return (
-        <Layout className="min-h-screen">
-            <Head />
-            <Layout>
-                <Sidenav />
-                <Layout
-                    style={{
-                        padding: "0 24px 24px",
-                    }}
-                >
-                    <CrumBread />
-                    <Content
+        <>
+            <Layout className="min-h-screen">
+                <Head />
+                <Layout>
+                    <Sidenav />
+                    <Layout
                         style={{
-                            padding: 24,
-                            margin: 0,
-                            minHeight: 280,
+                            padding: "0 20px 24px",
                         }}
                     >
-                        <Outlet />
-                    </Content>
-                    <Foot />
+                        <CrumBread />
+                        <Content className="p-5 bg-blue-300">
+                            <Outlet />
+                        </Content>
+                        <Foot />
+                    </Layout>
                 </Layout>
             </Layout>
-        </Layout>
+        </>
     );
 };
 export default DashboardLayOut;

@@ -1,54 +1,128 @@
-import { Space, Table, Typography } from "antd";
-import { useEffect, useState } from "react";
-import { getOrders } from "..";
+import { Button, Space, Table, Typography } from "antd";
+import { Link } from "react-router-dom";
 
 const Task = () => {
-  const [loading, setLoading] = useState(false);
-  const [dataSource, setDataSource] = useState([]);
 
-  useEffect(() => {
-    setLoading(true);
-    getOrders().then((res) => {
-      setDataSource(res.products);
-      setLoading(false);
-    });
-  }, []);
+  const dataSource = [
+    {
+      key: '1',
+      task: 'Mike lorem latin 1 task task task task task task task task task task task task task task task task task',
+      date: "2/23/2023",
+      status: 'incomplete',
+    },
+    {
+      key: '2',
+      task: 'John',
+      date: 42,
+      status: '10 Downing Street',
+    },
+    {
+      key: '3',
+      task: 'Mike lorem latin 1 task task task task task task task task task task task task task task task task task',
+      date: "2/23/2023",
+      status: 'incomplete',
+    },
+    {
+      key: '4',
+      task: 'John',
+      date: 42,
+      status: '10 Downing Street',
+    },
+    {
+      key: '5',
+      task: 'Mike lorem latin 1 task task task task task task task task task task task task task task task task task',
+      date: "2/23/2023",
+      status: 'incomplete',
+    },
+    {
+      key: '6',
+      task: 'John',
+      date: 42,
+      status: '10 Downing Street',
+    },
+    {
+      key: '7',
+      task: 'Mike lorem latin 1 task task task task task task task task task task task task task task task task task',
+      date: "2/23/2023",
+      status: 'incomplete',
+    },
+    {
+      key: '8',
+      task: 'John',
+      date: 42,
+      status: '10 Downing Street',
+    },
+    {
+      key: '9',
+      task: 'Mike lorem latin 1 task task task task task task task task task task task task task task task task task',
+      date: "2/23/2023",
+      status: 'incomplete',
+    },
+    {
+      key: '10',
+      task: 'John',
+      date: 42,
+      status: '10 Downing Street',
+    },
+    {
+      key: '11',
+      task: 'Mike lorem latin 1 task task task task task task task task task task task task task task task task task',
+      date: "2/23/2023",
+      status: 'incomplete',
+    },
+    {
+      key: '12',
+      task: 'John',
+      date: 42,
+      status: '10 Downing Street',
+    },
+  ];
+
+  const columns = [
+    
+      {
+        title: "Task",
+        dataIndex: "task",
+        width:300,
+      },
+      {
+        title:"Due Date",
+        dataIndex: "date",
+        width:50,
+      },
+      {
+        title:"Status",
+        dataIndex: "status",
+        width:50,
+      },
+      {
+        title: "Action",
+        width:50,
+        render: (text, record) => (
+          <Space size="middle">
+            <Button>
+            <Link to={`/task/edit/${record.id}`}>Completed</Link>
+            </Button>
+          </Space>
+        ),
+      }
+  ];
 
   return (
-    <Space size={20} direction="vertical"  className="flex flex-col min-w-full py-2 overflow-x-auto sm:-mx-6 lg:-mx-8 sm:px-6 lg:px-8">
-      <Typography.Title level={4}>Task</Typography.Title>
-      <Table className="min-w-full text-sm font-light text-left"
-        loading={loading}
-        columns={[
-          {
-            title: "Title",
-            dataIndex: "title",
-          },
-          {
-            title: "Price",
-            dataIndex: "price",
-            render: (value) => <span>${value}</span>,
-          },
-          {
-            title: "DiscountedPrice",
-            dataIndex: "discountedPrice",
-            render: (value) => <span>${value}</span>,
-          },
-          {
-            title: "Quantity",
-            dataIndex: "quantity",
-          },
-          {
-            title: "Total",
-            dataIndex: "total",
-          },
-        ]}
+    <div>
+      <Typography.Title level={4}>Tasks</Typography.Title>
+      <Table
+      className="bg-blue-400"
+        columns={columns}
         dataSource={dataSource}
         pagination={{
-          pageSize: 5,
+          pageSize: 8,
         }}
-      ></Table>
-    </Space>
+        scroll={{
+          x: 1500,
+        }}
+      />
+    </div>
   );
 }
 export default Task;

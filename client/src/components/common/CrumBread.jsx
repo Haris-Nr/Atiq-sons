@@ -4,37 +4,26 @@ import { Breadcrumb } from "antd";
 
 const CrumBread = () => {
   const location = useLocation();
-  const breadCrumbView = () => {
-    const { pathname } = location;
-    const pathnames = pathname.split("/").filter((item) => item);
-    const capatilize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-    return (
-      <div>
-        <Breadcrumb separator=">">
-          {pathnames.length > 0 ? (
-            <Breadcrumb.Item>
-              <Link to="/">Home</Link>
-            </Breadcrumb.Item>
-          ) : (
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-          )}
-          {pathnames.map((name, index) => {
-            const routeTo = `/${pathnames.slice(0, index + 1).join("/")}`;
-            const isLast = index === pathnames.length - 1;
-            return isLast ? (
-              <Breadcrumb.Item key={index}>{capatilize(name)}</Breadcrumb.Item>
-            ) : (
-              <Breadcrumb.Item key={index}>
-                <Link to={`${routeTo}`}>{capatilize(name)}</Link>
-              </Breadcrumb.Item>
-            );
-          })}
-        </Breadcrumb>
-      </div>
+  const { pathname } = location;
+  const pathnames = pathname.split("/").filter((item) => item);
+  const items = pathnames.map((item, index) => ({
+    path: `/${item}`,
+    title: item.charAt(0).toUpperCase() + item.slice(1),
+    key: index,
+  }));
+  const itemRender = (route, params, items, paths) => {
+    const last = items.indexOf(route) === items.length - 1;
+    return last ? (
+      <span>{route.title}</span>
+    ) : (
+      <Link to={paths.join("/")}>{route.title}</Link>
     );
   };
-
-  return <>{breadCrumbView()}</>;
+  return (
+    <>
+      <Breadcrumb itemRender={itemRender} items={items} className="p-3" />
+    </>
+  );
 };
 
 export default CrumBread;
