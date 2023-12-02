@@ -23,7 +23,7 @@ const AddProduct = () => {
   };
   return (
     <>
-    <Button type="primary" onClick={showModal}>
+    <Button onClick={showModal}>
       Add Product
     </Button>
     <Modal

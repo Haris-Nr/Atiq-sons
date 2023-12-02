@@ -70,7 +70,7 @@ const ResetPassword = () => {
           {() => (
             <Link to="/">
               <Button
-              type="primary" 
+              
                 block
                 className="font-bold"
                 htmlType="submit"

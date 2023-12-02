@@ -23,7 +23,7 @@ const TaskButton = () => {
     };
   return (
     <>
-    <Button type="primary" onClick={showModal}>
+    <Button onClick={showModal}>
       Asign Task
     </Button>
     <Modal

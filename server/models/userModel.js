@@ -1,13 +1,11 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
-// Declare the Schema of the Mongo model
 var userSchema = new mongoose.Schema(
     {
-        name: {
+        fullname: {
             type: String,
             required: true,
-            unique: true,
-            index: true,
         },
         email: {
             type: String,
@@ -17,13 +15,16 @@ var userSchema = new mongoose.Schema(
         mobile: {
             type: String,
             required: true,
-            unique: true,
         },
         password: {
             type: String,
             required: true,
         },
-        dashboard: { type: String, required: true},
+        confirmpassword: {
+            type: String,
+            required: true,
+        },
+        dashboard: { type: String, required: true },
         role: { type: String, enum: ["ADMIN", "EMPLOYEE"], default: "EMPLOYEE" },
     },
     {
@@ -31,5 +32,22 @@ var userSchema = new mongoose.Schema(
     }
 );
 
-//Export the model
-module.exports = mongoose.model("User", userSchema);
+userSchema.pre("save", async function (next) {
+    try {
+
+        const salt = await bcrypt.genSalt(10);
+        
+        const hashedPassword = await bcrypt.hash(this.password, salt);
+        this.password = hashedPassword;
+
+        const hashedConfirmPassword = await bcrypt.hash(this.confirmpassword, salt);
+        this.confirmpassword = hashedConfirmPassword;
+
+        return next();
+
+    } catch (error) {
+        return next(error);
+    }
+});
+
+module.exports = mongoose.model('User', userSchema);

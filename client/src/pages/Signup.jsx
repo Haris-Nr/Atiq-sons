@@ -140,7 +140,7 @@ const Signup = () => {
                 <Form.Item shouldUpdate>
                     {() => (
                         <Button
-                        type="primary" 
+                        
                             block
                             className="font-bold"
                             htmlType="submit"

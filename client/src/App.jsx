@@ -11,12 +11,12 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
-import Empolyee from "./components/Admin/Empolyee";
+import Empolyee from "./components/Admin/EmpolyeeTable";
 import Custom from "./components/common/Custom";
-import Log from "./components/Admin/Log";
-import Task from "./components/common/Task";
+import Log from "./components/Admin/LogTable";
+import Task from "./components/common/TaskTable";
 import Dashboard from "./components/common/Dashboard";
-import Product from "./components/common/Product";
+import Product from "./components/common/ProductTable";
 import AddTask from "./components/Admin/TaskForm";
 
 const router = createBrowserRouter(

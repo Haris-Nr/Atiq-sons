@@ -7,7 +7,7 @@ import {
 import { Card, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { getCustomers, getOrders, getProduct } from "..";
-import AddProduct from "../Lahore/AddProduct";
+import AddProduct from "../Lahore/ProductButton";
 import TaskButton from "../Admin/TaskButton";
 
 

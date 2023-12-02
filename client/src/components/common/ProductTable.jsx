@@ -1,4 +1,4 @@
-import { Avatar, Rate, Table, Typography } from "antd";
+import { Avatar, Rate, Table, Typography,Tag } from "antd";
 import { useEffect, useState } from "react";
 import { getProduct } from "..";
 
@@ -54,6 +54,17 @@ const Product = () => {
     {
       title: "Seller Name",
       dataIndex: "category",
+    },
+    {
+      title: "Status",
+      dataIndex: "category",
+      render: (_, { category }) => (
+        <>
+         <Tag color="red">
+                {category.toUpperCase()}
+          </Tag>
+        </>
+      ),
     },
     
   ];

@@ -60,10 +60,9 @@ const Login = () => {
             Forgot password
           </Link>
         </Form.Item>
-        <Form.Item shouldUpdate>
+        <Form.Item shouldUpdate ty>
           {() => (
             <Button
-            type="primary" 
               block
               className="font-bold"
               htmlType="submit"

@@ -40,8 +40,7 @@ const ForgetPassword = () => {
                 <Form.Item shouldUpdate>
                     {() => (
                         <Link to="/resetpassword">
-                            <Button
-                            type="primary" 
+                            <Button 
                                 block
                                 className="font-bold "
                                 htmlType="submit"

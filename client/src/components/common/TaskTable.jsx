@@ -1,4 +1,4 @@
-import { Button, Space, Table, Typography } from "antd";
+import { Button, Space, Table, Tag, Typography } from "antd";
 import { Link } from "react-router-dom";
 
 const Task = () => {
@@ -91,9 +91,16 @@ const Task = () => {
         width:50,
       },
       {
-        title:"Status",
+        title: "Status",
         dataIndex: "status",
         width:50,
+        render: (_, { status }) => (
+          <>
+           <Tag color="red">
+                  {status.toUpperCase()}
+            </Tag>
+          </>
+        ),
       },
       {
         title: "Action",
