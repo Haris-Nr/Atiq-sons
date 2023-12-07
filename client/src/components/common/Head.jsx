@@ -28,7 +28,7 @@ const Head = () => {
         </h1>
         <div className="flex items-center justify-center space-x-6">
           <Badge
-            count={11}
+            count={1}
             overflowCount={10}
             size="small"
             style={{

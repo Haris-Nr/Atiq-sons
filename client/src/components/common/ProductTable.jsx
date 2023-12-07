@@ -16,11 +16,14 @@ const Product = () => {
 
   const columns = [
     {
+      key:"thumbnail",
       title: "Thumbnail",
       dataIndex: "thumbnail",
+      headerColor:"red",
       render: (link) => {
         return <Avatar src={link} />;
       },
+      
     },
     {
       title: "Product Name",

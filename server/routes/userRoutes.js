@@ -1,14 +1,15 @@
 const express = require("express");
-const { createUser, loginUser, getAllemployees, getAdmin, updatedEmployee } = require("../controllers/userCtrl");
+const { createUser, loginUser, getEmployee, updatedEmployee, deleteEmployee, getAllUsers, fetchUser } = require("../controllers/userCtrl");
+const authMiddleware = require("../middlewares/authMiddleware");
 const router = express.Router();
 
 router.post("/signup",createUser);
 router.post("/login",loginUser);
-router.get("/allemployees",getAllemployees);
-router.get("/getadmin",getAdmin)
-router.patch("/reset-password/",updatedEmployee);
-// router.get("/:id",getaUser);
-// router.delete("/:id",deleteaUser);
+router.get("/allusers",getAllUsers);
+router.get("/getemployee",getEmployee)
+router.patch("/reset-password",updatedEmployee);
+router.delete("/delete/:id",deleteEmployee);
+router.get("/currentuser",authMiddleware,fetchUser);
 
 
 

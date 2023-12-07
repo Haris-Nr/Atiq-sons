@@ -2,17 +2,36 @@ import React, { useEffect, useState } from "react";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../redux/Features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+
+  const dispatch = useDispatch();
+  const {data,isError,isSuccess,message} = useSelector((state) => state.auth);
+    // console.log(data)
+    // console.log(isError)
+    // console.log(isSuccess)
+    // console.log(message)
+
+  const navigate = useNavigate();
+
   const [form] = Form.useForm();
+  
   const [clientReady, setClientReady] = useState(false);
   // To disable submit button at the beginning.
   useEffect(() => {
     setClientReady(true);
   }, []);
+
   const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+    dispatch(loginUser(values));
+    if(isSuccess){
+      navigate("/custom");
+    }
   };
+
   return (
     <div>
       <h3 className="text-blue-800 font-bold text-lg pb-5">
@@ -60,7 +79,7 @@ const Login = () => {
             Forgot password
           </Link>
         </Form.Item>
-        <Form.Item shouldUpdate ty>
+        <Form.Item shouldUpdate>
           {() => (
             <Button
               block
@@ -70,8 +89,7 @@ const Login = () => {
               disabled={
                 !clientReady ||
                 !form.isFieldsTouched(true) ||
-                !!form.getFieldsError().filter(({ errors }) => errors.length)
-                  .length
+                !!form.getFieldsError().filter(({ errors }) => errors.length).length
               }
             >
               Log In

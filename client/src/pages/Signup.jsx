@@ -2,23 +2,49 @@ import React, { useEffect, useState } from "react";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Select, Form, Input } from "antd";
 import { Link } from "react-router-dom";
-import PhoneInput from "antd-phone-input";
-import { Option } from "antd/es/mentions";
-
+// import PhoneInput from "antd-phone-input";
+import PhoneInput from "react-phone-number-input";
+import { useDispatch, useSelector } from "react-redux";
+import { signupUser } from "../redux/Features/auth/authSlice";
+import 'react-phone-number-input/style.css'
 const Signup = () => {
+    const dispatch = useDispatch();
+    const {data,isError,isSuccess,message} = useSelector((state) => state.auth);
+    // console.log(data)
+    // console.log(isError)
+    // console.log(isSuccess)
+    // console.log(message)
+    
     const [form] = Form.useForm();
+
     const [clientReady, setClientReady] = useState(false);
     // To disable submit button at the beginning.
     useEffect(() => {
         setClientReady(true);
     }, []);
+
     const onFinish = (values) => {
-        console.log("Received values of form: ", values);
+        dispatch(signupUser(values));
     };
 
+    const options = [
+        {
+            value: "Lahore",
+            label: "Lahore",
+        },
+        {
+            value: "Dubai",
+            label: "Dubai",
+        },
+        {
+            value: "China",
+            label: "China",
+        },
+    ];
+
     return (
-        <div className="lg:-mb-7">
-            <h3 className="text-blue-800 font-bold text-lg pb-5 lg:pb-2">Sign Up</h3>
+        <div className="-mb-7">
+            <h3 className="text-blue-800 font-bold text-lg ">Sign Up</h3>
             <Form
                 form={form}
                 name="signupForm"
@@ -86,7 +112,7 @@ const Signup = () => {
                 </Form.Item>
 
                 <Form.Item
-                    name="confirmPassword"
+                    name="confirmpassword"
                     dependencies={["password"]}
                     rules={[
                         {
@@ -113,34 +139,37 @@ const Signup = () => {
                     />
                 </Form.Item>
                 <Form.Item
-                    name="phoneNo"
+                    name="mobile"
                     message="Please inout your Phone NO"
-                    required="true"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your phone number!",
+                        },
+                    ]}
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     hasFeedback
                 >
                     <PhoneInput
-                        international
-                        defaultCountry="pk"
                         placeholder="Enter phone number"
+                        className="phoneInput"
                     />
                 </Form.Item>
                 <Form.Item
-                    name="category"
+                    name="dashboard"
                     required="true"
                     message="Please select a Dashboard"
                     hasFeedback
                 >
-                    <Select placeholder="Select a Dashboard" size="large">
-                        <Option value="Lahore">Lahore</Option>
-                        <Option value="Dubai">Dubai</Option>
-                        <Option value="China">China</Option>
-                    </Select>
+                    <Select
+                        placeholder="Select a Dashboard"
+                        size="large"
+                        options={options}
+                    />
                 </Form.Item>
                 <Form.Item shouldUpdate>
                     {() => (
                         <Button
-                        
                             block
                             className="font-bold"
                             htmlType="submit"
@@ -156,7 +185,7 @@ const Signup = () => {
                         </Button>
                     )}
                 </Form.Item>
-                <Form.Item className="lg:-mt-3">
+                <Form.Item>
                     Already have an account?&nbsp;
                     <Link to="/" className="text-blue-400 underline">
                         Login
