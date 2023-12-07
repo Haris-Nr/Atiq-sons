@@ -17,6 +17,7 @@ const createUser = async (req, res) => {
         if (password !== confirmpassword) {
             throw new Error("Password and confirm password do not match");
         }
+        
 
         let newUser = new User(req.body);
         await newUser.save();
