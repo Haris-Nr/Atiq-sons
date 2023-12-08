@@ -7,7 +7,7 @@ const signup = async (userData) => {
         const response = await axios.post(`${baseUrl}/user/signup`, userData);
         return response.data;  
     } catch (error) {
-        console.error('Signup error:', error);
+        console.error('Signup error:', error.response.data);
         throw error;  
     }
 };
@@ -17,14 +17,35 @@ const login = async (userData) =>{
         const response = await axios.post(`${baseUrl}/user/login`, userData);
         return response.data;  
     } catch (error) {
+        console.error('Signup error:', error.response.data);
+        throw error;  
+    }
+}
+
+const currentUser = async () =>{
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return null;
+        }
+        const response = await axios.get(`${baseUrl}/user/currentuser`,{
+            headers: {
+                Authorization: token,
+            },
+        });
+        return response.data;  
+    } catch (error) {
         console.error('Signup error:', error);
         throw error;  
     }
 }
 
+
+
 const authApi = {
     signup,
-    login
+    login,
+    currentUser
 };
 
 export default authApi;

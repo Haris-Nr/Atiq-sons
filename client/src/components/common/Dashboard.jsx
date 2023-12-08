@@ -4,43 +4,25 @@ import {
   ShoppingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Card, Space, Typography } from "antd";
-import { useEffect, useState } from "react";
-import { getCustomers, getOrders, getProduct } from "..";
+import { Button, Space, Typography } from "antd";
+import { useEffect} from "react";
 import AddProduct from "../Lahore/ProductButton";
 import TaskButton from "../Admin/TaskButton";
-
-
-function DashboardCard({ icon, title, value }) {
-  return (
-    <Card className="relative flex flex-col mb-4 text-gray-700 bg-white shadow-md w-82 rounded-xl bg-clip-border">
-      <Space direction="horizontal" className="items-center ">
-        {icon}
-        <Typography.Text className="mb-2 ml-2 font-sans text-xl font-semibold tracking-normal text-blue-gray-900">{title}</Typography.Text>
-        <Typography.Text className="mb-2 ml-2 font-semibold text-blue-gray-900">{value}</Typography.Text>
-      </Space>
-    </Card>
-  );
-}
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "../../redux/Features/auth/authSlice";
+import DashboardCard from './DashboardCard';
+import { useNavigate } from "react-router-dom";
 
 const  Dashboard = () => {
-  const [orders, setOrders] = useState(0);
-  const [product, setProduct] = useState(0);
-  const [customers, setCustomers] = useState(0);
-  const [revenue, setRevenue] = useState(0);
+
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+  const {data,isError,isSuccess,message} = useSelector((state) => state.auth);
 
   useEffect(() => {
-    getOrders().then((res) => {
-      setOrders(res.total);
-      setRevenue(res.discountedTotal);
-    });
-    getProduct().then((res) => {
-      setProduct(res.total);
-    });
-    getCustomers().then((res) => {
-      setCustomers(res.total);
-    });
-  }, []);
+    dispatch(fetchUser());
+  }, [dispatch]);
 
   return (
     <Space size={6} direction="vertical" className="p-6">
@@ -61,7 +43,7 @@ const  Dashboard = () => {
           />
         }
         title="Tasks"
-        value={orders}
+        // value={}
       />
       <DashboardCard
         icon={
@@ -76,7 +58,7 @@ const  Dashboard = () => {
           />
         }
         title={"Product"}
-        value={product}
+        // value={}
       />
       <DashboardCard
         icon={
@@ -91,7 +73,7 @@ const  Dashboard = () => {
           />
         }
         title={"Employee"}
-        value={customers}
+        // value={}
       />
       <DashboardCard
         icon={
@@ -106,10 +88,17 @@ const  Dashboard = () => {
           />
         }
         title={"Revenue"}
-        value={revenue}
+        // value={}
       />
     <AddProduct/>
     <TaskButton/>
+    <Button
+    onClick={()=> {
+      localStorage.removeItem("token")
+      navigate("/");}}
+    >
+      logout
+    </Button>
       {/* <img src={bulb} alt="" /> */}
     </Space>
   </Space>

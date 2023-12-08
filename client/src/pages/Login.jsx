@@ -28,7 +28,7 @@ const Login = () => {
   const onFinish = (values) => {
     dispatch(loginUser(values));
     if(isSuccess){
-      navigate("/custom");
+      navigate("/dashboard");
     }
   };
 

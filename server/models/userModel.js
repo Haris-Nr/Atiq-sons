@@ -39,6 +39,12 @@ const userSchema = new Schema(
             enum: ["ADMIN", "EMPLOYEE"],
             default: "EMPLOYEE",
         },
+        status: {
+            type: String,
+            enum: ['active', 'non-active'], 
+            default: 'non-active',            
+            index: true
+          },
     },
     {
         timestamps: true,
