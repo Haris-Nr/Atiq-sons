@@ -18,13 +18,13 @@ app.use(express.json());
 const userRoutes = require("./routes/userRoutes");
 
 const productRoutes = require("./routes/productRoutes");
-const taskRoutes = require("./routes/taskRoutes");
+
 
 
 // Define your routes
 app.use("/api/user", userRoutes);
 app.use("/api/product", productRoutes);
-app.use("/api/task", taskRoutes);
+
 
 
 
