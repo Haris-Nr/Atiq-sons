@@ -4,15 +4,10 @@ import { getCustomers } from "..";
 import { Link } from "react-router-dom";
 
 function Empolyee() {
-  const [loading, setLoading] = useState(false);
-  const [dataSource, setDataSource] = useState([]);
+
 
   useEffect(() => {
-    setLoading(true);
-    getCustomers().then((res) => {
-      setDataSource(res.users);
-      setLoading(false);
-    });
+
   }, []);
 
   const columns = [
@@ -71,10 +66,9 @@ function Empolyee() {
     <div>
       <Typography.Title level={4}>Empolyee</Typography.Title>
       <Table
-        loading={loading}
         columns={columns}
         responsive="stack"
-        dataSource={dataSource}
+        // dataSource={}
         pagination={{
           pageSize: 8,
         }}

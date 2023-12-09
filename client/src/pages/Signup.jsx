@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Select, Form, Input } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import PhoneInput from "antd-phone-input";
 import PhoneInput from "react-phone-number-input";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,7 @@ import { signupUser } from "../redux/Features/auth/authSlice";
 import 'react-phone-number-input/style.css'
 const Signup = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate()
     const {data,isError,isSuccess,message} = useSelector((state) => state.auth);
     // console.log(data)
     // console.log(isError)
@@ -25,6 +26,7 @@ const Signup = () => {
 
     const onFinish = (values) => {
         dispatch(signupUser(values));
+        navigate('/');
     };
 
     const options = [

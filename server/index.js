@@ -15,12 +15,12 @@ app.use(express.json());
 
 // Routes import
 const userRoutes = require("./routes/userRoutes");
-
-
+const productRoutes = require("./routes/ProductRoutes");
 
 
 
 app.use("/api/user", userRoutes);
+app.use("/api/product", productRoutes);
 
 
 

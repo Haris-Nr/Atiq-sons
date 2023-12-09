@@ -49,7 +49,7 @@ const Sidenav = () => {
         collapsedWidth="0"
     >
       <Menu
-        className="h-full "
+        className="h-full"
         mode="vertical"
         onClick={(item) => {
           navigate(item.key);
