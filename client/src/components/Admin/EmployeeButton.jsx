@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Button, Modal } from 'antd';
-import TaskForm from './TaskForm';
+import Signup from '../../pages/Signup';
 
-const TaskButton = () => {
+const EmployeeButton = () => {
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     // const [modalText, setModalText] = useState('Content of the modal');
@@ -23,25 +23,21 @@ const TaskButton = () => {
     };
   return (
     <>
-<<<<<<< HEAD
-    <Button onClick={showModal}>
-=======
     <Button onClick={showModal} size="large"
         className="font-bold border-none bg-green-500 hover:bg-black">
->>>>>>> 131a352 (bilal)
-      Asign Task
+    Add New Employee 
     </Button>
     <Modal
-      title="Asign Task"
+      title="Add New Employee"
       open={open}
       onOk={handleOk}
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
     >
-      <TaskForm/>
+      <Signup/>
     </Modal>
     </>
   )
 }
 
-export default TaskButton
+export default EmployeeButton;

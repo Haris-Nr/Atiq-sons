@@ -20,7 +20,11 @@ const login = async (userData) =>{
         console.error('Signup error:', error.response.data);
         throw error;  
     }
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> 131a352 (bilal)
 
 const currentUser = async () =>{
     try {

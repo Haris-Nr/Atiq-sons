@@ -27,10 +27,14 @@ const ProductForm = () => {
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 14 }}
     >
+<<<<<<< HEAD
       <Form.Item 
       label="Product Name"
        name="productname" 
        rules={[
+=======
+      <Form.Item label="Product Name" name="productname" rulesrules={[
+>>>>>>> 131a352 (bilal)
             {
               required: true,
               message: "Please enter Product Name!",
@@ -64,6 +68,7 @@ const ProductForm = () => {
           <Button icon={<UploadOutlined />}>Upload Image</Button>
         </Upload>
       </Form.Item>
+<<<<<<< HEAD
       <Form.Item 
       label="ASIN"
        name="asin"
@@ -74,6 +79,13 @@ const ProductForm = () => {
             }
             ]}
             >
+=======
+      <Form.Item label="ASIN" name="asin" rulesrules={[
+            {
+              required: true,
+              message: "Please enter ASIN number!",
+            },]}>
+>>>>>>> 131a352 (bilal)
         <Input />
       </Form.Item>
 
@@ -92,7 +104,11 @@ const ProductForm = () => {
       </Form.Item>
       <Form.Item
         label="URL Link"
+<<<<<<< HEAD
         name="url"
+=======
+        name="urlLink"
+>>>>>>> 131a352 (bilal)
         rules={[
           { required: true, message: 'Please input the URL link!' },
           { type: 'url', message: 'Please enter a valid URL!' },
