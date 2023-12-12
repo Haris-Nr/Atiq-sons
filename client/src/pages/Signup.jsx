@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
+<<<<<<< HEAD
 import { Button, Select, Form, Input } from "antd";
+=======
+import { Button, Select, Form, Input, message as messageApi } from "antd";
+>>>>>>> 131a352 (bilal)
 import { Link, useNavigate } from "react-router-dom";
 // import PhoneInput from "antd-phone-input";
 import PhoneInput from "react-phone-number-input";
@@ -9,11 +13,31 @@ import { signupUser } from "../redux/Features/auth/authSlice";
 import 'react-phone-number-input/style.css'
 const Signup = () => {
     const dispatch = useDispatch();
+<<<<<<< HEAD
     const navigate = useNavigate()
+<<<<<<< HEAD
     const {data} = useSelector((state) => state.auth);
     console.log(data)
+=======
+    const {data,isError,isSuccess,message} = useSelector((state) => state.auth);
+=======
+    const { data, isError, isSuccess, message } = useSelector((state) => state.auth);
+>>>>>>> 131a352 (bilal)
+    // console.log(data)
+    // console.log(isError)
+    // console.log(isSuccess)
+    // console.log(message)
+<<<<<<< HEAD
+>>>>>>> refs/remotes/origin/main
     
     const [form] = Form.useForm();
+=======
+
+    const [form] = Form.useForm();
+    const navigate = useNavigate();
+
+
+>>>>>>> 131a352 (bilal)
 
     const [clientReady, setClientReady] = useState(false);
     // To disable submit button at the beginning.
@@ -23,9 +47,21 @@ const Signup = () => {
 
     const onFinish = (values) => {
         dispatch(signupUser(values));
+<<<<<<< HEAD
         navigate('/');
     };
 
+=======
+        if (isSuccess) {
+            messageApi.success("Signup successful!");
+            navigate("/");
+        } else if (isError) {
+            messageApi.error("Signup failed. Please check your information.");
+        }
+    };
+
+
+>>>>>>> 131a352 (bilal)
     const options = [
         {
             value: "Lahore",
@@ -119,8 +155,13 @@ const Signup = () => {
                             message: "Please input your phone number!",
                         },
                     ]}
+<<<<<<< HEAD
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     hasFeedback
+=======
+                    hasFeedback
+                    prefix={<LockOutlined className="site-form-item-icon" />}
+>>>>>>> 131a352 (bilal)
                 >
                     <PhoneInput
                         placeholder="Enter phone number"

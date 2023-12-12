@@ -28,8 +28,14 @@ const AddProduct = () => {
 
   return (
     <>
+<<<<<<< HEAD
     <Button onClick={showModal}>
       Add Product
+=======
+    <Button onClick={showModal}size="large"
+        className="font-bold border-none bg-green-500 hover:bg-black">
+      Add New Product
+>>>>>>> 131a352 (bilal)
     </Button>
     <Modal
       title="Add Product"

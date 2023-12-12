@@ -8,7 +8,7 @@ import { FaTasks } from "react-icons/fa";
 import { FaPersonShelter } from "react-icons/fa6";
 import { BsPersonFill } from "react-icons/bs";
 
-const Sidenav = () => {
+const Sidenav = ({collapsed}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [selectedKeys, setSelectedKeys] = useState();
@@ -45,11 +45,10 @@ const Sidenav = () => {
   ];
   return (
     <Sider
-        breakpoint="lg"
-        collapsedWidth="0"
+    trigger={null} collapsible collapsed={collapsed}
     >
       <Menu
-        className="h-full"
+        className="h-full bg-gray-700 text-white"
         mode="vertical"
         onClick={(item) => {
           navigate(item.key);

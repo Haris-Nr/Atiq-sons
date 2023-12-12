@@ -18,7 +18,11 @@ const login = async (userData) =>{
     } catch (error) {
         return error.message 
     }
+<<<<<<< HEAD
 }
+=======
+};
+>>>>>>> 131a352 (bilal)
 
 const currentUser = async () =>{
     try {

@@ -13,4 +13,8 @@ const DashboardCard = ({ icon, title, value }) => {
       );
 }
 
+<<<<<<< HEAD
 export default DashboardCard
+=======
+export default DashboardCard;
+>>>>>>> 131a352 (bilal)
