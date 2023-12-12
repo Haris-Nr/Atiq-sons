@@ -1,10 +1,19 @@
-import React from 'react';
+import React,{ forwardRef } from 'react';
 import { Form, Input, InputNumber, Button, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from "react-redux";
+import { addProduct } from '../../redux/Features/product/productSlice';
 
-const ProductForm = () => {
+
+const ProductForm = forwardRef(function ProductForm( _, ref) {
+
+  const dispatch = useDispatch();
+  const {data} = useSelector((state) => state.product);
+  console.log(data)
+  
+
   const onFinish = (values) => {
-    console.log('Received values:', values);
+    dispatch(addProduct(values));
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -19,6 +28,9 @@ const ProductForm = () => {
     return isImage;
   };
 
+
+  
+
   return (
     <Form
       name="addProductForm"
@@ -26,10 +38,11 @@ const ProductForm = () => {
       onFinishFailed={onFinishFailed}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 14 }}
+      ref={ref}
     >
       <Form.Item 
       label="Product Name"
-       name="productname" 
+       name="productName" 
        rules={[
             {
               required: true,
@@ -53,7 +66,7 @@ const ProductForm = () => {
         name="image"
         valuePropName="fileList"
         getValueFromEvent={(e) => e && e.fileList}
-        rules={[{ required: true, message: 'Please upload an image!' }]}
+        // rules={[{ required: true, message: 'Please upload an image!' }]}
       >
         <Upload
           name="image"
@@ -107,13 +120,15 @@ const ProductForm = () => {
       >
        <Input />
       </Form.Item>
-      <Form.Item wrapperCol={{ offset: 8, span: 10 }}>
-        <Button type="primary" htmlType="submit" block>
+
+      {/* <Form.Item wrapperCol={{ offset: 8, span: 10 }}>
+        <Button type="primary" htmlType="submit" block ref={ref}>
           Add Product
         </Button>
-      </Form.Item>
+      </Form.Item> */}
+
     </Form>
   );
-};
+});
 
 export default ProductForm;

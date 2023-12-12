@@ -1,13 +1,18 @@
 const express = require("express");
-// const { authMiddleware } = require('../middlewares/authMiddleware');
-const { createProduct, deleteProduct, getProduct, getProducts } = require('../controllers/productCtrl');
-
 const router = express.Router();
+const authMiddleware = require("../middlewares/authMiddleware");
+const adminCheck = require("../middlewares/adminCheck");
+const { createProduct, deleteProduct, updateProduct, fetchProducts, changeStatus, singleProduct, allProduct} = require('../controllers/productCtrl');
 
-router.post("/",  createProduct);
-router.delete("/:id",  deleteProduct);
-router.get("/single/:id", getProduct);
-router.get("/", getProducts);
+
+router.post("/addproduct",authMiddleware,createProduct);
+router.post("/fetchProductsbyemployee", authMiddleware,fetchProducts)
+router.delete("/deleteproduct/:id",authMiddleware,deleteProduct);
+router.patch("/updateProduct/:id", authMiddleware,updateProduct);
+router.get("/fetchSingleProduct/:id", authMiddleware,singleProduct) 
+router.patch("/changeProductStatus/:id", authMiddleware,adminCheck,changeStatus)
+router.get("/fetchallProduct",authMiddleware,adminCheck,allProduct)
+
 
 
 

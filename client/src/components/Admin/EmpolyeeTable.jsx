@@ -1,6 +1,5 @@
 import { Avatar, Space, Table, Typography } from "antd";
-import { useEffect, useState } from "react";
-import { getCustomers } from "..";
+import { useEffect} from "react";
 import { Link } from "react-router-dom";
 
 function Empolyee() {

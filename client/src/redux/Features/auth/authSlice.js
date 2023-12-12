@@ -4,8 +4,6 @@ import authApi from "../../api/authApi";
 const userDefaultState = {
     fullname: null,
     email: null,
-    password: null,
-    confirmPassword: null,
     phoneNo: null,
     dashboard: null,
 };
@@ -14,8 +12,6 @@ const initialState = {
     data: userDefaultState,
     isError: false,
     isLoading: false,
-    isSuccess: false,
-    message: "",
 };
 
 export const signupUser = createAsyncThunk(
@@ -63,15 +59,11 @@ export const authSlice = createSlice({
             .addCase(signupUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isError = false;
-                state.isSuccess = action.payload.success;
-                state.message = action.payload.message;
-                state.data = action.payload.user;
+                state.data = action.payload;
             })
             .addCase(signupUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.isSuccess = action.payload.response.data.success;
-                state.message = action.payload.response.data.message;
                 state.data = action.payload;
             })
             .addCase(loginUser.pending, (state) => {
@@ -80,16 +72,12 @@ export const authSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isError = false;
-                localStorage.setItem("token", action.payload.token);
-                state.isSuccess = action.payload.success;
-                state.message = action.payload.message;
                 state.data = action.payload;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.isSuccess = action.payload.response.data.success;
-                state.message = action.payload.response.data.message;
+                state.data = action.payload;
             })
             .addCase(fetchUser.pending, (state) => {
                 state.isLoading = true;
@@ -97,15 +85,12 @@ export const authSlice = createSlice({
             .addCase(fetchUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isError = false;
-                state.isSuccess = action.payload && action.payload.success;
-                state.message = action.payload && action.payload.message;
                 state.data = action.payload && action.payload.data;
             })
             .addCase(fetchUser.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.isSuccess = action.payload.response.data.success;
-                state.message = action.payload.response.data.message;
+                state.data = action.payload;
             });
     },
 });

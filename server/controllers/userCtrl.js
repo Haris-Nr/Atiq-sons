@@ -1,39 +1,34 @@
-const User = require('../models/userModel');
-const jwt = require('jsonwebtoken');
+const User = require("../models/userModel");
+const Log = require("../models/logModel");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-
 const secret = process.env.JWT_SECRET;
 
 // create User
 const createUser = async (req, res) => {
     try {
-        const { email, password, confirmpassword, fullname } = req.body;
-
-        const findUser = await User.findOne({ email: email });
-        if (findUser) {
+        const user = await User.findOne({ email: req.body.email });
+        if (user) {
             throw new Error("User already exists");
         }
 
-        if (password !== confirmpassword) {
-            throw new Error("Password and confirm password do not match");
-        }
-        
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(req.body.password, salt);
+        req.body.password = hashPassword;
 
-        let newUser = new User(req.body);
+        const newUser = new User(req.body);
         await newUser.save();
 
-        newUser= newUser.toObject();
-        delete newUser['password']
-        delete newUser['confirmpassword']
-
-        res.status(201).json({
+        res.status(201).send({
             success: true,
-            message: "New user account created successfully!!" + fullname.toUpperCase(),
+            message:
+                "New user account created successfully!!" +
+                newUser.fullname.toUpperCase(),
         });
     } catch (error) {
-        res.status(500).json({
+        res.status(500).send({
             success: false,
-            message: error.message
+            message: error.message,
         });
     }
 };
@@ -43,138 +38,207 @@ const loginUser = async (req, res) => {
     try {
         let { email, password } = req.body;
 
-        let user = await User.findOne({ email }).lean();
+        let user = await User.findOne({ email });
+
         if (!user) {
-            throw new Error("User not found")
+            throw new Error("User not found");
+        }
+
+        if (user.status !== "active") {
+            throw new Error(
+                `Mr. ${user.fullname} your account is blocked, please contact the admin`
+            );
         }
 
         const validPassword = await bcrypt.compare(password, user.password);
 
         if (!validPassword) {
-            throw new Error("Invalid password")
+            throw new Error("Invalid password");
         }
-        
-        delete user['password']
-        delete user['confirmpassword']
 
-        const token = jwt.sign({ userId: user._id }, secret,{ expiresIn: "1d" });
+        const logEntry = new Log({
+            user_id: user._id,
+            action: "Login",
+        });
 
-        res.status(200).json({
+        await logEntry.save();
+
+        const token = jwt.sign({ userId: user._id }, secret, { expiresIn: "1d" });
+
+        res.status(200).send({
             success: true,
             message: user.fullname.toUpperCase() + " Logged in",
-            token,
+            data: token,
         });
     } catch (error) {
-        res.status(500).json({
+        res.status(500).send({
             success: false,
-            message: error.message
+            message: error.message,
         });
     }
-}
+};
 
 // get allUsers
 const getAllUsers = async (req, res) => {
     try {
-        const allUsers = await User.find().select('-password').select('-confirmpassword');
-        res.json({
+        const allUsers = await User.find()
+            .select("-password")
+            .select("-confirmpassword");
+        res.send({
             success: true,
             message: "All Users",
-            AllUsrs: allUsers
-        })
-    } catch (error) {
-        res.json({
-            success: false,
-            message: error.message
-        })
-    }
-}
-
-// getEmployee 
-const getEmployee = async (req, res) => {
-    try {
-        const employees = await User.find({ role: 'EMPLOYEE' }).select('-password').select('-confirmpassword');
-        res.status(200).json({
-            success: true,
-            message: " All Employee",
-            employees: employees,
-            
+            data: allUsers,
         });
     } catch (error) {
-        res.status(500).json({
+        res.send({
             success: false,
-            message: error.message
+            message: error.message,
+        });
+    }
+};
+
+// getEmployee
+const getEmployee = async (req, res) => {
+    try {
+        const employees = await User.find({ role: "employee" })
+            .select("-password")
+            .select("-confirmpassword");
+        res.status(200).send({
+            success: true,
+            message: " All Employee",
+            data: employees,
+        });
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: error.message,
         });
     }
 };
 
 // reset password
-const updatedEmployee = async (req, res) => {
+const resetPassword = async (req, res) => {
     try {
+        const { email, password } = req.body;
 
-        const { email, password, confirmpassword } = req.body;
+        const user = await User.findOne({ email });
 
-        if (password !== confirmpassword) {
-            throw new Error("Password and confirm password do not match");
+        if (!user) {
+            return res.status(404).send({
+                success: false,
+                message: "User not found",
+            });
         }
+
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const hashedConfirmPassword = await bcrypt.hash(confirmpassword, salt);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        const employeeUpdate = await User.findOneAndUpdate({ email },
-            { hashedPassword, hashedConfirmPassword },
+        await User.findOneAndUpdate(
+            { email },
+            { $set: { password: hashedPassword } },
             { new: true }
-        )
+        );
 
-        res.status(200).json({
+        res.status(200).send({
             success: true,
-            message: "Password updated successfully"
+            message: "Password updated successfully",
         });
     } catch (error) {
-        res.status(500).json({
+        res.status(500).send({
             success: false,
             message: error.message,
         });
     }
-}
+};
 
 // delete employee
 const deleteEmployee = async (req, res) => {
     try {
         const { id } = req.params;
         const deletedEmployee = await User.findByIdAndDelete(id);
-        if (!deletedEmployee){
+        if (!deletedEmployee) {
             throw new Error("Employee already deleted");
         }
-        res.status(200).json({
+        res.status(200).send({
             success: true,
-            message: "Employee deleted successfully"
+            message: "Employee deleted successfully",
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-        });
-    }
-}
-
-const fetchUser = async (req, res) => {
-    try {
-        const user = await User.findById(req.body.userId).select('-password').select('-confirmpassword')
-        // Send the user as a response
-        res.status(200).json({
-            success: true,
-            data: user,
-            message: "User fetched successfully",
-        });
-    } catch (error) {
-        res.status(500).json({
+        res.status(500).send({
             success: false,
             message: error.message,
         });
     }
 };
 
+// fetch current user
+const fetchUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.body.userId)
+            .select("-password")
+            .select("-confirmpassword");
+        res.status(200).send({
+            success: true,
+            message: "User fetched successfully",
+            data: user,
+        });
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: error.message,
+        });
+    }
+};
 
+const changeStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { status } = req.body;
+        await User.findByIdAndUpdate(id, { status }, { new: true });
+        res.status(200).send({
+            success: true,
+            message: "Status change successfully",
+        });
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: error.message,
+        });
+    }
+};
 
+const logout = async (req, res) => {
+    try {
+        const userId = req.body.userId;
 
-module.exports = { createUser, loginUser, getAllUsers, getEmployee, updatedEmployee, deleteEmployee,fetchUser };
+        const logEntry = new Log({
+            user_id: userId,
+            action: "Logout",
+        });
+        await logEntry.save();
+
+        localStorage.removeItem("token");
+
+        res.status(200).send({
+            success: true,
+            message: "Logged out successfully",
+        });
+    } catch (error) {
+        res.status(500).send({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+module.exports = {
+    createUser,
+    loginUser,
+    getAllUsers,
+    getEmployee,
+    resetPassword,
+    deleteEmployee,
+    fetchUser,
+    changeStatus,
+    logout,
+};

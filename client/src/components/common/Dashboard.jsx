@@ -8,7 +8,7 @@ import { Button, Space, Typography } from "antd";
 import { useEffect} from "react";
 import AddProduct from "../Lahore/ProductButton";
 import TaskButton from "../Admin/TaskButton";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchUser } from "../../redux/Features/auth/authSlice";
 import DashboardCard from './DashboardCard';
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ const  Dashboard = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const {data,isError,isSuccess,message} = useSelector((state) => state.auth);
+  // const {data,isError,isSuccess,message} = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchUser());

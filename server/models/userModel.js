@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
-const bcrypt = require("bcryptjs");
+const { Schema } = mongoose;
 
 const userSchema = new Schema(
     {
@@ -17,10 +16,6 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
-        confirmpassword: {
-            type: String,
-            required: true,
-        },
         mobile: {
             type: Number,
             required: true,
@@ -28,43 +23,24 @@ const userSchema = new Schema(
         dashboard: {
             type: String,
             required: true,
-            enum: ["Lahore", "Dubai", "China","Admin"],
-        },
-        date: {
-            type: Date,
-            default: Date.now,
+            enum: ["lahore", "dubai", "china", "admin"],
         },
         role: {
             type: String,
-            enum: ["ADMIN", "EMPLOYEE"],
-            default: "EMPLOYEE",
+            enum: ["admin", "employee"],
+            default: "employee",
         },
         status: {
             type: String,
-            enum: ['active', 'non-active'], 
-            default: 'non-active',            
-            index: true
-          },
+            enum: ["active", "blocked"],
+            default: "blocked",
+            index: true,
+        },
     },
     {
         timestamps: true,
     }
 );
 
-userSchema.pre("save", async function (next) {
-    try {
-        const salt = await bcrypt.genSalt(10);
-
-        const hashedPassword = await bcrypt.hash(this.password, salt);
-        this.password = hashedPassword;
-
-        const hashedConfirmPassword = await bcrypt.hash(this.confirmpassword, salt);
-        this.confirmpassword = hashedConfirmPassword;
-
-        return next();
-    } catch (error) {
-        return next(error);
-    }
-});
-
-module.exports = mongoose.model("User", userSchema);
+const User = mongoose.model("users", userSchema);
+module.exports = User;

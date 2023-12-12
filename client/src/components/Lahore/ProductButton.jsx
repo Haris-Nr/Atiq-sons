@@ -1,26 +1,31 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Button, Modal } from 'antd';
 import ProductForm from './ProductForm';
 
 const AddProduct = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  // const [modalText, setModalText] = useState('Content of the modal');
+
+  
   const showModal = () => {
     setOpen(true);
   };
+
+  const formRef = useRef(null);
   const handleOk = () => {
-    // setModalText('The modal will be closed after two seconds');
+    formRef.current.submit();
     setConfirmLoading(true);
     setTimeout(() => {
       setOpen(false);
       setConfirmLoading(false);
-    }, 2000);
+    }, 1000);
   };
+
   const handleCancel = () => {
-    console.log('Clicked cancel button');
     setOpen(false);
   };
+
+
   return (
     <>
     <Button onClick={showModal}>
@@ -33,7 +38,7 @@ const AddProduct = () => {
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
     >
-      <ProductForm />
+    <ProductForm ref={formRef} /> 
     </Modal>
   </>
   )

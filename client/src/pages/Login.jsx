@@ -9,29 +9,36 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
 
   const dispatch = useDispatch();
-  const {data,isError,isSuccess,message} = useSelector((state) => state.auth);
-    // console.log(data)
-    // console.log(isError)
-    // console.log(isSuccess)
-    // console.log(message)
-
+  const {data} = useSelector((state) => state.auth);
+  
   const navigate = useNavigate();
 
   const [form] = Form.useForm();
   
   const [clientReady, setClientReady] = useState(false);
   // To disable submit button at the beginning.
-  useEffect(() => {
-    setClientReady(true);
-  }, []);
+
 
   const onFinish = (values) => {
-    dispatch(loginUser(values));
-    if(isSuccess){
-      navigate("/dashboard");
+    try {
+      dispatch(loginUser(values));
+      if(data.success){
+        localStorage.setItem("token",data.token );
+        window.location.href="/dashboard"
+      }
+    } catch (error) {
+      console.log(error.message)
     }
+  
   };
 
+  useEffect(() => {
+    setClientReady(true);
+      if (localStorage.getItem("token")) {
+        navigate("/dashboard");
+      }
+  }, [navigate]);
+  
   return (
     <div>
       <h3 className="text-blue-800 font-bold text-lg pb-5">

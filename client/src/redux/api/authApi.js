@@ -1,42 +1,31 @@
-import axios from 'axios';
+import axisoInstance from './axisoInstance';
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const signup = async (userData) => {
     try {
-        const response = await axios.post(`${baseUrl}/user/signup`, userData);
+        const response = await axisoInstance.post(`/user/signup`, userData);
+        console.log(response.data)
         return response.data;  
     } catch (error) {
-        console.error('Signup error:', error.response.data);
-        throw error;  
+        return error.message 
     }
 };
 
 const login = async (userData) =>{
     try {
-        const response = await axios.post(`${baseUrl}/user/login`, userData);
+        const response = await axisoInstance.post(`/user/login`, userData);
         return response.data;  
     } catch (error) {
-        console.error('Signup error:', error.response.data);
-        throw error;  
+        return error.message 
     }
 }
 
 const currentUser = async () =>{
     try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            return null;
-        }
-        const response = await axios.get(`${baseUrl}/user/currentuser`,{
-            headers: {
-                Authorization: token,
-            },
-        });
+        const response = await axisoInstance.get(`/user/currentuser`);
         return response.data;  
     } catch (error) {
-        console.error('Signup error:', error);
-        throw error;  
+        return error.message
     }
 }
 

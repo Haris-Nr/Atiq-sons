@@ -10,11 +10,8 @@ import 'react-phone-number-input/style.css'
 const Signup = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate()
-    const {data,isError,isSuccess,message} = useSelector((state) => state.auth);
-    // console.log(data)
-    // console.log(isError)
-    // console.log(isSuccess)
-    // console.log(message)
+    const {data} = useSelector((state) => state.auth);
+    console.log(data)
     
     const [form] = Form.useForm();
 
@@ -112,34 +109,7 @@ const Signup = () => {
                         className="sm:text-lg"
                     />
                 </Form.Item>
-
-                <Form.Item
-                    name="confirmpassword"
-                    dependencies={["password"]}
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please confirm your password!",
-                        },
-                        ({ getFieldValue }) => ({
-                            validator(_, value) {
-                                if (!value || getFieldValue("password") === value) {
-                                    return Promise.resolve();
-                                }
-                                return Promise.reject(
-                                    new Error("The new password that you entered do not match!")
-                                );
-                            },
-                        }),
-                    ]}
-                    hasFeedback
-                >
-                    <Input.Password
-                        placeholder="Enter Your Confirm Password"
-                        prefix={<LockOutlined className="site-form-item-icon" />}
-                        className="sm:text-lg"
-                    />
-                </Form.Item>
+                
                 <Form.Item
                     name="mobile"
                     message="Please inout your Phone NO"

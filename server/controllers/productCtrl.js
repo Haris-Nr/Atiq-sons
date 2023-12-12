@@ -1,91 +1,170 @@
-const Product = require('../models/productModels');
+const Product = require("../models/productModels");
+const User = require("../models/userModel");
+const Notification = require("../models/notificationModel");
 
-const createProduct = async (req, res, next) => {
+
+// add product
+const createProduct = async (req, res) => {
   try {
-    console.log('req.user:', req.user);
 
-    const { productName, desc, images, quantity, asin, price, urlLink, category } = req.body;
+    const findproduct = await Product.findOne({ asin: req.body.asin });
+    if (findproduct) {
+      throw new Error("Product already in product list");
+    }
 
-    const newProduct = new Product({
-      productName,
-      desc,
-      images,
-      quantity: quantity || 0,
-      asin: asin || 0,
-      price: price || 0,
-      urlLink: urlLink || 'https://example.com',
-      category,
-      // ...(req.user && { addedBy: req.user._id }),
-      approved: false,
-      status: 'pending',
+    /*  send notification to admin */
+    const admins = await User.find({ role: "admin"});
+    admins.forEach(async (admin) => {
+        const newNotification = new Notification({
+          user: admin._id,
+          message: `New product added by ${req.user.name}`,
+          title: "New Product",
+          onClick: `/admin`,
+          seen: false,  
+        });
+        await newNotification.save();
     });
 
-    const savedProduct = await newProduct.save();
+    const newProduct = new Product(req.body);
 
-    res.status(201).json({ success: true, message: 'Product created successfully', data: savedProduct });
+    await newProduct.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Product created successfully",
+    });
   } catch (error) {
-    console.error('Error creating Product:', error);
-    next(new Error(`Internal Server Error: Unable to create Product. ${error.message}`));
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
-const deleteProduct = async (req, res, next) => {
+//fetch all products by employee
+const fetchProducts =  async (req, res) => {
   try {
-    const productToDelete = await Product.findById(req.params.id);
 
-    if (!productToDelete) {
-      return next(new Error('Product not found'));
-    }
+    const userId = req.body.userId;
 
-    if (productToDelete.edBy.toString() !== req.user._id.toString()) {
-      return next(new Error('Unauthorized access: You do not have permission to delete this Product'));
-    }
+    const products = await Product.find({ createdBy: userId })
+      .populate("createdBy").sort({ createdAt: -1 });
 
-    await Product.findByIdAndDelete(req.params.id);
-    res.status(200).json({ success: true, message: 'Product has been deleted!' });
+    res.send({
+      success: true,
+      data: products,
+    });
   } catch (error) {
-    console.error('Error deleting Product:', error);
-    next(new Error('Internal Server Error: Unable to delete Product'));
+    res.send({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
-const getProduct = async (req, res, next) => {
+// all products
+const allProduct = async (req,res)=>{
   try {
-    const productInstance = await Product.findById(req.params.id);
+    const products = await Product.find()
 
-    if (!productInstance) {
-      return next(new Error('Product not found'));
-    }
-
-    if (productInstance.edBy.toString() !== req.user._id.toString()) {
-      return next(new Error('Unauthorized access: You do not have permission to view this Product'));
-    }
-
-    res.status(200).json(productInstance);
+    res.send({
+      success: true,
+      data: products,
+    });
   } catch (error) {
-    console.error('Error fetching Product:', error);
-    next(new Error('Internal Server Error: Unable to fetch Product'));
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
+
+
+// delete product
+const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Product.findByIdAndDelete(id);
+    res.status(200).send({
+      success: true,
+      message: "Product has been deleted!",
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
-const getProducts = async (req, res, next) => {
-  const q = req.query;
-  const filters = {
-    ...(q.minStock && { quantity: { $gte: q.minStock } }),
-  };
-
+//update the existing product by id
+const updateProduct = async (req, res) => {
   try {
-    const products = await Product.find(filters).sort({ createdAt: -1 });
-    res.status(200).json(products);
+    const { id } = req.params;
+    await Product.findByIdAndUpdate(id, req.body);
+    res.send({
+      success: true,
+      message: "Product updated successfully",
+    });
   } catch (error) {
-    console.error('Error fetching Products:', error);
-    next(new Error('Internal Server Error: Unable to fetch Products'));
+    res.send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+/* change product status */
+const changeStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const updatedProduct =  await Product.findByIdAndUpdate(req.params.id, { status });
+
+    // send notification to seller 
+    const newNotification = new Notification({
+      user: updatedProduct.createdBy,
+      message: `Your product ${updatedProduct.title} has been ${status}`,
+      title: "Product Status Updated",
+      onClick: `/profile`,
+      seen: false,  
+    });
+    await newNotification.save(); 
+
+    res.send({
+      success: true,
+      message: "Product status updated successfully",
+    });
+  } catch (error) {
+    res.send({
+      succuess: false,
+      message: error.message,
+    });
+  }
+};
+
+/* Get a single product by id */
+const singleProduct = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id).populate('createdBy');
+    res.send({
+      success: true,
+      data: product
+    });
+  } catch (error) {
+    res.send({
+      succuess: false,
+      message: error.message,
+    });
   }
 };
 
 module.exports = {
   createProduct,
+  fetchProducts,
   deleteProduct,
-  getProduct,
-  getProducts,
+  updateProduct,
+  changeStatus,
+  singleProduct,
+  allProduct,
 };
