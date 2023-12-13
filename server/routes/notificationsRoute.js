@@ -8,3 +8,5 @@ router.post("/notify", authMiddleware,newNotification)
 router.get("/fetchAllNotifications", authMiddleware,allNotification)
 router.delete("/deleteNotification/:id", authMiddleware,deleteNotification)
 router.put("/seenAllNotifications/", authMiddleware, seenNotification)
+
+module.exports = router;

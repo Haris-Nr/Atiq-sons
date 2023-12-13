@@ -1,7 +1,7 @@
 const express = require("express");
+const router = express.Router();
 const { createTask, deleteTask, getTask, getTasks } = require('../controllers/taskCtrl');
 
-const router = express.Router();
 
 router.post("/",createTask);
 router.delete("/:id",deleteTask);
