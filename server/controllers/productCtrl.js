@@ -11,12 +11,13 @@ const createProduct = async (req, res) => {
     if (findproduct) {
       throw new Error("Product already in product list");
     }
+    const user = User.findById(req.body.userID);
     //  send notification to admin 
     const admins = await User.find({ role: "admin"});
     admins.forEach(async (admin) => {
         const newNotification = new Notification({
           user: admin._id,
-          message: `New product added by ${req.user.name}`,
+          message: `New product added by ${user.fullname}`,
           title: "New Product",
           onClick: `/admin`,
           seen: false,  
