@@ -23,12 +23,7 @@ const TaskButton = () => {
     };
   return (
     <>
-<<<<<<< HEAD
     <Button onClick={showModal}>
-=======
-    <Button onClick={showModal} size="large"
-        className="font-bold border-none bg-green-500 hover:bg-black">
->>>>>>> 131a352 (bilal)
       Asign Task
     </Button>
     <Modal

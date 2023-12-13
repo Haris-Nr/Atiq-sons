@@ -1,18 +1,8 @@
 import { Table, Typography } from "antd";
-import { useEffect, useState } from "react";
-import { getOrders } from "..";
 
-function Log() {
-  const [loading, setLoading] = useState(false);
-  const [dataSource, setDataSource] = useState([]);
+import React from 'react'
 
-  useEffect(() => {
-    setLoading(true);
-    getOrders().then((res) => {
-      setDataSource(res.products);
-      setLoading(false);
-    });
-  }, []);
+const  LogTable  = () => {
 
   const columns = [
     {
@@ -43,9 +33,7 @@ function Log() {
     <div>
       <Typography.Title level={4}>Logs</Typography.Title>
       <Table
-        loading={loading}
         columns={columns}
-        dataSource={dataSource}
         pagination={{
           pageSize: 8,
         }}
@@ -56,4 +44,4 @@ function Log() {
     </div>
   );
 }
-export default Log;
+export default LogTable;

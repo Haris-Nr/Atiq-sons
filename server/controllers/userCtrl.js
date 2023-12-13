@@ -189,7 +189,7 @@ const fetchUser = async (req, res) => {
         });
     }
 };
-
+// change status employee only admin
 const changeStatus = async (req, res) => {
     try {
         const { id } = req.params;

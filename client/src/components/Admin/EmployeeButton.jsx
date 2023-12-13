@@ -1,16 +1,13 @@
 import React, { useState } from 'react'
 import { Button, Modal } from 'antd';
-import Signup from '../../pages/Signup';
 
 const EmployeeButton = () => {
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
-    // const [modalText, setModalText] = useState('Content of the modal');
     const showModal = () => {
       setOpen(true);
     };
     const handleOk = () => {
-      // setModalText('The modal will be closed after two seconds');
       setConfirmLoading(true);
       setTimeout(() => {
         setOpen(false);
@@ -34,7 +31,6 @@ const EmployeeButton = () => {
       confirmLoading={confirmLoading}
       onCancel={handleCancel}
     >
-      <Signup/>
     </Modal>
     </>
   )

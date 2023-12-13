@@ -1,15 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authApi from "../../api/authApi";
 
-const userDefaultState = {
-    fullname: null,
-    email: null,
-    phoneNo: null,
-    dashboard: null,
-};
-
 const initialState = {
-    data: userDefaultState,
+    data: {},
     isError: false,
     isLoading: false,
 };
@@ -38,11 +31,7 @@ export const loginUser = createAsyncThunk(
     }
 );
 
-<<<<<<< HEAD
 export const fetchUser = createAsyncThunk("user/fetch", async (_, thunkAPI) => {
-=======
-export const fetchUser = createAsyncThunk("user/fetch",async(_,thunkAPI)=>{
->>>>>>> 131a352 (bilal)
     try {
         const response = await authApi.currentUser();
         return response;
@@ -51,10 +40,6 @@ export const fetchUser = createAsyncThunk("user/fetch",async(_,thunkAPI)=>{
     }
 });
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 131a352 (bilal)
 export const authSlice = createSlice({
     name: "auth",
     initialState,
@@ -80,16 +65,6 @@ export const authSlice = createSlice({
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isError = false;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-                localStorage.setItem("token", action.payload.token);
-=======
-                localStorage.setItem('token', action.payload.token);
->>>>>>> 131a352 (bilal)
-                state.isSuccess = action.payload.success;
-                state.message = action.payload.message;
->>>>>>> refs/remotes/origin/main
                 state.data = action.payload;
             })
             .addCase(loginUser.rejected, (state, action) => {
@@ -97,37 +72,20 @@ export const authSlice = createSlice({
                 state.isError = true;
                 state.data = action.payload;
             })
-<<<<<<< HEAD
             .addCase(fetchUser.pending, (state) => {
-=======
-            .addCase(fetchUser.pending,(state)=>{
->>>>>>> 131a352 (bilal)
                 state.isLoading = true;
             })
             .addCase(fetchUser.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isError = false;
-                state.data = action.payload && action.payload.data;
+                state.data = action.payload.data;
             })
-<<<<<<< HEAD
             .addCase(fetchUser.rejected, (state, action) => {
-=======
-            .addCase(fetchUser.rejected,(state,action)=>{
->>>>>>> 131a352 (bilal)
                 state.isLoading = false;
                 state.isError = true;
-<<<<<<< HEAD
                 state.data = action.payload;
-=======
-                state.isSuccess = action.payload.response.data.success;
-                state.message = action.payload.response.data.message;
-<<<<<<< HEAD
->>>>>>> refs/remotes/origin/main
+
             });
-=======
-            })
-            
->>>>>>> 131a352 (bilal)
     },
 });
 

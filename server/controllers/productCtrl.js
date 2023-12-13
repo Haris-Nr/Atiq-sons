@@ -6,13 +6,12 @@ const Notification = require("../models/notificationModel");
 // add product
 const createProduct = async (req, res) => {
   try {
-
+    // find product by asin NO
     const findproduct = await Product.findOne({ asin: req.body.asin });
     if (findproduct) {
       throw new Error("Product already in product list");
     }
-
-    /*  send notification to admin */
+    //  send notification to admin 
     const admins = await User.find({ role: "admin"});
     admins.forEach(async (admin) => {
         const newNotification = new Notification({
@@ -41,7 +40,7 @@ const createProduct = async (req, res) => {
   }
 };
 
-//fetch all products by employee
+//fetch all products by specific employee
 const fetchProducts =  async (req, res) => {
   try {
 
@@ -65,6 +64,7 @@ const fetchProducts =  async (req, res) => {
 // all products
 const allProduct = async (req,res)=>{
   try {
+    
     const products = await Product.find()
 
     res.send({

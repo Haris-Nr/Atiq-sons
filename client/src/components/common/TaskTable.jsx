@@ -1,12 +1,5 @@
-<<<<<<< HEAD
 import { Button, Space, Table, Tag, Typography } from "antd";
 import { Link } from "react-router-dom";
-=======
-import { Button, Space, Table, Tag, Typography, Affix } from "antd";
-import { Link } from "react-router-dom";
-import TaskButton from "../Admin/TaskButton";
-
->>>>>>> 131a352 (bilal)
 
 const Task = () => {
 
@@ -61,11 +54,7 @@ const Task = () => {
     },
     {
       key: '9',
-<<<<<<< HEAD
       task: 'Mike lorem latin 1 task task task task task task task task task task task task task task task task task',
-=======
-      task: 'Mike lorem latin 1 task task task task task task task task task task task task task',
->>>>>>> 131a352 (bilal)
       date: "2/23/2023",
       status: 'incomplete',
     },
@@ -75,7 +64,6 @@ const Task = () => {
       date: 42,
       status: '10 Downing Street',
     },
-<<<<<<< HEAD
     {
       key: '11',
       task: 'Mike lorem latin 1 task task task task task task task task task task task task task task task task task',
@@ -88,8 +76,6 @@ const Task = () => {
       date: 42,
       status: '10 Downing Street',
     },
-=======
->>>>>>> 131a352 (bilal)
   ];
 
   const columns = [
@@ -97,39 +83,20 @@ const Task = () => {
       {
         title: "Task",
         dataIndex: "task",
-<<<<<<< HEAD
         width:300,
-=======
-        width:300,  
-        key: "task",
-        className:"bg-purple-50",
->>>>>>> 131a352 (bilal)
       },
       {
         title:"Due Date",
         dataIndex: "date",
         width:50,
-<<<<<<< HEAD
-=======
-        key: "date",
-        className:"bg-purple-50",
->>>>>>> 131a352 (bilal)
       },
       {
         title: "Status",
         dataIndex: "status",
         width:50,
-<<<<<<< HEAD
         render: (_, { status }) => (
           <>
            <Tag color="red">
-=======
-        key: "status",
-        className:"bg-purple-50",
-        render: (_, { status }) => (
-          <>
-           <Tag color="purple">
->>>>>>> 131a352 (bilal)
                   {status.toUpperCase()}
             </Tag>
           </>
@@ -138,11 +105,6 @@ const Task = () => {
       {
         title: "Action",
         width:50,
-<<<<<<< HEAD
-=======
-        key: "action",
-        className:"bg-purple-50",
->>>>>>> 131a352 (bilal)
         render: (text, record) => (
           <Space size="middle">
             <Button>
@@ -155,18 +117,9 @@ const Task = () => {
 
   return (
     <div>
-<<<<<<< HEAD
       <Typography.Title level={4}>Tasks</Typography.Title>
       <Table
       className="bg-blue-400"
-=======
-      <div  className="bg-white flex items-center justify-between">
-      <Typography.Title level={4}>Tasks</Typography.Title>
-      <TaskButton/> 
-      </div>
-      <Table
-      className="bg-purple-50"
->>>>>>> 131a352 (bilal)
         columns={columns}
         dataSource={dataSource}
         pagination={{

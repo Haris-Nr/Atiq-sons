@@ -2,11 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import employeeApi from "../../api/employeeApi";
 
 const initialState = {
-    employees: [],
+    data: [],
     isError: false,
     isLoading: false,
-    isSuccess: false,
-    message: "",
 };
 
 export const getEmployee = createAsyncThunk(
@@ -45,8 +43,7 @@ export const employeeSlice = createSlice({
             .addCase(getEmployee.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isError = false;
-                state.isSuccess = true;
-                state.employees = action.payload.employees;
+                state.employees = action.payload;
             })
             .addCase(getEmployee.rejected, (state, action) => {
                 state.isLoading = false;
@@ -60,14 +57,12 @@ export const employeeSlice = createSlice({
             .addCase(deleteEmployee.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isError = false;
-                state.isSuccess = true;
-                state.message = action.payload.message;
+                state.data = action.payload;
             })
             .addCase(deleteEmployee.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
-                state.isSuccess = false;
-                state.message = action.error;
+                state.data = action.payload;
             });
     },
 });

@@ -41,7 +41,7 @@ var productSchema = new Schema(
         createdBy: {
             type: Schema.Types.ObjectId,
             ref: "users",
-            // required: true,
+            required: true,
         },
         status: {
             type: String,
