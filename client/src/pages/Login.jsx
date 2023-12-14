@@ -1,95 +1,77 @@
 import React, { useEffect, useState } from "react";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-<<<<<<< HEAD
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input,message  } from "antd";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../redux/Features/auth/authSlice";
-=======
-import { Button, Form, Input, message as messageApi } from "antd";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser, fetchUser } from "../redux/Features/auth/authSlice";
->>>>>>> 131a352 (bilal)
+import { fetchUser, loginUser } from "../redux/Features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
+  // const [messageApi, contextHolder] = message.useMessage();
+
   const dispatch = useDispatch();
-<<<<<<< HEAD
-  const {data} = useSelector((state) => state.auth);
   
-=======
-  const {data,isError,isSuccess,message} = useSelector((state) => state.auth);
-<<<<<<< HEAD
-=======
-  // const user = useSelector((state) => state.auth.user);
->>>>>>> 131a352 (bilal)
-    // console.log(data)
-    // console.log(isError)
-    // console.log(isSuccess)
-    // console.log(message)
-
->>>>>>> refs/remotes/origin/main
-  const navigate = useNavigate();
-
+  // const navigate = useNavigate();
+  
   const [form] = Form.useForm();
+  // const {data} = useSelector((state) => state.auth);
+  
+
+
+
   
   const [clientReady, setClientReady] = useState(false);
   // To disable submit button at the beginning.
 
 
   const onFinish = (values) => {
-<<<<<<< HEAD
-    try {
-      dispatch(loginUser(values));
-      if(data.success){
-        localStorage.setItem("token",data.token );
-        window.location.href="/dashboard"
-      }
-    } catch (error) {
-      console.log(error.message)
-=======
-    dispatch(loginUser(values));
-<<<<<<< HEAD
-    if(isSuccess){
-      navigate("/dashboard");
->>>>>>> refs/remotes/origin/main
-    }
-  
-  };
-=======
-  };
-  
 
-  useEffect(() => {
-    dispatch(fetchUser());
-    if (isError) {
-      messageApi.error('Login failed. Please check your credentials.')
-    }
-    if (isSuccess) {
-      // messageApi.success(`${data.fullname} logged in successfully`)
-      navigate("/dashboard");
-    }
-    // if (user) {
-    //   navigate("/");
+    dispatch(loginUser(values));
+    // try {
+    //   if(data.success){
+    //     localStorage.setItem("token",data.token );
+    //     // window.location.href="/dashboard"
+    //   }
+    // } catch (error) {
+    //   console.log(error.message)
+
+    // dispatch(loginUser(values));
+
+    // if(data.success){
+    //   navigate("/dashboard");
     // }
   
-  }, [isError, isSuccess, navigate, dispatch]);
+
+  };
+  // useEffect(() => {
+  //   dispatch(fetchUser());
+  //   if (data) {
+  //     messageApi.error('Login failed. Please check your credentials.')
+  //   }
+  //   if (data) {
+  //     // messageApi.success(`${data.fullname} logged in successfully`)
+  //     navigate("/dashboard");
+  //   }
+  //   // if (user) {
+  //   //   navigate("/");
+  //   // }
+  
+  // }, [navigate, dispatch,data,messageApi]);
 
   
 
->>>>>>> 131a352 (bilal)
 
   useEffect(() => {
     setClientReady(true);
-      if (localStorage.getItem("token")) {
-        navigate("/dashboard");
-      }
-  }, [navigate]);
+      // if (localStorage.getItem("token")) {
+      //   navigate("/dashboard");
+      // }
+  }, []);
   
   return (
     <div>
+      {/* {contextHolder} */}
       <h3 className="text-blue-800 font-bold text-lg pb-5">
         Login to Dashboard
       </h3>

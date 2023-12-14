@@ -53,7 +53,7 @@ const loginUser = async (req, res) => {
         const validPassword = await bcrypt.compare(password, user.password);
 
         if (!validPassword) {
-            throw new Error("Invalid password");
+            throw new Error("Password is incorrect");
         }
 
         const logEntry = new Log({
@@ -68,7 +68,7 @@ const loginUser = async (req, res) => {
         res.status(200).send({
             success: true,
             message: user.fullname.toUpperCase() + " Logged in",
-            data: token,
+            token: token,
         });
     } catch (error) {
         res.status(500).send({

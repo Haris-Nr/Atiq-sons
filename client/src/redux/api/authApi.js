@@ -4,7 +4,6 @@ import axisoInstance from './axisoInstance';
 const signup = async (userData) => {
     try {
         const response = await axisoInstance.post(`/user/signup`, userData);
-        console.log(response.data)
         return response.data;  
     } catch (error) {
         return error.message 
@@ -13,8 +12,8 @@ const signup = async (userData) => {
 
 const login = async (userData) =>{
     try {
-        const response = await axisoInstance.post(`/user/login`, userData);
-        return response.data;  
+        const {data} = await axisoInstance.post(`/user/login`, userData);
+        return data;  
     } catch (error) {
         return error.message 
     }

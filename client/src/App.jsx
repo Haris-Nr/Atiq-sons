@@ -16,8 +16,8 @@ import Custom from "./components/common/Custom";
 import Log from "./components/Admin/LogTable";
 import Task from "./components/common/TaskTable";
 import Dashboard from "./components/common/Dashboard";
-import Product from "./components/common/ProductTable";
 import AddTask from "./components/Admin/TaskForm";
+import ProductTable from "./components/Admin/ProductTable";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,7 +35,7 @@ const router = createBrowserRouter(
         <Route path="custom" element={<Custom/>}/>
         <Route path="log" element={<Log/>}/>
         <Route path="task" element={<Task/>}/>
-        <Route path="product" element={<Product/>}/>
+        <Route path="product" element={<ProductTable/>}/>
         <Route path="addTask" element={<AddTask/>}/>
       </Route>
     </Route>

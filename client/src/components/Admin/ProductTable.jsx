@@ -1,18 +1,10 @@
 import { Avatar, Rate, Table, Typography,Tag } from "antd";
-import { useEffect, useState } from "react";
-import { getProduct } from "..";
 
-const Product = () => {
-  const [loading, setLoading] = useState(false);
-  const [dataSource, setDataSource] = useState([]);
 
-  useEffect(() => {
-    setLoading(true);
-    getProduct().then((res) => {
-      setDataSource(res.products);
-      setLoading(false);
-    });
-  }, []);
+const ProductTable = () => {
+
+
+ 
 
   const columns = [
     {
@@ -78,12 +70,10 @@ const Product = () => {
      
 
       <Table
-        loading={loading}
         columns={columns}
         scroll={{
           x: 1500,
         }}
-        dataSource={dataSource}
         pagination={{
           pageSize: 8,
         }}
@@ -91,4 +81,4 @@ const Product = () => {
     </div>
   );
 };
-export default Product;
+export default ProductTable;
