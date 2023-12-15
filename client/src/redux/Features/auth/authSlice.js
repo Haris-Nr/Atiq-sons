@@ -3,13 +3,10 @@ import authApi from "../../api/authApi";
 
 const initialState = {
     data: {},
-    isError: false,
     isLoading: false,
 };
 
-export const signupUser = createAsyncThunk(
-    "user/signup",
-    async (user, thunkAPI) => {
+export const signupUser = createAsyncThunk( "user/signup", async (user, thunkAPI) => {
         try {
             const response = await authApi.signup(user);
             return response;
@@ -19,9 +16,7 @@ export const signupUser = createAsyncThunk(
     }
 );
 
-export const loginUser = createAsyncThunk(
-    "user/login",
-    async (user, thunkAPI) => {
+export const loginUser = createAsyncThunk( "user/login", async (user, thunkAPI) => {
         try {
             const response = await authApi.login(user);
             return response;
@@ -30,15 +25,6 @@ export const loginUser = createAsyncThunk(
         }
     }
 );
-
-export const fetchUser = createAsyncThunk("user/fetch", async (_, thunkAPI) => {
-    try {
-        const response = await authApi.currentUser();
-        return response;
-    } catch (error) {
-        return thunkAPI.rejectWithValue(error);
-    }
-});
 
 export const authSlice = createSlice({
     name: "auth",
@@ -51,12 +37,10 @@ export const authSlice = createSlice({
             })
             .addCase(signupUser.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.isError = false;
                 state.data = action.payload;
             })
             .addCase(signupUser.rejected, (state, action) => {
                 state.isLoading = false;
-                state.isError = true;
                 state.data = action.payload;
             })
             .addCase(loginUser.pending, (state) => {
@@ -64,28 +48,11 @@ export const authSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.isError = false;
                 state.data = action.payload;
             })
             .addCase(loginUser.rejected, (state, action) => {
-                console.log(action)
                 state.isLoading = false;
-                state.isError = true;
                 state.data = action.payload;
-            })
-            .addCase(fetchUser.pending, (state) => {
-                state.isLoading = true;
-            })
-            .addCase(fetchUser.fulfilled, (state, action) => {
-                state.isLoading = false;
-                state.isError = false;
-                state.data = action.payload.data;
-            })
-            .addCase(fetchUser.rejected, (state, action) => {
-                state.isLoading = false;
-                state.isError = true;
-                state.data = action.payload;
-
             });
     },
 });

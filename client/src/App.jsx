@@ -19,6 +19,7 @@ import Dashboard from "./components/common/Dashboard";
 import AddTask from "./components/Admin/TaskForm";
 import ProductTable from "./components/Admin/ProductTable";
 
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -43,7 +44,12 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return <RouterProvider router={router} />;
+  
+  return (
+    <>
+  <RouterProvider router={router} />
+  </>
+  );
 }
 
 export default App;

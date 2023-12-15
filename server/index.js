@@ -7,11 +7,9 @@ const dbConnect = require("./config/dbConnect");
 dbConnect();
 
 
-
-
-
 app.use(cors());
 app.use(express.json());
+
 
 // Routes import
 const userRoutes = require("./routes/userRoutes");
@@ -26,11 +24,7 @@ const taskRoute = require("./routes/taskRoutes");
 app.use("/api/user", userRoutes);
 app.use("/api/product",productRoutes)
 app.use("/api/notification", notificationsRoute);
-app.use("api/task",taskRoute)
-
-
-
-
+app.use("/api/task",taskRoute)
 
 
 

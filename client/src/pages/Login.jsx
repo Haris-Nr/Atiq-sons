@@ -1,77 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Form, Input,message  } from "antd";
-import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUser, loginUser } from "../redux/Features/auth/authSlice";
-import { useNavigate } from "react-router-dom";
+import { Button, Form, Input } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux'
+import { loginUser } from "../redux/Features/auth/authSlice";
+import { fetchUser } from "../redux/Features/auth/fetchSlice";
 
 const Login = () => {
 
-  // const [messageApi, contextHolder] = message.useMessage();
-
-  const dispatch = useDispatch();
-  
-  // const navigate = useNavigate();
-  
   const [form] = Form.useForm();
-  // const {data} = useSelector((state) => state.auth);
-  
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const {data} = useSelector((state)=> state.auth)
+  const {success,token} = data
+  const {user} = useSelector((state)=> state.fetch)
 
 
-
-  
   const [clientReady, setClientReady] = useState(false);
   // To disable submit button at the beginning.
 
-
-  const onFinish = (values) => {
-
-    dispatch(loginUser(values));
-    // try {
-    //   if(data.success){
-    //     localStorage.setItem("token",data.token );
-    //     // window.location.href="/dashboard"
-    //   }
-    // } catch (error) {
-    //   console.log(error.message)
-
-    // dispatch(loginUser(values));
-
-    // if(data.success){
-    //   navigate("/dashboard");
-    // }
-  
-
-  };
-  // useEffect(() => {
-  //   dispatch(fetchUser());
-  //   if (data) {
-  //     messageApi.error('Login failed. Please check your credentials.')
-  //   }
-  //   if (data) {
-  //     // messageApi.success(`${data.fullname} logged in successfully`)
-  //     navigate("/dashboard");
-  //   }
-  //   // if (user) {
-  //   //   navigate("/");
-  //   // }
-  
-  // }, [navigate, dispatch,data,messageApi]);
-
-  
-
-
   useEffect(() => {
     setClientReady(true);
-      // if (localStorage.getItem("token")) {
-      //   navigate("/dashboard");
-      // }
   }, []);
+
+  const onFinish = (values) => {
+      dispatch(loginUser(values))
+      if(success){
+        localStorage.setItem("token",token)
+      }
+      dispatch(fetchUser())
+      if(user.employee.dashboard){
+        navigate(`/${user.employee.dashboard}-dashboard`)
+      }
+  };
+  
+
+
+  
   
   return (
     <div>
-      {/* {contextHolder} */}
       <h3 className="text-blue-800 font-bold text-lg pb-5">
         Login to Dashboard
       </h3>

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   DollarCircleOutlined,
   ShoppingCartOutlined,
@@ -5,24 +6,20 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Button, Space, Typography } from "antd";
-import { useEffect} from "react";
 import AddProduct from "../Lahore/ProductButton";
 import TaskButton from "../Admin/TaskButton";
-import { useDispatch } from "react-redux";
-import { fetchUser } from "../../redux/Features/auth/authSlice";
 import DashboardCard from './DashboardCard';
 import { useNavigate } from "react-router-dom";
+
 
 const  Dashboard = () => {
 
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
-  // const {data,isError,isSuccess,message} = useSelector((state) => state.auth);
+  
 
-  useEffect(() => {
-    dispatch(fetchUser());
-  }, [dispatch]);
+
+
 
   return (
     <Space size={6} direction="vertical" className="p-6">

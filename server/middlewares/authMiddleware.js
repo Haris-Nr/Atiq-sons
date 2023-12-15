@@ -3,19 +3,17 @@ const secret = process.env.JWT_SECRET;
 
 module.exports = (req, res, next) => {
     try {
-        // Check if the authorization header is present
-        if (!req.headers.authorization) {
-            return res.status(401).json({ message: "Unauthorized" });
-        }
 
-        // Split the authorization header and get the token
+        if (!req.headers.authorization) {
+            throw new Error("Unauthorized");
+        }
+        console.log(req.headers)
         const tokenParts = req.headers.authorization.split(" ");
         if (tokenParts.length !== 2 || tokenParts[0] !== "Bearer") {
-            return res.status(401).json({ message: "Unauthorized" });
+            throw new Error("Unauthorized");
         }
         const token = tokenParts[1];
 
-        // Verify the token and attach the user ID to the request
         const decodedToken = jwt.verify(token, secret);
         req.body.userId = decodedToken.userId;
         next();

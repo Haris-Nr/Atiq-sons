@@ -7,26 +7,24 @@ const secret = process.env.JWT_SECRET;
 // create User
 const createUser = async (req, res) => {
     try {
-        const user = await User.findOne({ email: req.body.email });
-        if (user) {
-            throw new Error("User already exists");
+        const { email,password } = req.body;
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            throw new Error("User with this email already exists");
         }
 
         const salt = await bcrypt.genSalt(10);
-        const hashPassword = await bcrypt.hash(req.body.password, salt);
-        req.body.password = hashPassword;
+        const hashPassword = await bcrypt.hash(password, salt);
 
-        const newUser = new User(req.body);
+        const newUser = new User({...req.body,password:hashPassword});
         await newUser.save();
 
-        res.status(201).send({
+        res.status(201).json({
             success: true,
-            message:
-                "New user account created successfully!!" +
-                newUser.fullname.toUpperCase(),
+            message: "New user account created successfully!!" + newUser.fullname.toUpperCase(),
         });
     } catch (error) {
-        res.status(500).send({
+        res.status(500).json({
             success: false,
             message: error.message,
         });
@@ -65,13 +63,13 @@ const loginUser = async (req, res) => {
 
         const token = jwt.sign({ userId: user._id }, secret, { expiresIn: "1d" });
 
-        res.status(200).send({
+        res.status(200).json({
             success: true,
             message: user.fullname.toUpperCase() + " Logged in",
             token: token,
         });
     } catch (error) {
-        res.status(500).send({
+        res.status(500).json({
             success: false,
             message: error.message,
         });
@@ -84,13 +82,13 @@ const getAllUsers = async (req, res) => {
         const allUsers = await User.find()
             .select("-password")
             .select("-confirmpassword");
-        res.send({
+        res.json({
             success: true,
             message: "All Users",
             data: allUsers,
         });
     } catch (error) {
-        res.send({
+        res.json({
             success: false,
             message: error.message,
         });
@@ -103,13 +101,13 @@ const getEmployee = async (req, res) => {
         const employees = await User.find({ role: "employee" })
             .select("-password")
             .select("-confirmpassword");
-        res.status(200).send({
+        res.status(200).json({
             success: true,
             message: " All Employee",
             data: employees,
         });
     } catch (error) {
-        res.status(500).send({
+        res.status(500).json({
             success: false,
             message: error.message,
         });
@@ -124,7 +122,7 @@ const resetPassword = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(404).send({
+            return res.status(404).json({
                 success: false,
                 message: "User not found",
             });
@@ -139,12 +137,12 @@ const resetPassword = async (req, res) => {
             { new: true }
         );
 
-        res.status(200).send({
+        res.status(200).json({
             success: true,
             message: "Password updated successfully",
         });
     } catch (error) {
-        res.status(500).send({
+        res.status(500).json({
             success: false,
             message: error.message,
         });
@@ -159,12 +157,12 @@ const deleteEmployee = async (req, res) => {
         if (!deletedEmployee) {
             throw new Error("Employee already deleted");
         }
-        res.status(200).send({
+        res.status(200).json({
             success: true,
             message: "Employee deleted successfully",
         });
     } catch (error) {
-        res.status(500).send({
+        res.status(500).json({
             success: false,
             message: error.message,
         });
@@ -177,13 +175,13 @@ const fetchUser = async (req, res) => {
         const user = await User.findById(req.body.userId)
             .select("-password")
             .select("-confirmpassword");
-        res.status(200).send({
+        res.status(200).json({
             success: true,
             message: "User fetched successfully",
-            data: user,
+            employee: user,
         });
     } catch (error) {
-        res.status(500).send({
+        res.status(500).json({
             success: false,
             message: error.message,
         });
@@ -195,12 +193,12 @@ const changeStatus = async (req, res) => {
         const { id } = req.params;
         const { status } = req.body;
         await User.findByIdAndUpdate(id, { status }, { new: true });
-        res.status(200).send({
+        res.status(200).json({
             success: true,
             message: "Status change successfully",
         });
     } catch (error) {
-        res.status(500).send({
+        res.status(500).json({
             success: false,
             message: error.message,
         });
@@ -219,12 +217,12 @@ const logout = async (req, res) => {
 
         localStorage.removeItem("token");
 
-        res.status(200).send({
+        res.status(200).json({
             success: true,
             message: "Logged out successfully",
         });
     } catch (error) {
-        res.status(500).send({
+        res.status(500).json({
             success: false,
             message: error.message,
         });

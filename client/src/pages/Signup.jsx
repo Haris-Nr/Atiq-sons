@@ -1,37 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Select, Form, Input } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 // import PhoneInput from "antd-phone-input";
 import PhoneInput from "react-phone-number-input";
-import { useDispatch, useSelector } from "react-redux";
-import { signupUser } from "../redux/Features/auth/authSlice";
 import 'react-phone-number-input/style.css'
+import { useSelector, useDispatch } from 'react-redux'
+import { signupUser } from "../redux/Features/auth/authSlice";
+
+
+
 const Signup = () => {
-    const dispatch = useDispatch();
-
-    const navigate = useNavigate()
-    const {data} = useSelector((state) => state.auth);
-    console.log(data)
-
-    
-    const [form] = Form.useForm();
-
-
-
-
-
-
 
     const [clientReady, setClientReady] = useState(false);
+    const [form] = Form.useForm();
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const {data} = useSelector((state)=> state.auth)    
+    const {success} = data
+
     // To disable submit button at the beginning.
+
     useEffect(() => {
         setClientReady(true);
-    }, []);
+        if(localStorage.getItem("token")){
+            navigate('/')
+        }
+    }, [navigate]);
 
     const onFinish = (values) => {
-        dispatch(signupUser(values));
-        navigate('/');
+        try {
+            dispatch(signupUser(values))
+            if(success){
+                navigate('/')            
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
     };
 
     const options = [
@@ -131,8 +137,7 @@ const Signup = () => {
                     hasFeedback
                 >
                     <PhoneInput
-                        placeholder="Enter phone number"
-                        className="phoneInput"
+                        placeholder="Enter phone number +92..."
                     />
                 </Form.Item>
                 <Form.Item
@@ -157,8 +162,7 @@ const Signup = () => {
                             disabled={
                                 !clientReady ||
                                 !form.isFieldsTouched(true) ||
-                                !!form.getFieldsError().filter(({ errors }) => errors.length)
-                                    .length
+                                !!form.getFieldsError().filter(({ errors }) => errors.length).length
                             }
                         >
                             Sign Up

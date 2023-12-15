@@ -1,19 +1,16 @@
 import React,{ forwardRef } from 'react';
 import { Form, Input, InputNumber, Button, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { useDispatch, useSelector } from "react-redux";
-import { addProduct } from '../../redux/Features/product/productSlice';
+
 
 
 const ProductForm = forwardRef(function ProductForm( _, ref) {
 
-  const dispatch = useDispatch();
-  const {data} = useSelector((state) => state.product);
-  console.log(data)
+ 
   
 
   const onFinish = (values) => {
-    dispatch(addProduct(values));
+   console.log(values)
   };
 
   const onFinishFailed = (errorInfo) => {

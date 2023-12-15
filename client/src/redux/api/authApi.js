@@ -1,30 +1,30 @@
-import axisoInstance from './axisoInstance';
+import axiosInstance from './axiosInstance';
 
 
 const signup = async (userData) => {
     try {
-        const response = await axisoInstance.post(`/user/signup`, userData);
-        return response.data;  
+        const response = await axiosInstance.post(`user/signup`, userData);
+        return response.data;
     } catch (error) {
-        return error.message 
+        throw error.response.data;
     }
 };
 
 const login = async (userData) =>{
     try {
-        const {data} = await axisoInstance.post(`/user/login`, userData);
-        return data;  
+        const response = await axiosInstance.post(`user/login`, userData);
+        return response.data;  
     } catch (error) {
-        return error.message 
+        throw error.response.data;
     }
 }
 
 const currentUser = async () =>{
     try {
-        const response = await axisoInstance.get(`/user/currentuser`);
+        const response = await axiosInstance.get(`user/currentuser`);
         return response.data;  
     } catch (error) {
-        return error.message
+        throw error.response.data;
     }
 }
 
