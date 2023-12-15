@@ -10,7 +10,6 @@ import AddProduct from "../Lahore/ProductButton";
 import TaskButton from "../Admin/TaskButton";
 import DashboardCard from './DashboardCard';
 import { useNavigate } from "react-router-dom";
-git merge origin/main
 
 
 const  Dashboard = () => {
