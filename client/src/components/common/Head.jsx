@@ -1,58 +1,38 @@
-import { Badge, List, Drawer, notification, Button } from "antd";
+import React from "react";
+import { Badge, Button, Flex, Typography } from "antd";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Header } from "antd/es/layout/layout";
 import { IoNotificationsSharp } from "react-icons/io5";
-import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
-import { fetchUser } from "../../redux/Features/auth/authSlice";
-import { useEffect, useState} from "react";
-import { useDispatch, useSelector } from "react-redux";
-import React from "react";
+import Paragraph from "antd/es/typography/Paragraph";
 
-const Head = ({ collapsed, toggleCollapsed, }) => {
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const { data, isError, isSuccess, message } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    openNotificationWithIcon("success");
-    dispatch(fetchUser());
-  }, [dispatch]);
-  // useEffect(() => {
-  // }, []);
-
-  const [api, contextHolder] = notification.useNotification();
-  const openNotificationWithIcon = (type) => {
-    api[type]({
-      message: "Notification Title",
-      description:
-        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
-    });
+const Head = ({ collapsed, toggleCollapsed, isMobile }) => {
+  const headerStyle = {
+    position: "fixed",
+    zIndex: 1,
+    width: `calc(100% - ${isMobile ? 0 : collapsed ? 160 : 280}px)`,
+    // width:"100%",
+    margin: `16px ${isMobile ? 16 : collapsed ? 80 : 200}px 24px`,
+    left: 0,
+    top: 0,
+    boxSizing: "border-box",
+    transition: "all 0.2s",
+    marginLeft: isMobile ? "16px" : collapsed ? "96px" : "246px",
+    marginRight: "16px",
   };
 
   return (
-    <>
-      {contextHolder}
-      <Header className="flex items-center justify-between  bg-white">
-      <div className="flex items-center -ml-12">
-      <Button
-            // className="lg:block hidden"   
+    <Header style={headerStyle}>
+      <Flex align="center" justify="space-between">
+        <Flex justify="center" align="center">
+          <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={toggleCollapsed}
-            style={{
-              fontSize: '16px',
-              width: 64,
-              height: 64,
-            }}
-            />
-             
-      
-            {/* <button className="block md:hidden" onClick={toggleSidebar}>
-                            {isSidebarVisible ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                        </button> */}
-        <h1 className="text-2xl font-bold lg:text-2xl xl:text-3xl duration-500">
-          Lahore Dashboard
-        </h1>
-            </div>
-        <div className="flex items-center justify-center space-x-6">
+            style={{ fontSize: "16px", width: 64, height: 64, marginLeft:"-50px" }}
+          />
+          <Typography.Text className="text-sm">Lahore Dashboard</Typography.Text>
+        </Flex>
+        <Flex justify="center" align="center" gap={2} >
           <Badge
             count={1}
             overflowCount={10}
@@ -61,38 +41,15 @@ const Head = ({ collapsed, toggleCollapsed, }) => {
               backgroundColor: "red",
             }}
           >
-            <IoNotificationsSharp
-              className="text-2xl"
-              onClick={() => {
-                setNotificationsOpen(true);
-              }}
-            />
+            <IoNotificationsSharp className="text-2xl" />
           </Badge>
-          <Drawer
-            title="Notifications"
-            placement="right"
-            closable
-            onClose={() => {
-              setNotificationsOpen(false);
-            }}
-            open={notificationsOpen}
-          >
-            <List
-              dataSource={["test1", "test2"]}
-              renderItem={(item) => <List.Item>{item}</List.Item>}
-            ></List>
-          </Drawer>
-          <div className="inline-flex items-center justify-center">
-            <h1 className="mb-6 mr-2 text-xl font-medium text-black origin-left ">
-              User
-            </h1>
-            <span className="mt-5 -ml-12 text-sm text-gray-500 origin-left ">
-              employee
-            </span>
-          </div>
-        </div>
-      </Header>
-    </>
+          <Flex vertical gap={0} justify="center"wrap="wrap" >
+            <Typography.Text className="text-lg">User</Typography.Text>
+            <Paragraph>employee</Paragraph>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Header>
   );
 };
 

@@ -6,7 +6,6 @@ import {
   createRoutesFromElements,
 } from "react-router-dom";
 import Loginlayout from "./components/Layout/Loginlayout";
-import DashboardLayOut from "./components/Layout/DashboardLayOut";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import ForgetPassword from "./pages/ForgetPassword";
@@ -18,6 +17,7 @@ import Task from "./components/common/TaskTable";
 import Dashboard from "./components/common/Dashboard";
 import AddTask from "./components/Admin/TaskForm";
 import ProductTable from "./components/Admin/ProductTable";
+import DashboardLayout from "./components/Layout/DashboardLayout";
 
 
 const router = createBrowserRouter(
@@ -30,7 +30,7 @@ const router = createBrowserRouter(
         <Route path="resetpassword" element={<ResetPassword/>}/>
       </Route>
 
-      <Route path="/:dashboard" element={<DashboardLayOut/>}>
+      <Route path="/:dashboard" element={<DashboardLayout/>}>
         <Route index element={<Dashboard/>}/>
         <Route path="empolyee" element={<Empolyee/>}/>
         <Route path="custom" element={<Custom/>}/>

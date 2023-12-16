@@ -10,9 +10,14 @@ import { ConfigProvider } from 'antd'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ConfigProvider theme={{
-    token: {
-      /* here is your global tokens */
-    },
+        components: {
+          Layout: {
+            bodyBg:"yellow",
+            siderBg:"#2B2A3F",
+            footerBg:"red",
+            headerBg:"brown",
+          },
+        },
   }} 
   >
     <Provider store={store}>

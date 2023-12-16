@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { Button, Select, Form, Input } from "antd";
 import { Link, useNavigate} from "react-router-dom";
-// import PhoneInput from "antd-phone-input";
 import PhoneInput from "react-phone-number-input";
 import 'react-phone-number-input/style.css'
 import { useSelector, useDispatch } from 'react-redux'
@@ -56,7 +55,7 @@ const Signup = () => {
     ];
 
     return (
-        <div className="-mb-7">
+        <div>
             <h3 className="text-blue-800 font-bold text-lg ">Sign Up</h3>
             <Form
                 form={form}

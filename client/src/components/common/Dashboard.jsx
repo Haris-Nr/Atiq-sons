@@ -5,16 +5,13 @@ import {
   ShoppingOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Button, Space, Typography } from "antd";
-import AddProduct from "../Lahore/ProductButton";
-import TaskButton from "../Admin/TaskButton";
+import { Space } from "antd";
+
 import DashboardCard from './DashboardCard';
-import { useNavigate } from "react-router-dom";
 
 
 const  Dashboard = () => {
 
-  const navigate = useNavigate();
 
   
 
@@ -33,14 +30,12 @@ const  Dashboard = () => {
           <div className="flex  flex-col lg:flex-row items-center justify-between">
             <div className="w-full p-1 lg:ml-44 flex justify-between items-center">
               <div className="flex- text-white justify-between">
-                {/* <div className="text-white"> */}
-                  <h1 class="text-3xl font-bold mb-4">Good Morning, Victor!</h1>
-                  <p class="">Here’s what's happening with your store today</p>
-                  <p class="text-lg font-semibold">TODAY’S VISIT</p>
-                  <p class="text-lg font-semibold">15,209</p>
-                  {/* <p class="text-lg font-semibold">TODAY’S TOTAL SALES</p>
-                  <p class="text-lg font-semibold">$29,115.50</p> */}
-                {/* </div> */}
+
+                  <h1 className="text-3xl font-bold mb-4">Good Morning, Victor!</h1>
+                  <p>Here`&lsquo;`s what`&lsquo;`s happening with your store today</p>
+                  <p className="text-lg font-semibold">TODAY`&lsquo;`S VISIT</p>
+                  <p className="text-lg font-semibold">15,209</p>
+
                 <div className="md:flex gap-3">
                   <div className="flex text-center justify-center gap-3">
                     <DashboardCard
@@ -51,14 +46,11 @@ const  Dashboard = () => {
                             color: "green",
                             backgroundColor: "#F8F8FB",
                             borderRadius: 40,
-                            // fontSize: 10,
-                            // padding: 0,
                           }}
 
                         />
                       }
                       title="Tasks"
-                    // value={}
                     />
                     <DashboardCard
                       icon={
@@ -68,13 +60,11 @@ const  Dashboard = () => {
                             color: "blue",
                             backgroundColor: "#F8F8FB",
                             borderRadius: 40,
-                            // fontSize: 5,
-                            // padding: 20,
                           }}
                         />
                       }
                       title={"Product"}
-                    // value={}
+
                     />
                   </div>
                   <div className="flex justify-center  gap-3">
@@ -86,13 +76,10 @@ const  Dashboard = () => {
                             color: "purple",
                             backgroundColor: "#F8F8FB",
                             borderRadius: 40,
-                            // fontSize: 10,
-                            // padding: 5,
                           }}
                         />
                       }
                       title={"Employee"}
-                    // value={"110"}
                     />
                     <DashboardCard
                       icon={
@@ -102,13 +89,10 @@ const  Dashboard = () => {
                             color: "red",
                             backgroundColor: "#F8F8FB",
                             borderRadius: 40,
-                            // fontSize: 25,
-                            // padding: 20,
                           }}
                         />
                       }
                       title={"Revenue"}
-                    // value={}
                     />
                   </div>
                 </div>
@@ -125,17 +109,6 @@ const  Dashboard = () => {
             </div>
           </div>
         </div>
-
-        {/* <AddProduct/>
-    <TaskButton/>
-    <Button
-    onClick={()=> {
-      localStorage.removeItem("token")
-      navigate("/");}}
-    >
-      logout
-    </Button> */}
-        {/* <img src={bulb} alt="" /> */}
       </Space>
     </Space>
 

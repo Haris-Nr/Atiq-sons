@@ -21,7 +21,7 @@ const CrumBread = () => {
   };
   return (
     <>
-      <Breadcrumb itemRender={itemRender} items={items} className="p-3" />
+      <Breadcrumb itemRender={itemRender} items={items} style={{ margin: "20px 0" }} />
     </>
   );
 };

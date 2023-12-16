@@ -2,18 +2,18 @@
 	height: 40px;
 }
 
-.forPurple {
-	background: #6560F0;
-  }  
+.ant-menu-item-active {
+	color: red !important;
+  }
 
-@media (max-width: 768px) {
-	.sidebar{
-		display: none;
-	}
-}  
+  .ant-menu-item-active{
+	background-color: rebeccapurple !important;
+  }
+  .ant-menu-item-selected{
+	background-color: chartreuse !important;
+	color: aliceblue !important;
+  }
 
-@media (min-width: 768px) {
-	.dsidebar{
-		display: none;
-	}
-}  
+  .ant-menu{
+	background-color: burlywood;
+  }
