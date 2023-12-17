@@ -12,10 +12,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ConfigProvider theme={{
         components: {
           Layout: {
-            bodyBg:"yellow",
+            bodyBg:"#F2F1F9",
             siderBg:"#2B2A3F",
-            footerBg:"red",
-            headerBg:"brown",
+            footerBg:"white",
+            headerBg:"white",
           },
         },
   }} 
