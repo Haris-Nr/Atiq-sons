@@ -3,17 +3,20 @@
 }
 
 .ant-menu-item-active {
-	color: red !important;
+	color: white !important;
+  transform: scale(1.1);
   }
 
   .ant-menu-item-active{
-	background-color: rebeccapurple !important;
+	background-color: #2B2A3F !important;
   }
   .ant-menu-item-selected{
-	background-color: chartreuse !important;
+	background-color: #6560F0 !important;
 	color: aliceblue !important;
   }
 
   .ant-menu{
-	background-color: burlywood;
+	background-color: #2B2A3F;
   }
+
+  
