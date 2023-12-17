@@ -8,7 +8,7 @@ const axiosInstance = axios.create({
 
 // Add a request interceptor
 axiosInstance.interceptors.request.use(function (config) {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     config.headers.authorization = token ? `Bearer ${token}` : '';
     return config;
 }, function (error) {

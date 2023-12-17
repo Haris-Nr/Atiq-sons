@@ -19,14 +19,17 @@ const Login = () => {
   const [clientReady, setClientReady] = useState(false);
 
 
+
   useEffect(() => {
     setClientReady(true);
-    const token = localStorage.getItem("token");
-        if (token) {
-          navigate(`/${user?.employee?.dashboard}`);
-        }else{
-          navigate('/')
-        }
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      if (user?.employee?.dashboard) {
+        navigate(`/${user?.employee?.dashboard}dashboard`);
+      }
+    } else {
+      navigate("/");
+    }
   }, [navigate,user]);
 
 
@@ -38,12 +41,12 @@ const Login = () => {
   useEffect(() => {    
     try {
         if (loginData.success === true) {
-          localStorage.setItem("token",loginData.token)
+          sessionStorage.setItem("token",loginData.token)
             dispatch(fetchUser())
             message.success(loginData.message);
             dispatch(resetLoginState())
             if (user?.employee?.dashboard) {
-              navigate(`/${user.employee.dashboard}`);
+              navigate(`/${user?.employee?.dashboard}dashboard`);
             }
         } else if(loginData.success === false) {
             messageApi.error(loginData.message);

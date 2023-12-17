@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import { Layout, Spin, message, theme } from "antd";
+import { Layout, message, theme } from "antd";
 import Sidenav from "../common/Sidenav";
 import Head from "../common/Head";
 import CrumBread from "../common/CrumBread";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate} from "react-router-dom";
 import Foot from "../common/Foot";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser } from "../../redux/Features/auth/fetchSlice";
@@ -16,14 +16,13 @@ const DashboardLayout2 = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
     const {user} = useSelector((state)=> state.fetch)
-
     const dispatch = useDispatch()
 
 
 
     useEffect(() => {
         try {
-            const token = localStorage.getItem("token");
+            const token = sessionStorage.getItem("token");
         if (!token) {
             navigate("/");
         }else{
