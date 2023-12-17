@@ -1,16 +1,35 @@
 import React, { useEffect, useState } from "react";
-
-import { Layout, theme } from "antd";
+import { Layout, message, theme } from "antd";
 import Sidenav from "../common/Sidenav";
 import Head from "../common/Head";
 import CrumBread from "../common/CrumBread";
-import { Outlet } from "react-router-dom";
+import { Outlet,useNavigate } from "react-router-dom";
 import Foot from "../common/Foot";
+import { useDispatch, useSelector } from "react-redux";
 const { Content } = Layout;
+import { fetchUser } from "../../redux/Features/auth/fetchSlice";
 
 const DashboardLayout2 = () => {
     const [collapsed, setCollapsed] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 1440);
+    const navigate = useNavigate()
+    const {user} = useSelector((state)=> state.fetch)
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        try {
+            const token = sessionStorage.getItem("token");
+        if (!token) {
+            navigate("/");
+        }else{
+            dispatch(fetchUser())
+        }
+    } catch (error) {
+        message.error(error.message)
+        }
+        
+    }, [dispatch,navigate])
 
     useEffect(() => {
         const handleResize = () => {
@@ -55,6 +74,7 @@ const DashboardLayout2 = () => {
                     collapsed={collapsed}
                     toggleCollapsed={toggleCollapsed}
                     isMobile={isMobile}
+                    user={user}
                 />
                 <Content
                     style={{ marginTop: 64, margin: "64px 0px 0px 0px", padding: 14 }}

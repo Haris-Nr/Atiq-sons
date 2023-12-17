@@ -19,7 +19,6 @@ import ProductTable from "./components/Admin/ProductTable";
 import DashboardLayout from "./components/Layout/DashboardLayout";
 import { Spin } from "antd";
 import { useSelector } from "react-redux";
-import { message } from 'antd';
 
 
 
@@ -46,14 +45,12 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  const [messageApi,contextHolder] = message.useMessage();
   const {isLoading} = useSelector((state)=> state.fetch)
 
   return (
     <>
-     {contextHolder}
     {isLoading && <Spin/>}
-  <RouterProvider router={router} messageApi = {messageApi.success}  />
+  <RouterProvider router={router} />
   </>
   );
 }

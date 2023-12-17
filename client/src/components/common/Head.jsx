@@ -48,7 +48,7 @@ const Head = ({ collapsed, toggleCollapsed, isMobile,user }) => {
             <IoNotificationsOutline className="text-2xl" />
           </Badge>
           <Flex vertical gap={0} justify="center"wrap="wrap" >
-            <Typography.Text className="text-md font-bold p-1">User</Typography.Text>
+            <Typography.Text className="text-md font-bold p-1">{user?.employee?.dashboard}</Typography.Text>
             <Paragraph className="text-md font-bold">employee</Paragraph>
           </Flex>
         </Flex>
