@@ -1,4 +1,4 @@
-import { Card, Space, Typography } from 'antd';
+import { Space, Typography } from 'antd';
 import React from 'react'
 
 const DashboardCard = ({ icon, title, value }) => {

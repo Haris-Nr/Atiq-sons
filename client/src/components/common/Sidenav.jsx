@@ -11,7 +11,6 @@ import { BsPersonFill } from "react-icons/bs";
 
 const Sidenav = ({collapsed,toggleCollapsed,setCollapsed,isMobile}) => {
   const params = useParams()
-  console.log(params)
   const location = useLocation();
   const navigate = useNavigate();
 
