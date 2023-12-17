@@ -84,15 +84,21 @@ const Task = () => {
         title: "Task",
         dataIndex: "task",
         width:300,
+        className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
       },
       {
         title:"Due Date",
         dataIndex: "date",
         width:50,
+        className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
       },
       {
         title: "Status",
         dataIndex: "status",
+        className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
         width:50,
         render: (_, { status }) => (
           <>
@@ -104,6 +110,8 @@ const Task = () => {
       },
       {
         title: "Action",
+        className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
         width:50,
         render: (text, record) => (
           <Space size="middle">
