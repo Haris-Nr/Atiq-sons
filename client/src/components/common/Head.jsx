@@ -1,27 +1,22 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Badge, Button, Flex, Typography } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { TfiAlignRight, TfiAlignLeft } from "react-icons/tfi";
 import { Header } from "antd/es/layout/layout";
-import { IoNotificationsSharp } from "react-icons/io5";
+import { IoNotificationsOutline } from "react-icons/io5";
 import Paragraph from "antd/es/typography/Paragraph";
-import { useDispatch, useSelector} from 'react-redux'
-import { fetchUser } from "../../redux/Features/auth/fetchSlice";
 
-const Head = ({ collapsed, toggleCollapsed, isMobile,user }) => {
-  // const {user} = useSelector((state)=> state.fetch)
-
-  
+const Head = ({ collapsed, toggleCollapsed, isMobile }) => {
   const headerStyle = {
     position: "fixed",
     zIndex: 1,
-    width: `calc(100% - ${isMobile ? 0 : collapsed ? 160 : 280}px)`,
+    width: `calc(100% - ${isMobile ? 0 : collapsed ? 110 : 230}px)`,
     // width:"100%",
     margin: `16px ${isMobile ? 16 : collapsed ? 80 : 200}px 24px`,
     left: 0,
     top: 0,
     boxSizing: "border-box",
     transition: "all 0.2s",
-    marginLeft: isMobile ? "16px" : collapsed ? "96px" : "246px",
+    marginLeft: isMobile ? "16px" : collapsed ? "96px" : "216px",
     marginRight: "16px",
   };
 
@@ -31,13 +26,13 @@ const Head = ({ collapsed, toggleCollapsed, isMobile,user }) => {
         <Flex justify="center" align="center">
           <Button
             type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            icon={collapsed ? <TfiAlignLeft /> : <TfiAlignRight /> }
             onClick={toggleCollapsed}
-            style={{ fontSize: "16px", width: 64, height: 64, marginLeft:"-50px" }}
+            style={{ fontSize: "24px", width: 64, height: 38, marginLeft:"-50px" }}
           />
-          <Typography.Text className="text-sm">Lahore Dashboard</Typography.Text>
+          <Typography.Text className="text-md font-bold">Lahore Dashboard</Typography.Text>
         </Flex>
-        <Flex justify="center" align="center" gap={2} >
+        <Flex justify="center" align="center" gap={6}>
           <Badge
             count={1}
             overflowCount={10}
@@ -46,11 +41,11 @@ const Head = ({ collapsed, toggleCollapsed, isMobile,user }) => {
               backgroundColor: "red",
             }}
           >
-            <IoNotificationsSharp className="text-2xl" />
+            <IoNotificationsOutline className="text-2xl" />
           </Badge>
           <Flex vertical gap={0} justify="center"wrap="wrap" >
-            <Typography.Text className="text-lg"> {user?.employee?.fullname?.charAt(0).toUpperCase() + user?.employee?.fullname?.slice(1)}</Typography.Text>
-            <Paragraph>employee</Paragraph>
+            <Typography.Text className="text-md font-bold p-1">User</Typography.Text>
+            <Paragraph className="text-md font-bold">employee</Paragraph>
           </Flex>
         </Flex>
       </Flex>
