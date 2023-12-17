@@ -5,7 +5,11 @@ import { Header } from "antd/es/layout/layout";
 import { IoNotificationsOutline } from "react-icons/io5";
 import Paragraph from "antd/es/typography/Paragraph";
 
-const Head = ({ collapsed, toggleCollapsed, isMobile }) => {
+
+const Head = ({ collapsed, toggleCollapsed, isMobile,user }) => {
+
+
+  
   const headerStyle = {
     position: "fixed",
     zIndex: 1,

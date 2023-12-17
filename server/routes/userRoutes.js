@@ -16,7 +16,7 @@ const {
 
 router.post("/signup", createUser);
 router.post("/login", loginUser);
-router.patch("/reset-password", resetPassword);
+router.patch("/resetpassword", resetPassword);
 router.get("/allusers", authMiddleware, adminCheck, getAllUsers);
 router.get("/getemployee", authMiddleware, adminCheck, getEmployee);
 router.delete("/delete/:id", authMiddleware, adminCheck, deleteEmployee);

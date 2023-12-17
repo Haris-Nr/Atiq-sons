@@ -11,12 +11,7 @@ const signup = async (userData) => {
 };
 
 const login = async (userData) =>{
-    try {
-        const response = await axiosInstance.post(`user/login`, userData);
-        return response.data;  
-    } catch (error) {
-        throw error.response.data;
-    }
+        return await axiosInstance.post(`user/login`, userData);
 }
 
 const currentUser = async () =>{
@@ -28,12 +23,29 @@ const currentUser = async () =>{
     }
 }
 
+const resetPassword = async (resetData) =>{
+    try {
+        const response = await axiosInstance.patch(`user/resetpassword`,resetData);
+        return response.data;  
+    } catch (error) {
+        throw error.response.data;
+    }
+}
+
+const logout = async () =>{
+    const {data} = await axiosInstance.post(`user/resetpassword`);
+    return data
+}
+
+
 
 
 const authApi = {
     signup,
     login,
-    currentUser
+    currentUser,
+    resetPassword,
+    logout
 };
 
 export default authApi;

@@ -2,8 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import employeeApi from "../../api/employeeApi";
 
 const initialState = {
-    data: [],
-    isError: false,
+    getEmployeedata: [],
+    deleteEmployeedata:{},
+    changeStatusdata:{},
     isLoading: false,
 };
 
@@ -31,10 +32,29 @@ export const deleteEmployee = createAsyncThunk(
     }
 );
 
+export const changeUserStatus = createAsyncThunk(
+    "user/changeStatus",
+    async ({ id, newStatus },thunkAPI) => {
+        try {
+            const response = await employeeApi.changeStatus(id,newStatus);
+            return response;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error);
+        }
+    }
+);
+
 export const employeeSlice = createSlice({
     name: "employee",
     initialState,
-    reducers: {},
+    reducers: {
+        resetDeleteState: (state) => {
+            state.deleteEmployeedata = {};
+        },
+        resetStatusState: (state) => {
+            state.changeStatusdata = {};
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(getEmployee.pending, (state) => {
@@ -42,29 +62,37 @@ export const employeeSlice = createSlice({
             })
             .addCase(getEmployee.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.isError = false;
-                state.employees = action.payload;
+                state.getEmployeedata = action.payload;
             })
             .addCase(getEmployee.rejected, (state, action) => {
                 state.isLoading = false;
-                state.isError = true;
-                state.isSuccess = false;
-                state.message = action.error;
+                state.getEmployeedata = action.error;
             })
             .addCase(deleteEmployee.pending, (state) => {
                 state.isLoading = true;
             })
             .addCase(deleteEmployee.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.isError = false;
-                state.data = action.payload;
+                state.deleteEmployeedata = action.payload;
             })
             .addCase(deleteEmployee.rejected, (state, action) => {
                 state.isLoading = false;
-                state.isError = true;
-                state.data = action.payload;
+                state.deleteEmployeedata = action.payload;
+            })
+            .addCase(changeUserStatus.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(changeUserStatus.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.changeStatusdata = action.payload;
+            })
+            .addCase(changeUserStatus.rejected, (state, action) => {
+                state.isLoading = false;
+                state.changeStatusdata = action.payload;
             });
     },
 });
 
+
+export const { resetDeleteState,resetStatusState } = employeeSlice.actions;
 export default employeeSlice.reducer;

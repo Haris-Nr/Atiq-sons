@@ -8,7 +8,6 @@ import {
 import Loginlayout from "./components/Layout/Loginlayout";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Empolyee from "./components/Admin/EmpolyeeTable";
 import Custom from "./components/common/Custom";
@@ -20,6 +19,8 @@ import ProductTable from "./components/Admin/ProductTable";
 import DashboardLayout from "./components/Layout/DashboardLayout";
 import { Spin } from "antd";
 import { useSelector } from "react-redux";
+import { message } from 'antd';
+
 
 
 const router = createBrowserRouter(
@@ -28,7 +29,6 @@ const router = createBrowserRouter(
       <Route path="/" element={<Loginlayout />}>
         <Route index element={<Login/>}/>
         <Route path="signup" element={<Signup/>}/>
-        <Route path="forgetpassword" element={<ForgetPassword/>}/>
         <Route path="resetpassword" element={<ResetPassword/>}/>
       </Route>
 
@@ -46,11 +46,14 @@ const router = createBrowserRouter(
 );
 
 function App() {
+  const [messageApi,contextHolder] = message.useMessage();
   const {isLoading} = useSelector((state)=> state.fetch)
+
   return (
     <>
+     {contextHolder}
     {isLoading && <Spin/>}
-  <RouterProvider router={router} />
+  <RouterProvider router={router} messageApi = {messageApi.success}  />
   </>
   );
 }

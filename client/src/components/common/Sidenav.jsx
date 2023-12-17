@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import { AppstoreOutlined } from "@ant-design/icons";
 import { TfiControlForward } from "react-icons/tfi";
 import { Button, Divider, Menu } from "antd";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Sider from "antd/es/layout/Sider";
 import { FaProductHunt } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
 import { FaPersonShelter } from "react-icons/fa6";
 import { BsPersonFill } from "react-icons/bs";
 
-const Sidenav = ({ collapsed, toggleCollapsed, setCollapsed, isMobile }) => {
+const Sidenav = ({collapsed,toggleCollapsed,setCollapsed,isMobile}) => {
+  const params = useParams()
+  console.log(params)
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -18,6 +20,8 @@ const Sidenav = ({ collapsed, toggleCollapsed, setCollapsed, isMobile }) => {
     const pathName = location.pathname;
     setSelectedKeys(pathName.split("/")[2]);
   }, [location.pathname]);
+
+  
   const items = [
     {
       label: "Dashboard",
@@ -39,11 +43,11 @@ const Sidenav = ({ collapsed, toggleCollapsed, setCollapsed, isMobile }) => {
       key: "log",
       icon: <FaPersonShelter />,
     },
-    {
-      label: "Employee",
-      key: "empolyee",
-      icon: <BsPersonFill />,
-    }
+   params.dashboard === "admindashboard" ? {
+      label:"Employee",
+      key:"empolyee",
+      icon:<BsPersonFill />,
+    }:null
   ];
 
   const siderStyle = {

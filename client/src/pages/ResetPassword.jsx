@@ -1,18 +1,40 @@
 import React, { useEffect, useState } from "react";
-import { LockOutlined } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
-import { Link } from "react-router-dom";
+import { LockOutlined,MailOutlined } from "@ant-design/icons";
+import { Button, Form, Input, message } from "antd";
+import { useDispatch,useSelector } from 'react-redux'
+import { resetPasswordState, resetUserPassword } from "../redux/Features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
   const [form] = Form.useForm();
   const [clientReady, setClientReady] = useState(false);
-  // To disable submit button at the beginning.
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const {resetData} = useSelector((state)=>state.auth)
+
+
   useEffect(() => {
     setClientReady(true);
   }, []);
-  const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+
+  useEffect(() => {
+    if (resetData && resetData.message) {
+      if (resetData.success) {
+        message.success(resetData.message);
+        navigate('/')
+        dispatch(resetPasswordState())
+      } else {
+        message.error(resetData.message);
+      }
+    }
+  }, [resetData,navigate,dispatch]);
+  
+
+  const onFinish = async (values) => {
+    dispatch(resetUserPassword(values));
   };
+  
+
   return (
     <div>
       <h3 className="text-blue-800 font-bold text-lg  pb-5">Reset Password</h3>
@@ -23,6 +45,26 @@ const ResetPassword = () => {
         size="large"
         layout="vertical"
       >
+        <Form.Item
+                    name="email"
+                    hasFeedback
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please enter your email!",
+                        },
+                        {
+                            type: "email",
+                            message: "Enter a valid email!",
+                        },
+                    ]}
+                >
+                    <Input
+                        prefix={<MailOutlined className="site-form-item-icon" />}
+                        placeholder="Enter your Email"
+                        className="sm:text-lg"
+                    />
+                </Form.Item>
         <Form.Item
           name="password"
           hasFeedback
@@ -39,36 +81,9 @@ const ResetPassword = () => {
             className="sm:text-lg"
           />
         </Form.Item>
-        <Form.Item
-          name="confirmPassword"
-          hasFeedback
-          dependencies={["password"]}
-          rules={[
-            {
-              required: true,
-              message: "Please confirm your password!",
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error("The new password that you entered do not match!")
-                );
-              },
-            }),
-          ]}
-        >
-          <Input.Password
-            placeholder="Enter Your Confirm Password"
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            className="sm:text-lg"
-          />
-        </Form.Item>
+      
         <Form.Item shouldUpdate>
           {() => (
-            <Link to="/">
               <Button
               
                 block
@@ -84,7 +99,6 @@ const ResetPassword = () => {
               >
                 Reset Password
               </Button>
-            </Link>
           )}
         </Form.Item>
       </Form>

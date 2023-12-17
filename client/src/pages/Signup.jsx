@@ -45,15 +45,15 @@ const Signup = () => {
 
     const options = [
         {
-            value: "Lahore",
+            value: "lahore",
             label: "Lahore",
         },
         {
-            value: "Dubai",
+            value: "dubai",
             label: "Dubai",
         },
         {
-            value: "China",
+            value: "china",
             label: "China",
         },
     ];

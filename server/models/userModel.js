@@ -23,7 +23,7 @@ const userSchema = new Schema(
         dashboard: {
             type: String,
             required: true,
-            enum: ["Lahore", "Dubai", "China", "Admin"],
+            enum: ["lahore", "dubai", "china", "admin"],
         },
         role: {
             type: String,

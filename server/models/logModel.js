@@ -11,6 +11,13 @@ const logSchema = new Schema(
       type: String,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ["Active", "Inactive"],
+      default: "Inactive",
+      index: true,
+  },
+  
   },
   {
     timestamps: true,

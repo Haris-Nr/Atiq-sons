@@ -103,7 +103,6 @@ const getEmployee = async (req, res) => {
             .select("-confirmpassword");
         res.status(200).json({
             success: true,
-            message: " All Employee",
             data: employees,
         });
     } catch (error) {
@@ -187,6 +186,7 @@ const fetchUser = async (req, res) => {
         });
     }
 };
+
 // change status employee only admin
 const changeStatus = async (req, res) => {
     try {
@@ -215,7 +215,7 @@ const logout = async (req, res) => {
         });
         await logEntry.save();
 
-        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
 
         res.status(200).json({
             success: true,

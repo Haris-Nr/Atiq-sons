@@ -15,7 +15,6 @@ const Login = () => {
   const {user} = useSelector((state)=> state.fetch)
 
 
-
   const [clientReady, setClientReady] = useState(false);
 
 
@@ -43,7 +42,7 @@ const Login = () => {
         if (loginData.success === true) {
           sessionStorage.setItem("token",loginData.token)
             dispatch(fetchUser())
-            message.success(loginData.message);
+            messageApi.success(loginData.message);
             dispatch(resetLoginState())
             if (user?.employee?.dashboard) {
               navigate(`/${user?.employee?.dashboard}dashboard`);
@@ -106,7 +105,7 @@ const Login = () => {
           />
         </Form.Item>
         <Form.Item className="text-right">
-          <Link className="login-form-forgot" to="/forgetpassword">
+          <Link className="login-form-forgot" to="resetpassword">
             Forgot password
           </Link>
         </Form.Item>
