@@ -1,84 +1,167 @@
-import { Avatar, Rate, Table, Typography,Tag } from "antd";
-
+import { Avatar, Rate, Table, Tag, Input, Button , Menu ,Dropdown} from "antd";
+import { useState } from "react";
+import { EllipsisOutlined, EyeOutlined,DeleteOutlined , EditOutlined} from '@ant-design/icons';
+import { PlusCircleOutlined   } from '@ant-design/icons';
 
 const ProductTable = () => {
-
-
- 
+  const [searchText, setSearchText] = useState("");
+  const menu = (record) => (
+    <Menu>
+      <Menu.Item key="edit" icon={<EditOutlined />}>
+        <a href={`/edit/${record.key}`}>Edit</a>
+      </Menu.Item>
+      <Menu.Item key="delete"  icon={<DeleteOutlined />}>Delete</Menu.Item>
+      <Menu.Item key="activate" icon={<EyeOutlined  />}>View</Menu.Item>
+    </Menu>
+  );
 
   const columns = [
     {
-      key:"thumbnail",
-      title: "Thumbnail",
-      dataIndex: "thumbnail",
-      headerColor:"red",
-      render: (link) => {
-        return <Avatar src={link} />;
-      },
-      
+      key: 'thumbnail',
+      title: 'Thumbnail',
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
+      dataIndex: 'thumbnail',
+      headerColor: 'red',
+      render: (link) => <Avatar src={link} />,
     },
     {
-      title: "Product Name",
-      dataIndex: "title",
+      title: 'Product Name',
+      dataIndex: 'title',
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
     },
     {
-      title: "Price",
-      dataIndex: "price",
+      title: 'Price',
+      dataIndex: 'price',
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
       render: (value) => <span>${value}</span>,
     },
     {
-      title: "Rating",
-      dataIndex: "rating",
-      render: (rating) => {
-        return <Rate value={rating} allowHalf disabled />;
-      },
-    },
-    {
-      title: "Asin No",
-      dataIndex: "stock",
-    },
+      title: 'Rating',
+      dataIndex: 'rating',
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
 
-    {
-      title: "Brand",
-      dataIndex: "brand",
+      render: (rating) => <Rate value={rating} allowHalf disabled />,
     },
     {
-      title: "Category",
-      dataIndex: "category",
+      title: 'Asin No',
+      dataIndex: 'stock',
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
     },
     {
-      title: "Seller Name",
-      dataIndex: "category",
+      title: 'Brand',
+      dataIndex: 'brand',
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
     },
     {
-      title: "Status",
-      dataIndex: "category",
-      render: (_, { category }) => (
-        <>
-         <Tag color="red">
-                {category.toUpperCase()}
-          </Tag>
-        </>
+      title: 'Category',
+      dataIndex: 'category',
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
+    },
+    {
+      title: 'Seller Name',
+      dataIndex: 'category',
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      render: (_, record) => (
+        <Dropdown overlay={menu(record)} placement="bottomLeft" arrow>
+          <Button icon={<EllipsisOutlined />}  vertical/>
+        </Dropdown>
       ),
     },
-    
   ];
+
+  const dataSource = [
+    {
+      key: '1',
+      thumbnail: 'thumbnail_url_1',
+      title: 'Product 1',
+      price: 50,
+      rating: 4,
+      stock: 'ASIN123',
+      brand: 'Brand 1',
+      category: 'Category 1',
+      sellerName: 'Seller 1',
+      status: 'available',
+    },
+    {
+      key: '1',
+      thumbnail: 'thumbnail_url_1',
+      title: 'thing 1',
+      price: 50,
+      rating: 4,
+      stock: 'ASIN123',
+      brand: 'Brand 1',
+      category: 'Category 1',
+      sellerName: 'Seller 1',
+      status: 'available',
+    },
+    {
+      key: '1',
+      thumbnail: 'thumbnail_url_1',
+      title: 'some 1',
+      price: 50,
+      rating: 4,
+      stock: 'ASIN123',
+      brand: 'Brand 1',
+      category: 'Category 1',
+      sellerName: 'Seller 1',
+      status: 'available',
+    },
+  ];
+
+  const head = (
+    <div className="flex gap-20 " >
+   
+      <Input.Search
+       
+        placeholder="Search Product..."
+        size="large"
+        style={{ marginBottom: 2, width: '30%' }}
+        onSearch={(value) => setSearchText(value)}
+      />
+      <div className=" relative w-full px-4 max-w-full flex-grow flex-1 text-right " >
+         <Button
+      className=" text-white group-hover:text-gray-900   bg-indigo-500 focus:bg-indigo-600 ..."
+        shape="round"
+        icon={<PlusCircleOutlined   />}
+        size="large"
+       
+      >
+        Add Product
+      </Button>
+      </div>
+    </div>
+  );
 
   return (
     <div>
-      <Typography.Title level={4}>Product</Typography.Title>
-     
-
       <Table
-        columns={columns}
-        scroll={{
-          x: 1500,
-        }}
-        pagination={{
-          pageSize: 8,
-        }}
+        title={() => head}
+        columns={columns.map((col) => ({
+          ...col,
+          filteredValue: [searchText],
+          onFilter: (value, record) =>
+            record[col.dataIndex]
+              .toString()
+              .toUpperCase()
+              .includes(value.toUpperCase()),
+        }))}
+        dataSource={dataSource}
+        scroll={{ x: 1500 }}
+        pagination={{ pageSize: 8 }}
       />
     </div>
   );
 };
+
 export default ProductTable;
