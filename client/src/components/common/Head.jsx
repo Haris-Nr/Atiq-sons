@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Badge, Button, Flex, Typography } from "antd";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Header } from "antd/es/layout/layout";
 import { IoNotificationsSharp } from "react-icons/io5";
 import Paragraph from "antd/es/typography/Paragraph";
+import { useDispatch, useSelector} from 'react-redux'
+import { fetchUser } from "../../redux/Features/auth/fetchSlice";
 
-const Head = ({ collapsed, toggleCollapsed, isMobile }) => {
+const Head = ({ collapsed, toggleCollapsed, isMobile,user }) => {
+  // const {user} = useSelector((state)=> state.fetch)
+
+  
   const headerStyle = {
     position: "fixed",
     zIndex: 1,
@@ -44,7 +49,7 @@ const Head = ({ collapsed, toggleCollapsed, isMobile }) => {
             <IoNotificationsSharp className="text-2xl" />
           </Badge>
           <Flex vertical gap={0} justify="center"wrap="wrap" >
-            <Typography.Text className="text-lg">User</Typography.Text>
+            <Typography.Text className="text-lg"> {user?.employee?.fullname?.charAt(0).toUpperCase() + user?.employee?.fullname?.slice(1)}</Typography.Text>
             <Paragraph>employee</Paragraph>
           </Flex>
         </Flex>

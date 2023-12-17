@@ -42,16 +42,16 @@ const loginUser = async (req, res) => {
             throw new Error("User not found");
         }
 
-        if (user.status !== "active") {
-            throw new Error(
-                `Mr. ${user.fullname} your account is blocked, please contact the admin`
-            );
-        }
-
         const validPassword = await bcrypt.compare(password, user.password);
 
         if (!validPassword) {
             throw new Error("Password is incorrect");
+        }
+
+        if (user.status !== "active") {
+            throw new Error(
+                `Mr. ${user.fullname} your account is blocked, please contact the admin`
+            );
         }
 
         const logEntry = new Log({

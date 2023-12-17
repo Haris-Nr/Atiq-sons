@@ -3,8 +3,8 @@ import axiosInstance from './axiosInstance';
 
 const signup = async (userData) => {
     try {
-        const response = await axiosInstance.post(`user/signup`, userData);
-        return response.data;
+        const {data} = await axiosInstance.post(`user/signup`, userData);
+        return data;
     } catch (error) {
         throw error.response.data;
     }

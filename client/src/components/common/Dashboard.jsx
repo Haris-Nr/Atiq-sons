@@ -12,12 +12,6 @@ import DashboardCard from './DashboardCard';
 
 const  Dashboard = () => {
 
-
-  
-
-
-
-
   return (
     <Space size={6} direction="vertical" className="">
       <Space direction="horizontal" className="flex">
@@ -32,8 +26,8 @@ const  Dashboard = () => {
               <div className="flex- text-white justify-between">
 
                   <h1 className="text-3xl font-bold mb-4">Good Morning, Victor!</h1>
-                  <p>Here`&lsquo;`s what`&lsquo;`s happening with your store today</p>
-                  <p className="text-lg font-semibold">TODAY`&lsquo;`S VISIT</p>
+                  <p>Here&lsquo;s what&lsquo;s happening with your store today</p>
+                  <p className="text-lg font-semibold">TODAY&lsquo;S VISIT</p>
                   <p className="text-lg font-semibold">15,209</p>
 
                 <div className="md:flex gap-3">

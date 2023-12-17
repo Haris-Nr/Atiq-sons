@@ -1,45 +1,67 @@
 import React, { useEffect, useState } from "react";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Spin, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
-import { loginUser } from "../redux/Features/auth/authSlice";
+import { loginUser, resetLoginState} from "../redux/Features/auth/authSlice";
 import { fetchUser } from "../redux/Features/auth/fetchSlice";
 
 const Login = () => {
-
+  const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const {data} = useSelector((state)=> state.auth)
-  const {success,token} = data
+  const {loginData,isLoading} = useSelector((state)=> state.auth)
   const {user} = useSelector((state)=> state.fetch)
 
 
+
   const [clientReady, setClientReady] = useState(false);
-  // To disable submit button at the beginning.
+
 
   useEffect(() => {
     setClientReady(true);
-  }, []);
+    const token = localStorage.getItem("token");
+        if (token) {
+          navigate(`/${user?.employee?.dashboard}`);
+        }else{
+          navigate('/')
+        }
+  }, [navigate,user]);
 
-  const onFinish = (values) => {
-      dispatch(loginUser(values))
-      if(success){
-        localStorage.setItem("token",token)
-      }
-      dispatch(fetchUser())
-      if(user.employee.dashboard){
-        navigate(`/${user.employee.dashboard}-dashboard`)
-      }
+
+  const onFinish =(values) => {
+    dispatch(loginUser(values));
   };
   
+
+  useEffect(() => {    
+    try {
+        if (loginData.success === true) {
+          localStorage.setItem("token",loginData.token)
+            dispatch(fetchUser())
+            message.success(loginData.message);
+            dispatch(resetLoginState())
+            if (user?.employee?.dashboard) {
+              navigate(`/${user.employee.dashboard}`);
+            }
+        } else if(loginData.success === false) {
+            messageApi.error(loginData.message);
+        dispatch(resetLoginState())
+        }
+    } catch (error) {
+        messageApi.error(error);
+    }
+}, [dispatch,navigate,loginData,messageApi,user])
+
 
 
   
   
   return (
     <div>
+      {contextHolder}
+            {isLoading && <Spin />}
       <h3 className="text-blue-800 font-bold text-lg pb-5">
         Login to Dashboard
       </h3>

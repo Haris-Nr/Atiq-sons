@@ -1,16 +1,40 @@
 import React, { useEffect, useState } from "react";
 
-import { Layout, theme } from "antd";
+import { Layout, Spin, message, theme } from "antd";
 import Sidenav from "../common/Sidenav";
 import Head from "../common/Head";
 import CrumBread from "../common/CrumBread";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Foot from "../common/Foot";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser } from "../../redux/Features/auth/fetchSlice";
 const { Content } = Layout;
 
 const DashboardLayout2 = () => {
+
+    const navigate = useNavigate()
     const [collapsed, setCollapsed] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 1024);
+    const {user} = useSelector((state)=> state.fetch)
+
+    const dispatch = useDispatch()
+
+
+
+    useEffect(() => {
+        try {
+            const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/");
+        }else{
+            dispatch(fetchUser())
+        }
+    } catch (error) {
+        message.error(error.message)
+        }
+        
+    }, [dispatch,navigate])
+    
 
     useEffect(() => {
         const handleResize = () => {
@@ -38,7 +62,7 @@ const DashboardLayout2 = () => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken()
     return (
-        <Layout hasSider>
+        <Layout hasSider> 
             <Sidenav
                 collapsed={collapsed}
                 toggleCollapsed={toggleCollapsed}
@@ -55,6 +79,7 @@ const DashboardLayout2 = () => {
                     collapsed={collapsed}
                     toggleCollapsed={toggleCollapsed}
                     isMobile={isMobile}
+                    user={user}
                 />
                 <Content
                     style={{ marginTop: 64, margin: "64px 0px 0px 0px", padding: 14 }}

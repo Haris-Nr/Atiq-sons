@@ -18,6 +18,8 @@ import Dashboard from "./components/common/Dashboard";
 import AddTask from "./components/Admin/TaskForm";
 import ProductTable from "./components/Admin/ProductTable";
 import DashboardLayout from "./components/Layout/DashboardLayout";
+import { Spin } from "antd";
+import { useSelector } from "react-redux";
 
 
 const router = createBrowserRouter(
@@ -44,9 +46,10 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  
+  const {isLoading} = useSelector((state)=> state.fetch)
   return (
     <>
+    {isLoading && <Spin/>}
   <RouterProvider router={router} />
   </>
   );

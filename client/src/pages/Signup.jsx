@@ -1,43 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Select, Form, Input } from "antd";
-import { Link, useNavigate} from "react-router-dom";
+import { Button, Select, Form, Input, message, Spin } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-number-input";
-import 'react-phone-number-input/style.css'
-import { useSelector, useDispatch } from 'react-redux'
-import { signupUser } from "../redux/Features/auth/authSlice";
-
-
+import "react-phone-number-input/style.css";
+import { useSelector, useDispatch } from "react-redux";
+import { resetSignupState, signupUser } from "../redux/Features/auth/authSlice";
 
 const Signup = () => {
-
+    const [messageApi, contextHolder] = message.useMessage();
     const [clientReady, setClientReady] = useState(false);
     const [form] = Form.useForm();
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const {data} = useSelector((state)=> state.auth)    
-    const {success} = data
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { signupData, isLoading } = useSelector((state) => state.auth);
 
-    // To disable submit button at the beginning.
+    const onFinish = async (values) => {
+        dispatch(signupUser(values));
+    };
+
+    useEffect(() => {    
+        try {
+            if (signupData.success === true) {
+                navigate("/");
+                message.success(signupData.message,[2]);
+                dispatch(resetSignupState())
+            } else if(signupData.success === false) {
+                messageApi.error(signupData.message);
+            dispatch(resetSignupState())
+            }
+        } catch (error) {
+            messageApi.error(error);
+        }
+    }, [dispatch,navigate,signupData,messageApi])
+
 
     useEffect(() => {
         setClientReady(true);
-        if(localStorage.getItem("token")){
-            navigate('/')
+        const token = localStorage.getItem("token");
+        if (token) {
+            navigate("/");
         }
     }, [navigate]);
-
-    const onFinish = (values) => {
-        try {
-            dispatch(signupUser(values))
-            if(success){
-                navigate('/')            
-            }
-        } catch (error) {
-            console.log(error)
-        }
-
-    };
 
     const options = [
         {
@@ -56,6 +60,8 @@ const Signup = () => {
 
     return (
         <div>
+            {contextHolder}
+            {isLoading && <Spin />}
             <h3 className="text-blue-800 font-bold text-lg ">Sign Up</h3>
             <Form
                 form={form}
@@ -122,7 +128,7 @@ const Signup = () => {
                         className="sm:text-lg"
                     />
                 </Form.Item>
-                
+
                 <Form.Item
                     name="mobile"
                     message="Please inout your Phone NO"
@@ -135,9 +141,7 @@ const Signup = () => {
                     prefix={<LockOutlined className="site-form-item-icon" />}
                     hasFeedback
                 >
-                    <PhoneInput
-                        placeholder="Enter phone number +92..."
-                    />
+                    <PhoneInput placeholder="Enter phone number +92..." />
                 </Form.Item>
                 <Form.Item
                     name="dashboard"
@@ -161,7 +165,8 @@ const Signup = () => {
                             disabled={
                                 !clientReady ||
                                 !form.isFieldsTouched(true) ||
-                                !!form.getFieldsError().filter(({ errors }) => errors.length).length
+                                !!form.getFieldsError().filter(({ errors }) => errors.length)
+                                    .length
                             }
                         >
                             Sign Up

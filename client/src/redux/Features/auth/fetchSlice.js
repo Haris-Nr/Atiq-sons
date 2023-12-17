@@ -9,8 +9,7 @@ const initialState = {
 
 export const fetchUser = createAsyncThunk("user/fetch", async (_, thunkAPI) => {
     try {
-        const response = await authApi.currentUser();
-        return response;
+        return await authApi.currentUser();
     } catch (error) {
         return thunkAPI.rejectWithValue(error);
     }

@@ -1,15 +1,17 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authApi from "../../api/authApi";
 
+
+
 const initialState = {
-    data: {},
+    signupData: {},
+    loginData:{},
     isLoading: false,
 };
 
 export const signupUser = createAsyncThunk( "user/signup", async (user, thunkAPI) => {
         try {
-            const response = await authApi.signup(user);
-            return response;
+            return await authApi.signup(user);
         } catch (error) {
             return thunkAPI.rejectWithValue(error);
         }
@@ -29,7 +31,14 @@ export const loginUser = createAsyncThunk( "user/login", async (user, thunkAPI) 
 export const authSlice = createSlice({
     name: "auth",
     initialState,
-    reducers: {},
+    reducers: {
+        resetSignupState: (state) => {
+            state.signupData = {};
+        },
+        resetLoginState: (state) => {
+            state.loginData = {};
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(signupUser.pending, (state) => {
@@ -37,24 +46,24 @@ export const authSlice = createSlice({
             })
             .addCase(signupUser.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.data = action.payload;
+                state.signupData = action.payload;
             })
             .addCase(signupUser.rejected, (state, action) => {
                 state.isLoading = false;
-                state.data = action.payload;
+                state.signupData = action.payload;
             })
             .addCase(loginUser.pending, (state) => {
                 state.isLoading = true;
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.data = action.payload;
+                state.loginData = action.payload;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.isLoading = false;
-                state.data = action.payload;
+                state.loginData = action.payload;
             });
     },
 });
-
+export const { resetSignupState,resetLoginState } = authSlice.actions;
 export default authSlice.reducer;
