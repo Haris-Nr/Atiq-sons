@@ -13,6 +13,8 @@ function Empolyee() {
     {
       title: "Id",
       dataIndex: "image",
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
       render: (link) => {
         return <Avatar   src={link}  />;
       },
@@ -20,18 +22,26 @@ function Empolyee() {
     {
       title: "Name",
       dataIndex: "firstName",
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
     },
     {
       title: "Dashboard",
       dataIndex: "lastName",
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
     },
     {
       title: "Email",
       dataIndex: "email",
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
     },
     {
       title: "Phone",
       dataIndex: "phone",
+      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+
     },
 
     {
