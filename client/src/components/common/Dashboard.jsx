@@ -20,7 +20,7 @@ const Dashboard = () => {
           <div className="p-5 flex-col text-white text-start">
             <h1 className="text-3xl font-bold mb-4">Good Morning, Victor!</h1>
             <p className="text-lg font-semibold">TODAY,S VISIT</p>
-            <p className="text-lg font-semibold mb-10">15,209</p>
+            <p className="text-lg font-semibold mb-10">15</p>
             <div className="md:flex gap-3">
               <div className="flex text-center justify-center gap-3">
                 <DashboardCard
