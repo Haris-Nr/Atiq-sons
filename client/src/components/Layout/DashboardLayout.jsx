@@ -35,7 +35,7 @@ const DashboardLayout2 = () => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 1440);
             if (window.innerWidth <= 1440) {
-                setCollapsed(true); // Automatically collapse the sidebar on small screens
+                setCollapsed(true); 
             }
         };
 
@@ -44,11 +44,9 @@ const DashboardLayout2 = () => {
     }, []);
 
     const toggleCollapsed = () => {
-        // For mobile view, always toggle between collapsed and expanded
         if (isMobile) {
             setCollapsed(!collapsed);
         } else {
-            // For larger screens, only collapse if it's not already collapsed
             setCollapsed(collapsed ? false : true);
         }
     };
@@ -63,6 +61,7 @@ const DashboardLayout2 = () => {
                 toggleCollapsed={toggleCollapsed}
                 setCollapsed={setCollapsed}
                 isMobile={isMobile}
+                user={user}
             />
             <Layout
                 style={{
@@ -89,7 +88,7 @@ const DashboardLayout2 = () => {
                             borderRadius: borderRadiusLG,
                         }}
                     >
-                        <Outlet />
+                        <Outlet/>
                     </div>
                 </Content>
                 <Foot />

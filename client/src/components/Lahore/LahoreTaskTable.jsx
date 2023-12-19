@@ -1,7 +1,7 @@
 import { Button, Space, Table, Tag, Typography } from "antd";
 import { Link } from "react-router-dom";
 
-const Task = () => {
+const LahoreTaskTable = () => {
 
   const dataSource = [
     {
@@ -22,11 +22,6 @@ const Task = () => {
       date: "2/23/2023",
       status: 'incomplete',
     },
-   
-  
-  
-
-  
   ];
 
   const columns = [
@@ -34,19 +29,15 @@ const Task = () => {
       {
         title: "Task",
         dataIndex: "task",
-        className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
         
       },
       {
         title:"Due Date",
         dataIndex: "date",
-        className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
       },
       {
         title: "Status",
         dataIndex: "status",
-      
-        className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
         render: (_, { status }) => (
           <>
            <Tag color="red">
@@ -57,8 +48,6 @@ const Task = () => {
       },
       {
         title: "Action",
- 
-        className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
         render: (text, record) => (
           <Space size="middle">
             <Button>
@@ -68,16 +57,15 @@ const Task = () => {
         ),
       }
   ];
-  const heading = [
-    <Typography.Title level={4}>Recent Task</Typography.Title>
-  ];
+  const heading =  <Typography.Title level={4}>Task</Typography.Title>
+  
 
 
   return (
     <div>
  
       <Table
-title={() =>heading}
+        title={() =>heading}
         columns={columns}
         dataSource={dataSource}
         pagination={false}
@@ -88,4 +76,4 @@ title={() =>heading}
     </div>
   );
 }
-export default Task;
+export default LahoreTaskTable;

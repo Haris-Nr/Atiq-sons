@@ -1,6 +1,12 @@
 const Product = require("../models/productModels");
 const User = require("../models/userModel");
 const Notification = require("../models/notificationModel");
+const cloudinary = require("../config/cloudinary");
+
+
+
+
+
 
 
 // add product
@@ -11,19 +17,26 @@ const createProduct = async (req, res) => {
     if (findproduct) {
       throw new Error("Product already in product list");
     }
-    const user = User.findById(req.body.userID);
-    //  send notification to admin 
-    const admins = await User.find({ role: "admin"});
-    admins.forEach(async (admin) => {
-        const newNotification = new Notification({
-          user: admin._id,
-          message: `New product added by ${user.fullname}`,
-          title: "New Product",
-          onClick: `/admin`,
-          seen: false,  
-        });
-        await newNotification.save();
+
+    const result = await cloudinary.uploader.upload(req.image.path, {
+      folder: "Atiq-sons",
     });
+
+    console.log(result)
+
+    // const user = User.findById(req.body.userID);
+    // //  send notification to admin 
+    // const admins = await User.find({ role: "admin"});
+    // admins.forEach(async (admin) => {
+    //     const newNotification = new Notification({
+    //       user: admin._id,
+    //       message: `New product added by ${user.fullname}`,
+    //       title: "New Product",
+    //       onClick: `/admin`,
+    //       seen: false,  
+    //     });
+    //     await newNotification.save();
+    // });
 
     const newProduct = new Product(req.body);
 
@@ -44,12 +57,11 @@ const createProduct = async (req, res) => {
 //fetch all products by specific employee
 const fetchProducts =  async (req, res) => {
   try {
-
-    const userId = req.body.userId;
-
-    const products = await Product.find({ createdBy: userId })
+    const products = await Product.find({ createdBy: req.body.createdBy })
       .populate("createdBy").sort({ createdAt: -1 });
-
+      if(!products){
+        return null
+      }
     res.send({
       success: true,
       data: products,
@@ -61,6 +73,7 @@ const fetchProducts =  async (req, res) => {
     });
   }
 };
+
 
 // all products
 const allProduct = async (req,res)=>{

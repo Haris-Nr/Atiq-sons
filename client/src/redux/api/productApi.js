@@ -1,17 +1,28 @@
-import axisoInstance from './axisoInstance';
+import axiosInstance from './axiosInstance';
 
 const addProduct = async (productData) => {
     try {
-        const response = await axisoInstance.post(`/product/addproduct`, productData);
+        const response = await axiosInstance.post(`/product/addproduct`, productData);
         return response.data;  
     } catch (error) {
-        return error.message 
+        throw error.response.data 
+    }
+};
+
+const fetchProductsbyemployee = async (productData) => {
+    try {
+        const response = await axiosInstance.post(`/product/fetchProductsbyemployee`,{createdBy:productData});
+        return response.data;  
+    } catch (error) {
+        throw error.response.data 
     }
 };
 
 
+
 const productApi = {
-    addProduct
+    addProduct,
+    fetchProductsbyemployee
 };
 
 export default productApi;

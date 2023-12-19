@@ -1,10 +1,11 @@
-import { Button, Popconfirm, Space, Table, Typography } from "antd";
+import { Button, Popconfirm, Space, Table, Typography, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import {
   changeUserStatus,
   deleteEmployee,
   getEmployee,
+  resetStatusState,
 } from "../../redux/Features/Employees/employeeSlice";
 import moment from "moment";
 
@@ -17,25 +18,31 @@ function Empolyee() {
 
   useEffect(() => {
     dispatch(getEmployee());
-    // if (deleteEmployeedata.success === true) {
-    //   message.success(deleteEmployeedata.message);
-    // } else if (deleteEmployeedata.success === false) {
-    //   message.error(deleteEmployeedata.message);
-    // }
-    // if (changeStatusdata.success === true) {
-    //   message.success(changeStatusdata.message);
-    // } else if (changeStatusdata.success === false) {
-    //   message.error(changeStatusdata.message);
-    // }
-  }, [dispatch,deleteEmployeedata,changeStatusdata]);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (changeStatusdata.success === true) {
+      message.success(changeStatusdata.message);
+      dispatch(resetStatusState())
+    } else if (changeStatusdata.success === false) {
+      message.error(changeStatusdata.message);
+      dispatch(resetStatusState())
+    }
+  }, [changeStatusdata,dispatch])
+  
+
+  useEffect(() => {
+       if (deleteEmployeedata.success === true) {
+      message.success(deleteEmployeedata.message);
+    } else if (deleteEmployeedata.success === false) {
+      message.error(deleteEmployeedata.message);
+    }
+  }, [deleteEmployeedata])
+  
+
 
   const handleDelete = (id) => {
     dispatch(deleteEmployee(id)).then(() => {
-      // if (deleteEmployeedata.success === true) {
-      //   message.success(deleteEmployeedata.message);
-      // } else if (deleteEmployeedata.success === false) {
-      //   message.error(deleteEmployeedata.message);
-      // }
       dispatch(getEmployee());
     });
   };
@@ -43,11 +50,6 @@ function Empolyee() {
 
   const handleStatus = (id, newStatus) => {
     dispatch(changeUserStatus({ id, newStatus })).then(() => {
-      // if (changeStatusdata.success === true) {
-      //   message.success(changeStatusdata.message);
-      // } else if (changeStatusdata.success === false) {
-      //   message.error(changeStatusdata.message);
-      // }
       dispatch(getEmployee());
     });
   };
@@ -56,7 +58,6 @@ function Empolyee() {
     {
       title: "SrNo",
       key: "srNo",
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
       render: (text, record, index) => {
         return index + 1;
       },
@@ -65,7 +66,7 @@ function Empolyee() {
       title: "FullName",
       dataIndex: "fullname",
       key: "fullname",
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+      
 
     },
     {
@@ -74,7 +75,7 @@ function Empolyee() {
     },
     {
       title: "Phone",
-      dataIndex: "phone",
+      dataIndex: "mobile",
     },
     {
       title: "Dashboard",

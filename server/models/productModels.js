@@ -14,13 +14,14 @@ var productSchema = new Schema(
         description: {
             type: String,
         },
-        images: {
+        image: {
             type: String,
             required: true,
         },
         asin: {
             type: Schema.Types.Mixed,
             required: true,
+            unique:true
         },
         price: {
             type: Schema.Types.Mixed,
@@ -41,7 +42,7 @@ var productSchema = new Schema(
         createdBy: {
             type: Schema.Types.ObjectId,
             ref: "users",
-            // required: true,
+            required: true,
         },
         status: {
             type: String,

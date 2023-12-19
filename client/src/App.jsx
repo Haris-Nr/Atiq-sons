@@ -19,39 +19,45 @@ import ProductTable from "./components/Admin/ProductTable";
 import DashboardLayout from "./components/Layout/DashboardLayout";
 import { Spin } from "antd";
 import { useSelector } from "react-redux";
-
-
+import LahoreProductTable from "./components/Lahore/LahoreProductTable";
+import LahoreTaskTable from "./components/Lahore/LahoreTaskTable";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<Loginlayout />}>
-        <Route index element={<Login/>}/>
-        <Route path="signup" element={<Signup/>}/>
-        <Route path="resetpassword" element={<ResetPassword/>}/>
+        <Route index element={<Login />} />
+        <Route path="signup" element={<Signup />} />
+        <Route path="resetpassword" element={<ResetPassword />} />
       </Route>
 
-      <Route path="/:dashboard" element={<DashboardLayout/>}>
-        <Route index element={<Dashboard/>}/>
-        <Route path="empolyee" element={<Empolyee/>}/>
-        <Route path="custom" element={<Custom/>}/>
-        <Route path="log" element={<Log/>}/>
-        <Route path="task" element={<Task/>}/>
-        <Route path="product" element={<ProductTable/>}/>
-        <Route path="addTask" element={<AddTask/>}/>
+      <Route path="/:dashboard" element={<DashboardLayout />}>
+        <Route index element={<Dashboard />} />
+        {/* Lahore Routes */}
+        <Route path="producttable" element={<LahoreProductTable />} />
+        <Route path="tasktable" element={<LahoreTaskTable />} />
+
+        {/* Admin Routes */}
+        <Route path="employeetable" element={<Empolyee />} />
+
+        <Route path="custom" element={<Custom />} />
+        <Route path="log" element={<Log />} />
+        <Route path="task" element={<Task />} />
+        <Route path="product" element={<ProductTable />} />
+        <Route path="addTask" element={<AddTask />} />
       </Route>
     </Route>
   )
 );
 
 function App() {
-  const {isLoading} = useSelector((state)=> state.fetch)
+  const { isLoading } = useSelector((state) => state.fetch);
 
   return (
     <>
-    {isLoading && <Spin/>}
-  <RouterProvider router={router} />
-  </>
+      {isLoading && <Spin />}
+      <RouterProvider router={router} />
+    </>
   );
 }
 

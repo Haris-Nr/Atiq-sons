@@ -3,9 +3,16 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 const adminCheck = require("../middlewares/adminCheck");
 const { createProduct, deleteProduct, updateProduct, fetchProducts, changeStatus, singleProduct, allProduct} = require('../controllers/productCtrl');
+const multer = require("multer");
 
+const storage = multer.diskStorage({
+    filename: function (req, file, callback) {
+      callback(null, Date.now() + file.originalname);
+    },
+  });
+  const upload = multer({ storage: storage });
 
-router.post("/addproduct",authMiddleware,createProduct);
+router.post("/addproduct",authMiddleware,upload.single('image'),createProduct);
 router.post("/fetchProductsbyemployee", authMiddleware,fetchProducts)
 router.delete("/deleteproduct/:id",authMiddleware,deleteProduct);
 router.patch("/updateProduct/:id", authMiddleware,updateProduct);

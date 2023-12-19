@@ -1,126 +1,238 @@
-import React from 'react';
-import { Avatar, Rate, Table, Typography, Dropdown, Button, Input, Menu } from 'antd';
-import { EllipsisOutlined, EyeOutlined,DeleteOutlined , EditOutlined} from '@ant-design/icons';
-import { PlusCircleOutlined   } from '@ant-design/icons';
+import React, { useEffect, useRef } from 'react';
+import { SearchOutlined } from '@ant-design/icons';
+import { Avatar, Rate, Table, Dropdown, Button, Input, Menu, Space } from 'antd';
+// import { EllipsisOutlined, EyeOutlined,DeleteOutlined , EditOutlined} from '@ant-design/icons';
 import { useState } from "react";
+import ProductButton from './ProductButton';
+import {Link} from 'react-router-dom'
+import { useDispatch, useSelector } from "react-redux";
+import { Productsbyemployee } from '../../redux/Features/Product/productSlice';
+import Highlighter from 'react-highlight-words';
 
-const { Search } = Input;
+
 
 const LahoreProductTable = () => {
-  const [searchText, setSearchText] = useState("");
+  const dispatch = useDispatch();
+  const {user} = useSelector((state)=> state.fetch)
+  const {employee} = user;
+  const { fetchProductData } = useSelector((state) => state.product);
 
-  const menu = (record) => (
-    <Menu>
-      <Menu.Item key="edit" icon={<EditOutlined />}>
-        <a href={`/edit/${record.key}`}>Edit</a>
-      </Menu.Item>
-      <Menu.Item key="delete"  icon={<DeleteOutlined />}>Delete</Menu.Item>
-      <Menu.Item key="activate" icon={<EyeOutlined  />}>View</Menu.Item>
-    </Menu>
-  );
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef(null);
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText('');
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+      <div
+        style={{
+          padding: 8,
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{
+              width: 90,
+            }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({
+                closeDropdown: false,
+              });
+              setSearchText(selectedKeys[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1677ff' : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{
+            backgroundColor: '#ffc069',
+            padding: 0,
+          }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  });
+
+
+
+  useEffect(() => {
+    dispatch(Productsbyemployee(employee?._id));
+  }, [dispatch,employee]);
+
+  // const menu = (record) => (
+  //   <Menu>
+  //     <Menu.Item key="edit" icon={<EditOutlined />}>
+  //       <a href={`/edit/${record.key}`}>Edit</a>
+  //     </Menu.Item>
+  //     <Menu.Item key="delete"  icon={<DeleteOutlined />}>Delete</Menu.Item>
+  //     <Menu.Item key="activate" icon={<EyeOutlined  />}>View</Menu.Item>
+  //   </Menu>
+  // );
 
   const columns = [
     {
-      key: 'thumbnail',
+      title: "SrNo",
+      key: "srNo",
+      render: (text, record, index) => {
+        return index + 1;
+      },
+    },
+    {
+      key: 'image',
       title: 'Thumbnail',
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
-
-      dataIndex: 'thumbnail',
+      dataIndex: 'image',
       headerColor: 'red',
       render: (link) => <Avatar src={link} />,
     },
     {
       title: 'Product Name',
-      dataIndex: 'title',
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
-
+      dataIndex: 'productName',
+      key:'productName',
+      render: (_,record) => {
+        return (
+          <Link to={record.url} >
+        {record.productName}
+      </Link>
+        )
+      }, 
+      ...getColumnSearchProps('name')
+    },
+    {
+      title:"Quantity",
+      dataIndex:'quantity',
+      key:'quantity'
+    },
+    {
+      title:"Description",
+      dataIndex:'description',
+      key:'description'
     },
     {
       title: 'Price',
       dataIndex: 'price',
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+      key: 'price',
+     
 
       render: (value) => <span>${value}</span>,
     },
     {
       title: 'Rating',
       dataIndex: 'rating',
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
+      key:'rating',
+     
 
-      render: (rating) => <Rate value={rating} allowHalf disabled />,
+      render: (_, record) => <Rate value={record.rating} allowHalf disabled />,
     },
     {
       title: 'Asin No',
-      dataIndex: 'stock',
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
-
+      dataIndex: 'asin',
+     key:'asin',
     },
     {
       title: 'Brand',
       dataIndex: 'brand',
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
-
+     key:"brand",
     },
     {
       title: 'Category',
       dataIndex: 'category',
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
-
+     key:'category',
     },
     {
       title: 'Seller Name',
-      dataIndex: 'category',
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
-
+      dataIndex: 'createdBy',
+     key:'createdBy'
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      render: (_, record) => (
-        <Dropdown overlay={menu(record)} placement="bottomLeft" arrow>
-          <Button icon={<EllipsisOutlined />}  vertical/>
-        </Dropdown>
-      ),
+      title:"Status",
+      dataIndex:"status",
+      key:"status"
     },
+    // {
+    //   title: 'Action',
+    //   dataIndex: 'action',
+    //   render: (_, record) => (
+    //     <Dropdown menu={menu(record)} placement="bottomLeft" arrow>
+    //       <Button icon={<EllipsisOutlined />}/>
+    //     </Dropdown>
+    //   ),
+    // },
   ];
-  const dataSource = [
-    {
-      key: '1',
-      thumbnail: 'thumbnail_url_1',
-      title: 'Product 1',
-      price: 50,
-      rating: 4,
-      stock: 'ASIN123',
-      brand: 'Brand 1',
-      category: 'Category 1',
-      sellerName: 'Seller 1',
-      status: 'available',
-    },
-    {
-      key: '1',
-      thumbnail: 'thumbnail_url_1',
-      title: 'Product 1',
-      price: 50,
-      rating: 4,
-      stock: 'ASIN123',
-      brand: 'Brand 1',
-      category: 'Category 1',
-      sellerName: 'Seller 1',
-      status: 'available',
-    },
-    {
-      key: '1',
-      thumbnail: 'thumbnail_url_1',
-      title: 'Product 1',
-      price: 50,
-      rating: 4,
-      stock: 'ASIN123',
-      brand: 'Brand 1',
-      category: 'Category 1',
-      sellerName: 'Seller 1',
-      status: 'available',
-    },
-  ];
+  
 
   const heading = (
     <div className="flex gap-20 " >
@@ -132,26 +244,24 @@ const LahoreProductTable = () => {
       style={{ marginBottom: 2, width: '30%' }}
       onSearch={(value) => setSearchText(value)}
     />
-    <div className=" relative w-full px-4 max-w-full flex-grow flex-1 text-right " >
-       <Button
-    className=" text-white group-hover:text-gray-900   bg-indigo-500 focus:bg-indigo-600 ..."
-      shape="round"
-      icon={<PlusCircleOutlined   />}
-      size="medium"
-     
-    >
-      Add Product
-    </Button>
-    </div>
+  
+    <ProductButton/>
   </div>
   );
+
+  const dataSourceWithKeys = fetchProductData.data
+  ? fetchProductData.data.map((item) => ({
+    ...item,
+    key: item._id,
+  }))
+  : [];
 
   return (
     <div>
       <Table
         title={() => heading}
         columns={columns}
-        dataSource={dataSource}
+        dataSource={dataSourceWithKeys}
         scroll={{
           x: 1100,
         }}

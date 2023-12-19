@@ -6,8 +6,12 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import DashboardCard from "./DashboardCard";
+import { useSelector } from "react-redux";
+
 
 const Dashboard = () => {
+  const { user } = useSelector((state) => state.fetch);
+  const { employee } = user;
   return (
     <>
       <div
@@ -18,9 +22,11 @@ const Dashboard = () => {
       >
         <div className="xl:flex xl:justify-between">
           <div className="p-5 flex-col text-white text-start">
-            <h1 className="text-3xl font-bold mb-4">Good Morning, Victor!</h1>
-            <p className="text-lg font-semibold">TODAY,S VISIT</p>
-            <p className="text-lg font-semibold mb-10">15</p>
+            <h1 className="text-3xl font-bold mb-4">
+              Good Morning,
+              {employee?.fullname.charAt(0).toUpperCase() +
+                employee?.fullname.slice(1)}
+            </h1>
             <div className="md:flex gap-3">
               <div className="flex text-center justify-center gap-3">
                 <DashboardCard

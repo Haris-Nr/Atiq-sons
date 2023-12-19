@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
         if (!req.headers.authorization) {
             throw new Error("Unauthorized");
         }
-        console.log(req.headers)
+        
         const tokenParts = req.headers.authorization.split(" ");
         if (tokenParts.length !== 2 || tokenParts[0] !== "Bearer") {
             throw new Error("Unauthorized");

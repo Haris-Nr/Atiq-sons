@@ -1,53 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { AppstoreOutlined } from "@ant-design/icons";
 import { TfiControlForward } from "react-icons/tfi";
-import { Button, Divider, Menu } from "antd";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Button, Menu } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
 import Sider from "antd/es/layout/Sider";
 import { FaProductHunt } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
 import { FaPersonShelter } from "react-icons/fa6";
 import { BsPersonFill } from "react-icons/bs";
 
-const Sidenav = ({collapsed,toggleCollapsed,setCollapsed,isMobile}) => {
-  const params = useParams()
+const Sidenav = ({collapsed,toggleCollapsed,setCollapsed,isMobile,user}) => {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [selectedKeys, setSelectedKeys] = useState();
+
   useEffect(() => {
     const pathName = location.pathname;
     setSelectedKeys(pathName.split("/")[2]);
   }, [location.pathname]);
 
+  const employeeDashboard = user?.employee?.dashboard;
   
   const items = [
-    {
-      label: "Dashboard",
-      key: "./",
-      icon: <AppstoreOutlined />,
+    employeeDashboard === "lahore" && {
+      label:"Product",
+      key:"producttable",
+      icon: <FaProductHunt/>
     },
-    {
-      label: "Product",
-      key: "product",
-      icon: <FaProductHunt />,
-    },
-    {
+    employeeDashboard === "lahore" &&  {
       label: "Task",
-      key: "task",
+      key: "tasktable",
       icon: <FaTasks />,
     },
-    {
-      label: "Log",
-      key: "log",
-      icon: <FaPersonShelter />,
-    },
-   params.dashboard === "admindashboard" ? {
-      label:"Employee",
-      key:"empolyee",
-      icon:<BsPersonFill />,
-    }:null
-  ];
+    employeeDashboard === "admin" && {
+      label: "Employee",
+      key: "employeetable",
+      icon: <BsPersonFill />,
+    }
+  ].filter(Boolean);
 
   const siderStyle = {
     overflow: "auto",
@@ -82,16 +73,14 @@ const Sidenav = ({collapsed,toggleCollapsed,setCollapsed,isMobile}) => {
       }
        {collapsed ? null : (
         <Button
-          className="block xl:hidden -mb-2"
+          className='-mb-2'
           type="text"
-          MenuFoldOutlined
-          icon={collapsed ? <TfiControlForward /> : <TfiControlForward />}
+          icon={!collapsed ? <TfiControlForward className="2xl:hidden"/>: null}
           onClick={() => setCollapsed(!collapsed)}
           style={{ fontSize: "22px", width: 64, height: 64, color: "white" }}
         />
       )}
       </div>
-      {/* <Divider/> */}
       <Menu
         onClick={(item) => {
           navigate(item.key);
