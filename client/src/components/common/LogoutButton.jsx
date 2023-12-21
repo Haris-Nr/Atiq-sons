@@ -1,13 +1,34 @@
-import React from 'react'
-import { Button } from "antd";
-const LogoutButton = () => {
-  return (
-    <div>
-        <Button>
-            Logout
-        </Button>
-    </div>
-  )
-}
+// Import necessary modules
+import React from 'react';
+import { Button, message as messageApi } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUser } from '../../redux/Features/auth/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { TbLogout } from "react-icons/tb";
 
-export default LogoutButton
+
+const LogoutButton = () => {
+  const dispatch = useDispatch();
+  const Navigate = useNavigate();
+  const {logoutData} = useSelector((state)=> state.auth)
+  // const {user} = useSelector((state)=> state.fetch)
+
+
+
+  const handleLogout = () => {
+    dispatch(logoutUser(logoutData));
+    // dispatch(fetchUser);
+    sessionStorage.removeItem("token");
+    Navigate('/');
+    messageApi.success(logoutData.message);
+  };
+  
+
+  return (
+    <div onClick={handleLogout} className='text-red-500 text-2xl cursor-pointer' >
+      <TbLogout />
+    </div>
+  );
+};
+
+export default LogoutButton;

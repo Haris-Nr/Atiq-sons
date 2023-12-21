@@ -3,6 +3,7 @@ import { Badge, Button, Flex, Typography } from "antd";
 import { TfiAlignRight, TfiAlignLeft } from "react-icons/tfi";
 import { Header } from "antd/es/layout/layout";
 import { IoNotificationsOutline } from "react-icons/io5";
+import LogoutButton from "./LogoutButton";
 
 
 const Head = ({ collapsed, toggleCollapsed, isMobile,user }) => {
@@ -34,7 +35,7 @@ const Head = ({ collapsed, toggleCollapsed, isMobile,user }) => {
           />
           <Typography.Text className="text-clip font-bold">{employee?.dashboard.charAt(0).toUpperCase() + employee?.dashboard.slice(1) +" "+ "Dashboard" }</Typography.Text>
         </Flex>
-        <Flex justify="center" align="center" gap={20} className="mt-2 mr-6">
+        <Flex justify="center" align="center" gap={16} className="mt-2 mr-6">
           <Badge
             count={1}
             overflowCount={10}
@@ -49,6 +50,7 @@ const Head = ({ collapsed, toggleCollapsed, isMobile,user }) => {
             <Typography.Text className="text-lg font-bold" >{employee?.fullname.charAt(0).toUpperCase() + employee?.fullname.slice(1)}</Typography.Text>
             <Typography.Text className="text-clip font-normal">{employee?.role}</Typography.Text>
           </Flex>
+      <LogoutButton/>
         </Flex>
       </Flex>
     </Header>

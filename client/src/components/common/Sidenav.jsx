@@ -9,13 +9,7 @@ import { FaTasks } from "react-icons/fa";
 import { FaPersonShelter } from "react-icons/fa6";
 import { BsPersonFill } from "react-icons/bs";
 
-const Sidenav = ({
-  collapsed,
-  toggleCollapsed,
-  setCollapsed,
-  isMobile,
-  user,
-}) => {
+const Sidenav = ({collapsed,toggleCollapsed,setCollapsed,isMobile,user}) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -27,23 +21,28 @@ const Sidenav = ({
   }, [location.pathname]);
 
   const employeeDashboard = user?.employee?.dashboard;
-
+  
   const items = [
     employeeDashboard === "lahore" && {
-      label: "Product",
-      key: "producttable",
-      icon: <FaProductHunt />,
+      label:"Product",
+      key:"producttable",
+      icon: <FaProductHunt/>
     },
-    employeeDashboard === "lahore" && {
+    employeeDashboard === "lahore" &&  {
       label: "Task",
       key: "tasktable",
       icon: <FaTasks />,
     },
     employeeDashboard === "admin" && {
       label: "Employee",
-      key: "employees",
+      key: "employeetable",
       icon: <BsPersonFill />,
     },
+    employeeDashboard === "admin" && {
+      label: "Logs",
+      key: "logtable",
+      icon: <BsPersonFill />,
+    }
   ].filter(Boolean);
 
   const siderStyle = {
@@ -68,28 +67,24 @@ const Sidenav = ({
       onBreakpoint={(broken) => setCollapsed(broken)}
       trigger={null}
     >
-      <div className="flex items-center p-5 gap-6">
-        {collapsed ? (
-          <div className="text-white font-bold text-3xl">
-            <img src="/logo.png" alt="logo" />
-          </div>
-        ) : (
-          <div className="text-white font-bold text-3xl justify-center flex items-center gap-2">
-            <img src="/logo.png" alt="logo" />
-            AtiqSons
-          </div>
-        )}
-        {collapsed ? null : (
-          <Button
-            className="-mb-2"
-            type="text"
-            icon={
-              !collapsed ? <TfiControlForward className="2xl:hidden" /> : null
-            }
-            onClick={() => setCollapsed(!collapsed)}
-            style={{ fontSize: "22px", width: 64, height: 64, color: "white" }}
-          />
-        )}
+      <div className="flex items-center p-5 gap-6"> 
+      {collapsed ? <div className="text-white font-bold text-3xl">
+        <img src="/logo.png" alt="logo" />
+      </div> :
+        <div className="text-white font-bold text-3xl justify-center flex items-center gap-2">
+          <img src="/logo.png" alt="logo" />
+          AtiqSons
+        </div>
+      }
+       {collapsed ? null : (
+        <Button
+          className='-mb-2'
+          type="text"
+          icon={!collapsed ? <TfiControlForward className="2xl:hidden"/>: null}
+          onClick={() => setCollapsed(!collapsed)}
+          style={{ fontSize: "22px", width: 64, height: 64, color: "white" }}
+        />
+      )}
       </div>
       <Menu
         onClick={(item) => {
