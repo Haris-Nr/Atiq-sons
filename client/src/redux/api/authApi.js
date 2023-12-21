@@ -32,12 +32,19 @@ const resetPassword = async (resetData) =>{
     }
 }
 
-const logout = async () =>{
-    const {data} = await axiosInstance.post(`user/resetpassword`);
-    return data
+const logout = async () => {
+    const {data} = await axiosInstance.post(`user/logout`);
+    return data;
 }
 
-
+const getAllLogs = async () => {
+    try {
+        const {data} = await axiosInstance.get(`log/logs`);
+        return data;
+    } catch (error) {
+        throw error.response.data;
+    }
+}
 
 
 const authApi = {
@@ -45,7 +52,8 @@ const authApi = {
     login,
     currentUser,
     resetPassword,
-    logout
+    logout,
+    getAllLogs
 };
 
 export default authApi;
