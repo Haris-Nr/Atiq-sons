@@ -11,12 +11,12 @@ const CrumBread = () => {
     title: item.charAt(0).toUpperCase() + item.slice(1),
     key: index,
   }));
-  const itemRender = (route, params, items, paths) => {
+  const itemRender = (route, params, items) => {
     const last = items.indexOf(route) === items.length - 1;
     return last ? (
       <span>{route.title}</span>
     ) : (
-      <Link to={paths.join("/")}>{route.title}</Link>
+      <Link to=".." relative="path">{route.title}</Link>
     );
   };
   return (

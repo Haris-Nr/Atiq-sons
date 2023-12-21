@@ -1,6 +1,6 @@
 {
     "docwriter.progress.trackMethods": false,
-    "docwriter.progress.trackFunctions": false,
+    "docwriter.progress.trackFunctions": true,
     "editor.inlineSuggest.showToolbar": "onHover",
     "docwriter.hotkey.mac": "⌥ + ."
 }

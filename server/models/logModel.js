@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const logSchema = new Schema(
   {
     user_id: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "users",
     },
     action: {

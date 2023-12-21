@@ -1,25 +1,51 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Modal } from "antd";
-import { Form, Input, InputNumber, Button, Upload, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { PlusCircleOutlined   } from '@ant-design/icons';
-import { useDispatch,useSelector } from "react-redux";
-import { Productsbyemployee, addProduct } from "../../redux/Features/Product/productSlice";
+import {
+  Form,
+  Input,
+  InputNumber,
+  Button,
+  Upload,
+  message,
+  Modal,
+  Select,
+} from "antd";
+import { UploadOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  Productsbyemployee,
+  addProduct,
+} from "../../redux/Features/Product/productSlice";
+import { Option } from "antd/es/mentions";
+
+const props = {
+  progress: {
+    strokeColor: {
+      '0%': '#108ee9',
+      '100%': '#87d068',
+    },
+    strokeWidth: 3,
+    format: (percent) => percent && `${parseFloat(percent.toFixed(2))}%`,
+  },
+}
 
 const ProductButton = () => {
+  
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.fetch);
   const { employee } = user;
-  const { productdata } = useSelector((state)=>state.product)
+  const { productdata, isLoading } = useSelector((state) => state.product);
 
-  const onFinish = (values) => {
-    console.log(values)
-    values.createdBy = employee?._id
-    dispatch(addProduct(values)).then(()=>{
-      dispatch(Productsbyemployee(employee?._id))
-    })
+  const onFinish = async (values) => {
+    const formData = {
+      ...values,
+      createdBy: employee?._id,
+      image: values.image.file.originFileObj,
+    };
+    dispatch(addProduct(formData)).then(() => {
+      dispatch(Productsbyemployee(employee?._id));
+    });
   };
 
   useEffect(() => {
@@ -31,17 +57,7 @@ const ProductButton = () => {
       message.error(productdata.message);
       setConfirmLoading(false);
     }
-  }, [productdata,dispatch]);
-  
-
-
-  const validateImage = (_, file) => {
-    const isImage = file.type.startsWith("image/");
-    if (!isImage) {
-      message.error("You can only upload image files!");
-    }
-    return isImage;
-  };
+  }, [productdata, dispatch]);
 
   const showModal = () => {
     setOpen(true);
@@ -56,26 +72,44 @@ const ProductButton = () => {
 
   const handleOk = () => {
     formRef.current.submit();
+    setConfirmLoading(true);
+    if (isLoading) {
+      resetFormAndCloseModal();
+      setConfirmLoading(false);
+    }
   };
 
   const handleCancel = () => {
-    resetFormAndCloseModal()
+    resetFormAndCloseModal();
   };
+
+  const selectAfter = (
+    <Select
+      defaultValue="USD"
+      style={{
+        width: 60,
+      }}
+    >
+      <Option value="USD">$</Option>
+      <Option value="EUR">€</Option>
+      <Option value="GBP">£</Option>
+      <Option value="CNY">¥</Option>
+      <Option value="AED">AED</Option>
+    </Select>
+  );
 
   return (
     <>
-      <div className=" relative w-full px-4 max-w-full flex-grow flex-1 text-right " >
-       <Button
-       onClick={showModal}
-    className=" text-white group-hover:text-gray-900   bg-indigo-500 focus:bg-indigo-600 ..."
-      shape="round"
-      icon={<PlusCircleOutlined   />}
-      size="medium"
-     
-    >
-      Add Product
-    </Button>
-    </div>
+  
+        <Button
+          type="primary"
+          onClick={showModal}
+          shape="round"
+          icon={<PlusCircleOutlined />}
+        >
+          Add New Product
+        </Button>
+
       <Modal
         title="Add Product"
         open={open}
@@ -127,17 +161,13 @@ const ProductButton = () => {
           <Form.Item
             label="Image Upload"
             name="image"
-            valuePropName="fileList"
-            getValueFromEvent={(e) => e && e.fileList}
-          rules={[{ required: true, message: 'Please upload an image!' }]}
+            rules={[{ required: true, message: "Please upload an image!" }]}
           >
             <Upload
-              name="image"
-              listType="picture-card"
-              beforeUpload={validateImage}
-              showUploadList={false}
+            {...props}
+             maxCount={1}
             >
-              <Button icon={<UploadOutlined />}>Upload Image</Button>
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
             </Upload>
           </Form.Item>
           <Form.Item
@@ -166,8 +196,9 @@ const ProductButton = () => {
             ]}
           >
             <InputNumber
+              addonAfter={selectAfter}
               formatter={(value) =>
-                `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
               }
               parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
               style={{ width: "100%" }}
@@ -184,6 +215,10 @@ const ProductButton = () => {
                 min: 0,
                 message: "Rating must be a non-negative number!",
               },
+              {
+                max:5,
+                message: "Rating must be a less than or equal to 5 number!",
+              }
             ]}
           >
             <InputNumber

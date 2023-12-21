@@ -2,7 +2,11 @@ import axiosInstance from './axiosInstance';
 
 const addProduct = async (productData) => {
     try {
-        const response = await axiosInstance.post(`/product/addproduct`, productData);
+        const response = await axiosInstance.post(`/product/addproduct`, productData,{
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
         return response.data;  
     } catch (error) {
         throw error.response.data 

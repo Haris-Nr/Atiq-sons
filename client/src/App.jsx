@@ -38,13 +38,7 @@ const router = createBrowserRouter(
         <Route path="tasktable" element={<LahoreTaskTable />} />
 
         {/* Admin Routes */}
-        <Route path="employeetable" element={<Empolyee />} />
-
-        <Route path="custom" element={<Custom />} />
-        <Route path="log" element={<Log />} />
-        <Route path="task" element={<Task />} />
-        <Route path="product" element={<ProductTable />} />
-        <Route path="addTask" element={<AddTask />} />
+        <Route path="employees" element={<Empolyee />} />
       </Route>
     </Route>
   )

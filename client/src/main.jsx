@@ -10,6 +10,7 @@ import { ConfigProvider } from 'antd'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ConfigProvider theme={{
+      token: {},
         components: {
           Layout: {
             bodyBg:"#F2F1F9",
@@ -17,6 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             footerBg:"white",
             headerBg:"white",
           },
+          Button: {},
         },
   }} 
   >

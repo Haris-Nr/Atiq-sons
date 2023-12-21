@@ -1,5 +1,4 @@
 const Product = require("../models/productModels");
-const User = require("../models/userModel");
 const Notification = require("../models/notificationModel");
 const cloudinary = require("../config/cloudinary");
 
@@ -18,31 +17,22 @@ const createProduct = async (req, res) => {
       throw new Error("Product already in product list");
     }
 
-    const result = await cloudinary.uploader.upload(req.image.path, {
-      folder: "Atiq-sons",
-    });
+    let result
 
-    console.log(result)
+    try {
+      result = await cloudinary.uploader.upload(req.file.path,{
+        folder: "Atiq-sons"
+      });
+    } catch (uploadError) {
+      throw new Error("Error uploading image to Cloudinary");
+    }
 
-    // const user = User.findById(req.body.userID);
-    // //  send notification to admin 
-    // const admins = await User.find({ role: "admin"});
-    // admins.forEach(async (admin) => {
-    //     const newNotification = new Notification({
-    //       user: admin._id,
-    //       message: `New product added by ${user.fullname}`,
-    //       title: "New Product",
-    //       onClick: `/admin`,
-    //       seen: false,  
-    //     });
-    //     await newNotification.save();
-    // });
-
-    const newProduct = new Product(req.body);
+   
+    const newProduct = new Product({...req.body,image:result.secure_url});
 
     await newProduct.save();
 
-    res.status(201).json({
+    res.status(201).send({
       success: true,
       message: "Product created successfully",
     });

@@ -19,4 +19,17 @@
 	background-color: #2B2A3F;
   }
 
+  .ant-btn-primary{
+    background-color: #6560F0 !important;
+  }
+
+  .ant-btn-primary:hover{
+    background-color: #150ef2 !important;
+    
+  }
+
+  .ant-btn-icon-only:hover{
+    background-color: white !important;
+  }
+
   

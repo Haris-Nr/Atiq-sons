@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Spin, message } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
 import { loginUser, resetLoginState} from "../redux/Features/auth/authSlice";
 import { fetchUser } from "../redux/Features/auth/fetchSlice";
 
 const Login = () => {
-  const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const {loginData,isLoading} = useSelector((state)=> state.auth)
+  const {loginData} = useSelector((state)=> state.auth)
   const {user} = useSelector((state)=> state.fetch)
 
 
@@ -42,19 +41,19 @@ const Login = () => {
         if (loginData.success === true) {
           sessionStorage.setItem("token",loginData.token)
             dispatch(fetchUser())
-            messageApi.success(loginData.message);
+            message.success(loginData.message);
             dispatch(resetLoginState())
             if (user?.employee?.dashboard) {
               navigate(`/${user?.employee?.dashboard}dashboard`);
             }
         } else if(loginData.success === false) {
-            messageApi.error(loginData.message);
+          message.error(loginData.message);
         dispatch(resetLoginState())
         }
     } catch (error) {
-        messageApi.error(error);
+      message.error(error);
     }
-}, [dispatch,navigate,loginData,messageApi,user])
+}, [dispatch,navigate,loginData,user])
 
 
 
@@ -62,8 +61,6 @@ const Login = () => {
   
   return (
     <div>
-      {contextHolder}
-            {isLoading && <Spin />}
       <h3 className="text-blue-800 font-bold text-lg pb-5">
         Login to Dashboard
       </h3>

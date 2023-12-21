@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Select, Form, Input, message, Spin } from "antd";
+import { Button, Select, Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-number-input";
 import "react-phone-number-input/style.css";
@@ -8,12 +8,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { resetSignupState, signupUser } from "../redux/Features/auth/authSlice";
 
 const Signup = () => {
-    const [messageApi, contextHolder] = message.useMessage();
     const [clientReady, setClientReady] = useState(false);
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { signupData, isLoading } = useSelector((state) => state.auth);
+    const { signupData } = useSelector((state) => state.auth);
 
     const onFinish = async (values) => {
         dispatch(signupUser(values));
@@ -23,16 +22,16 @@ const Signup = () => {
         try {
             if (signupData.success === true) {
                 navigate("/");
-                message.success(signupData.message,[2]);
+                message.success(signupData.message);
                 dispatch(resetSignupState())
             } else if(signupData.success === false) {
-                messageApi.error(signupData.message);
+                message.error(signupData.message);
             dispatch(resetSignupState())
             }
         } catch (error) {
-            messageApi.error(error);
+            message.error(error);
         }
-    }, [dispatch,navigate,signupData,messageApi])
+    }, [dispatch,navigate,signupData])
 
 
     useEffect(() => {
@@ -43,7 +42,7 @@ const Signup = () => {
         }
     }, [navigate]);
 
-    const options = [
+    const dashboard = [
         {
             value: "lahore",
             label: "Lahore",
@@ -60,8 +59,6 @@ const Signup = () => {
 
     return (
         <div>
-            {contextHolder}
-            {isLoading && <Spin />}
             <h3 className="text-blue-800 font-bold text-lg ">Sign Up</h3>
             <Form
                 form={form}
@@ -131,7 +128,6 @@ const Signup = () => {
 
                 <Form.Item
                     name="mobile"
-                    message="Please inout your Phone NO"
                     rules={[
                         {
                             required: true,
@@ -152,7 +148,7 @@ const Signup = () => {
                     <Select
                         placeholder="Select a Dashboard"
                         size="large"
-                        options={options}
+                        options={dashboard}
                     />
                 </Form.Item>
                 <Form.Item shouldUpdate>
