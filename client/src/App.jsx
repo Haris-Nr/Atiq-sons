@@ -10,12 +10,8 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import Empolyee from "./components/Admin/EmpolyeeTable";
-import Custom from "./components/common/Custom";
 import Log from "./components/Admin/LogTable";
-import Task from "./components/common/TaskTable";
 import Dashboard from "./components/common/Dashboard";
-import AddTask from "./components/Admin/TaskForm";
-import ProductTable from "./components/Admin/ProductTable";
 import DashboardLayout from "./components/Layout/DashboardLayout";
 import { Spin } from "antd";
 import { useSelector } from "react-redux";
@@ -39,6 +35,7 @@ const router = createBrowserRouter(
 
         {/* Admin Routes */}
         <Route path="employees" element={<Empolyee />} />
+        <Route path="logs" element={<Log />} />
       </Route>
     </Route>
   )

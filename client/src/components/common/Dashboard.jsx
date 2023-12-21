@@ -1,4 +1,4 @@
-import React, {useEffect, useState}  from "react";
+import React, { useEffect, useState } from "react";
 import {
   DollarCircleOutlined,
   ShoppingCartOutlined,
@@ -8,23 +8,22 @@ import {
 import DashboardCard from "./DashboardCard";
 import { useSelector } from "react-redux";
 
-
 const Dashboard = () => {
   const { user } = useSelector((state) => state.fetch);
   const { employee } = user;
-    const getPeriodOfDay = (hour) =>
-      hour >= 5 && hour < 12
-        ? 'morning'
-        : hour >= 12 && hour < 18
-        ? 'afternoon'
-        : 'evening';
-  
-    const [periodOfDay, setPeriodOfDay] = useState('');
-  
-    useEffect(() => {
-      const currentHour = new Date().getHours();
-      setPeriodOfDay(currentHour === 12 ? 'noon' : getPeriodOfDay(currentHour));
-    }, []);
+  const getPeriodOfDay = (hour) =>
+    hour >= 5 && hour < 12
+      ? "morning"
+      : hour >= 12 && hour < 18
+      ? "afternoon"
+      : "evening";
+
+  const [periodOfDay, setPeriodOfDay] = useState("");
+
+  useEffect(() => {
+    const currentHour = new Date().getHours();
+    setPeriodOfDay(currentHour === 12 ? "noon" : getPeriodOfDay(currentHour));
+  }, []);
   return (
     <>
       <div
@@ -36,7 +35,7 @@ const Dashboard = () => {
         <div className="xl:flex xl:justify-between">
           <div className="p-5 flex-col text-white text-start">
             <h1 className="text-3xl font-bold mb-4">
-            {`Good ${periodOfDay} `}
+              {`Good ${periodOfDay} `}
               {employee?.fullname.charAt(0).toUpperCase() +
                 employee?.fullname.slice(1)}
             </h1>

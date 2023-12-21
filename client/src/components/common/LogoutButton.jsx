@@ -1,6 +1,6 @@
 // Import necessary modules
 import React from 'react';
-import { Button, message as messageApi } from 'antd';
+import { message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../../redux/Features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,7 @@ const LogoutButton = () => {
     // dispatch(fetchUser);
     sessionStorage.removeItem("token");
     Navigate('/');
-    messageApi.success(logoutData.message);
+    message.success(logoutData.message);
   };
   
 
