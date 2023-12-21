@@ -1,41 +1,41 @@
 import { Table, Typography } from "antd";
+import { useEffect, useState } from "react";
+import { getOrders } from "..";
 
-import React from 'react'
+function Log() {
+  const [loading, setLoading] = useState(false);
+  const [dataSource, setDataSource] = useState([]);
 
-const  LogTable  = () => {
+  useEffect(() => {
+    setLoading(true);
+    getOrders().then((res) => {
+      setDataSource(res.products);
+      setLoading(false);
+    });
+  }, []);
 
   const columns = [
     {
       title: "ID",
       dataIndex: "id",
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
-
     },
     {
       title: "Name",
       dataIndex: "Name",
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
-
       render: (value) => <span>{value}</span>,
     },
     {
       title: "Dashboard",
       dataIndex: "dashboard",
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
-
       render: (value) => <span>{value}</span>,
     },
     {
       title: "Login Time",
       dataIndex: "login",
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
-
     },
     {
       title: "LogOut Time",
       dataIndex: "logout",
-      className: 'text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer',
-
     },
   ]
 
@@ -43,7 +43,9 @@ const  LogTable  = () => {
     <div>
       <Typography.Title level={4}>Logs</Typography.Title>
       <Table
+        loading={loading}
         columns={columns}
+        dataSource={dataSource}
         pagination={{
           pageSize: 8,
         }}
@@ -54,4 +56,4 @@ const  LogTable  = () => {
     </div>
   );
 }
-export default LogTable;
+export default Log;
