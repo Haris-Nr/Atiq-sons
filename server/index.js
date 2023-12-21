@@ -16,6 +16,7 @@ const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes")
 const notificationsRoute = require("./routes/notificationsRoute");
 const taskRoute = require("./routes/taskRoutes");
+const logRoute = require("./routes/logRoute");
 
 
 
@@ -25,6 +26,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/product",productRoutes)
 app.use("/api/notification", notificationsRoute);
 app.use("/api/task",taskRoute)
+app.use("/api/log",logRoute)
 
 
 
