@@ -57,9 +57,11 @@ const loginUser = async (req, res) => {
         const logEntry = new Log({
             user_id: user._id,
             action: "Login",
+            loginTime: new Date(),
+            logstatus:"Active"
         });
-
         await logEntry.save();
+
 
         const token = jwt.sign({ userId: user._id }, secret, { expiresIn: "1d" });
 
@@ -207,15 +209,23 @@ const changeStatus = async (req, res) => {
 
 const logout = async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const { userId } = req.body;
 
-        const logEntry = new Log({
-            user_id: userId,
-            action: "Logout",
-        });
-        await logEntry.save();
+        // Find the most recent login log entry for this user
+        const latestLoginLog = await Log.findOne({ user_id: userId, action: "Login" })
+                                        .sort({ createdAt: -1 });
+        if (!latestLoginLog) {
+            throw new Error("Login log not found");
+        }
 
-        sessionStorage.removeItem("token");
+        // Update the log entry with the logout time
+        latestLoginLog.logoutTime = new Date();
+        latestLoginLog.action = "Logout";
+        latestLoginLog.logstatus = "Inactive";
+        await latestLoginLog.save();
+
+        // Clear token or session data if needed
+        // ...
 
         res.status(200).json({
             success: true,
@@ -228,6 +238,7 @@ const logout = async (req, res) => {
         });
     }
 };
+
 
 module.exports = {
     createUser,

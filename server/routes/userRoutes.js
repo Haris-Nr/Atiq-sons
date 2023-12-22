@@ -22,6 +22,6 @@ router.get("/getemployee", authMiddleware, adminCheck, getEmployee);
 router.delete("/delete/:id", authMiddleware, adminCheck, deleteEmployee);
 router.patch("/changestatus/:id", authMiddleware, adminCheck, changeStatus);
 router.get("/currentuser", authMiddleware, fetchUser);
-router.post("/logout",authMiddleware,logout)
+router.post("/logout",logout)
 
 module.exports = router;

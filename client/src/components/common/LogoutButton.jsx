@@ -11,13 +11,12 @@ const LogoutButton = () => {
   const dispatch = useDispatch();
   const Navigate = useNavigate();
   const {logoutData} = useSelector((state)=> state.auth)
-  // const {user} = useSelector((state)=> state.fetch)
+  const {user} = useSelector((state)=> state.fetch)
 
 
 
   const handleLogout = () => {
-    dispatch(logoutUser(logoutData));
-    // dispatch(fetchUser);
+    dispatch(logoutUser(user.employee._id));
     sessionStorage.removeItem("token");
     Navigate('/');
     message.success(logoutData.message);

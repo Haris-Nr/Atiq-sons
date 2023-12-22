@@ -39,9 +39,9 @@ export const resetUserPassword = createAsyncThunk( "user/resetPassword", async (
 }
 );
 
-export const logoutUser = createAsyncThunk( "user/logout", async (thunkAPI) => {
+export const logoutUser = createAsyncThunk( "user/logout", async (userId,thunkAPI) => {
     try {
-        const response = await authApi.logout();
+        const response = await authApi.logout(userId);
         return response;
     } catch (error) {
         return thunkAPI.rejectWithValue(error.response.data);
@@ -106,10 +106,12 @@ export const authSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(logoutUser.fulfilled, (state, action) => {
+                // console.log(action)
                 state.isLoading = false;
                 state.logoutData = action.payload;
             })
             .addCase(logoutUser.rejected, (state, action) => {
+                // console.log(action)
                 state.isLoading = false;
                 state.logoutData = action.payload;
             })

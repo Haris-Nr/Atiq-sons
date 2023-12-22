@@ -32,8 +32,8 @@ const resetPassword = async (resetData) =>{
     }
 }
 
-const logout = async () => {
-    const {data} = await axiosInstance.post(`user/logout`);
+const logout = async (userId) => {
+    const {data} = await axiosInstance.post(`user/logout`,{userId});
     return data;
 }
 

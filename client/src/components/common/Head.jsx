@@ -43,7 +43,7 @@ const Head = ({ collapsed, toggleCollapsed, isMobile, user }) => {
               "Dashboard"}
           </Typography.Text>
         </Flex>
-        <Flex justify="center" align="center" gap={16} className="mt-2 mr-6">
+        <Flex justify="center" align="center" gap={16} className="mt-2">
           <Badge
             count={1}
             overflowCount={10}
@@ -54,6 +54,7 @@ const Head = ({ collapsed, toggleCollapsed, isMobile, user }) => {
           >
             <IoNotificationsOutline className="text-2xl" />
           </Badge>
+          <Flex  justify="space-between" align="center" gap={20} className="-mr-6">
           <Flex vertical justify="center" wrap="wrap">
             <Typography.Text className="text-lg font-bold">
               {employee?.fullname.charAt(0).toUpperCase() +
@@ -64,6 +65,7 @@ const Head = ({ collapsed, toggleCollapsed, isMobile, user }) => {
             </Typography.Text>
           </Flex>
           <LogoutButton />
+          </Flex>
         </Flex>
       </Flex>
     </Header>

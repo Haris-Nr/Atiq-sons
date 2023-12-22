@@ -1,11 +1,14 @@
+const http = require('http')
 const express = require("express");
-const cors = require("cors");
 const app = express();
+const server = http.createServer(app);
+const socketIO = require('./config/socket');
+const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
 const dbConnect = require("./config/dbConnect");
 dbConnect();
-
+socketIO(server);
 
 app.use(cors());
 app.use(express.json());
@@ -34,4 +37,4 @@ app.use("/api/log",logRoute)
 
 
 const PORT = process.env.PORT || 5555;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

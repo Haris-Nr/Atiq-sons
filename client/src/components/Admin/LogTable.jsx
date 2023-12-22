@@ -1,4 +1,4 @@
-import { Table, Typography, Spin } from "antd";
+import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import moment from "moment";
@@ -6,51 +6,75 @@ import { allLogs } from "../../redux/Features/auth/logSlice";
 
 const LogTable = () => {
   const dispatch = useDispatch();
+  const { allLogsData } = useSelector((state) => state.log);
 
-  const state = useSelector((state) => state.log);
-console.log(state.allLogsData)
   useEffect(() => {
     dispatch(allLogs());
   }, [dispatch]);
 
   const columns = [
-    { title: "FullName", dataIndex: "fullname", key: "fullname" },
-    { title: "Email", dataIndex: "email", key: "email" },
-    { title: "Dashboard", dataIndex: "dashboard", key: "dashboard" },
-    { title: "Status", dataIndex: "status", key: "status" },
-    { title: "Action", dataIndex: "action", key: "action" },
+    {
+      title: "FullName",
+      dataIndex: "fullname",
+      key: "fullname",
+      render: (text, record) => {
+        return <>{record?.user_id?.fullname}</>;
+      },
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      render: (text, record) => {
+        return <>{record?.user_id?.email}</>;
+      },
+    },
+    {
+      title: "Dashboard",
+      dataIndex: "dashboard",
+      key: "dashboard",
+      render: (text, record) => {
+        return <>{record?.user_id?.dashboard}</>;
+      },
+    },
     {
       title: "DATE",
       dataIndex: "createdAt",
       render: (text) => moment(text).format("DD/MM/YYYY"),
       key: "createdAt",
     },
-    { title: "Login Time", dataIndex: "createdAt", 
-    render: (text) => moment(text).format("HH:mm:ss"),
-    
-    key: "loginTime" },
-    { title: "Logout Time", dataIndex: "",
-    render: (text) => moment(text).format("HH:mm:ss"),
-    key: "logoutTime" }, // Assuming updatedAt is the logout time
+    {
+      title: "Login Time",
+      dataIndex: "loginTime",
+      render: (text) => moment(text).format("HH:mm:ss"),
+      key: "loginTime",
+    },
+    {
+      title: "Logout Time",
+      dataIndex: "logoutTime",
+      render: (text) => {
+        return(
+          text?
+          moment(text).format("HH:mm:ss"):"00:00:00"
+        );
+      },
+      key: "logoutTime",
+    },
   ];
 
-  const dataSourceWithKeys = state.allLogsData?.data
-    ? state.allLogsData.data.map((item) => ({ ...item.user_id, key: item._id }))
+  const dataSourceWithKeys = allLogsData?.data
+    ? allLogsData?.data.map((item) => ({ ...item, key: item._id }))
     : [];
+    console.log(dataSourceWithKeys)
   return (
     <div>
-      <Typography.Title level={4}>Logs</Typography.Title>
-      {state.isLoading ? (
-        <Spin size="large" />
-      ) : (
-        <Table
-          bordered
-          columns={columns}
-          dataSource={dataSourceWithKeys}
-          pagination={{ pageSize: 8 }}
-          scroll={{ x: 1500 }}
-        />
-      )}
+      <Table
+        bordered
+        columns={columns}
+        dataSource={dataSourceWithKeys}
+        pagination={{ pageSize: 8 }}
+        scroll={{ x: 1500 }}
+      />
     </div>
   );
 };

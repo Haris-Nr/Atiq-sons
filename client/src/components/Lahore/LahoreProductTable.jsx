@@ -73,11 +73,6 @@ const LahoreProductTable = () => {
       key: "quantity",
       render: (text) => renderColumnWithHighlight(text),
     },
-    // {
-    //   title: "Description",
-    //   dataIndex: "description",
-    //   key: "description",
-    // },
     {
       title: "Price",
       dataIndex: "price",
@@ -100,23 +95,12 @@ const LahoreProductTable = () => {
       key: "asin",
       render: (text) => renderColumnWithHighlight(text),
     },
-
-    // {
-    //   title: "Brand",
-    //   dataIndex: "brand",
-    //   key: "brand",
-    // },
     {
       title: "Category",
       dataIndex: "category",
       key: "category",
       render: (text) => renderColumnWithHighlight(text),
     },
-    // {
-    //   title: "Seller Name",
-    //   dataIndex: "createdBy",
-    //   key: "createdBy",
-    // },
     {
       title: "Status",
       dataIndex: "status",

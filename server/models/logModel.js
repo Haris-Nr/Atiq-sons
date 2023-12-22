@@ -6,18 +6,28 @@ const logSchema = new Schema(
     user_id: {
       type: Schema.Types.ObjectId,
       ref: "users",
+      required: true,
     },
+
     action: {
       type: String,
       required: true,
+      enum: ["Login", "Logout"],
     },
-    status: {
+    logstatus: {
       type: String,
       enum: ["Active", "Inactive"],
       default: "Inactive",
-      index: true,
-  },
-  
+    },
+    loginTime: {
+      type: Date,
+      default: null,
+    },
+
+    logoutTime: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
