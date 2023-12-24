@@ -17,6 +17,8 @@ import { Spin } from "antd";
 import { useSelector } from "react-redux";
 import LahoreProductTable from "./components/Lahore/LahoreProductTable";
 import LahoreTaskTable from "./components/Lahore/LahoreTaskTable";
+import DubaiProductTable from "./components/Dubai/DubaiProductTable";
+import TrackProduct from "./components/Lahore/TrackProduct";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,8 +32,12 @@ const router = createBrowserRouter(
       <Route path="/:dashboard" element={<DashboardLayout />}>
         <Route index element={<Dashboard />} />
         {/* Lahore Routes */}
-        <Route path="producttable" element={<LahoreProductTable />} />
+        <Route path="lahoreproducttable" element={<LahoreProductTable />} />
         <Route path="tasktable" element={<LahoreTaskTable />} />
+        <Route path="trackproduct" element={<TrackProduct />} />
+
+        {/* Lahore Routes */}
+        <Route path="dubaiproducttable" element={<DubaiProductTable />} />
 
         {/* Admin Routes */}
         <Route path="employees" element={<Empolyee />} />
