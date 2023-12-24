@@ -2,8 +2,9 @@ import React from "react";
 import { Badge, Button, Flex, Typography } from "antd";
 import { TfiAlignRight, TfiAlignLeft } from "react-icons/tfi";
 import { Header } from "antd/es/layout/layout";
-import { IoNotificationsOutline } from "react-icons/io5";
 import LogoutButton from "./LogoutButton";
+import Notifi from "./Notifi";
+
 
 const Head = ({ collapsed, toggleCollapsed, isMobile, user }) => {
   const { employee } = user;
@@ -11,7 +12,7 @@ const Head = ({ collapsed, toggleCollapsed, isMobile, user }) => {
   const headerStyle = {
     position: "fixed",
     zIndex: 1,
-    width: `calc(100% - ${isMobile ? 50 : collapsed ? 110 : 230}px)`,
+    width: `calc(100% - ${isMobile ? 30 : collapsed ? 110 : 230}px)`,
     margin: `16px ${isMobile ? 16 : collapsed ? 80 : 200}px 24px`,
     left: 0,
     top: 0,
@@ -33,7 +34,7 @@ const Head = ({ collapsed, toggleCollapsed, isMobile, user }) => {
               fontSize: "24px",
               width: 64,
               height: 38,
-              marginLeft: "-50px",
+              marginLeft: "-60px",
             }}
           />
           <Typography.Text className="text-clip font-bold">
@@ -43,7 +44,7 @@ const Head = ({ collapsed, toggleCollapsed, isMobile, user }) => {
               "Dashboard"}
           </Typography.Text>
         </Flex>
-        <Flex justify="center" align="center" gap={16} className="mt-2">
+        <Flex justify="center" align="center" gap={6} className="">
           <Badge
             count={1}
             overflowCount={10}
@@ -52,9 +53,8 @@ const Head = ({ collapsed, toggleCollapsed, isMobile, user }) => {
               backgroundColor: "red",
             }}
           >
-            <IoNotificationsOutline className="text-2xl" />
+            <Notifi/>
           </Badge>
-          <Flex  justify="space-between" align="center" gap={20} className="-mr-6">
           <Flex vertical justify="center" wrap="wrap">
             <Typography.Text className="text-lg font-bold">
               {employee?.fullname.charAt(0).toUpperCase() +
@@ -65,7 +65,6 @@ const Head = ({ collapsed, toggleCollapsed, isMobile, user }) => {
             </Typography.Text>
           </Flex>
           <LogoutButton />
-          </Flex>
         </Flex>
       </Flex>
     </Header>

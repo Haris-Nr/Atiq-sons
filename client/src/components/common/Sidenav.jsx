@@ -31,13 +31,23 @@ const Sidenav = ({
   const items = [
     employeeDashboard === "lahore" && {
       label: "Product",
-      key: "producttable",
+      key: "lahoreproducttable",
       icon: < FaProductHunt />,
     },
     employeeDashboard === "lahore" && {
       label: "Task",
       key: "tasktable",
       icon: <FaTasks />,
+    },
+    employeeDashboard === "lahore" && {
+      label: "Tack Product",
+      key: "trackproduct",
+      icon: <FaProductHunt />,
+    },
+    employeeDashboard === "dubai" && {
+      label: "Product",
+      key: "dubaiproducttable",
+      icon: <FaProductHunt />,
     },
     employeeDashboard === "admin" && {
       label: "Employee",
