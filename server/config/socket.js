@@ -1,20 +1,29 @@
 const socketIO = require('socket.io');
-let connectedUsers = 0;
 
-module.exports = function (server) {
-    const io = socketIO(server);
+let loggedInEmployeeCount = 0;
+
+module.exports = (server) => {
+    const io = socketIO(server, {
+        cors: {
+            origin: "http://localhost:5173",
+            methods: "*",
+        }
+    });
+
 
     io.on('connection', (socket) => {
-        console.log('A user connected'+ socket.id);
-        connectedUsers++
+        console.log('A user connected ' + socket.id);
+        loggedInEmployeeCount++
+        socket.emit('userCount', loggedInEmployeeCount);
 
-        socket.on('message', (data)=> {
-            console.log('Message received:', data);
-        });
 
-        socket.on('disconnect',  ()=> {
-            connectedUsers--
-            console.log('A user disconnected');
+       socket.on('disconnect', () => {
+        loggedInEmployeeCount--;
         });
+       
     });
+
+    
+
+    return io;
 };

@@ -1,16 +1,21 @@
 import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect} from "react";
 import moment from "moment";
-import { allLogs } from "../../redux/Features/auth/logSlice";
+import { allLogs, setCurrentPage, setPageSize } from "../../redux/Features/auth/logSlice";
 
 const LogTable = () => {
   const dispatch = useDispatch();
-  const { allLogsData } = useSelector((state) => state.log);
+  const { allLogsData, totalItems, currentPage, pageSize } = useSelector((state) => state.log);
 
   useEffect(() => {
     dispatch(allLogs());
-  }, [dispatch]);
+  }, [dispatch, currentPage, pageSize]);
+
+  const handleTableChange = (pagination) => {
+    dispatch(setCurrentPage(pagination.current));
+    dispatch(setPageSize(pagination.pageSize));
+  };
 
   const columns = [
     {
@@ -65,14 +70,20 @@ const LogTable = () => {
   const dataSourceWithKeys = allLogsData?.data
     ? allLogsData?.data.map((item) => ({ ...item, key: item._id }))
     : [];
-    console.log(dataSourceWithKeys)
+
   return (
     <div>
       <Table
         bordered
         columns={columns}
         dataSource={dataSourceWithKeys}
-        pagination={{ pageSize: 8 }}
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: totalItems,
+          showTotal: (total) => `Total ${total} items`,
+        }}
+        onChange={handleTableChange}
         scroll={{ x: 1500 }}
       />
     </div>

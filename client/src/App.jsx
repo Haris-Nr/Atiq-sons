@@ -13,12 +13,12 @@ import Empolyee from "./components/Admin/EmpolyeeTable";
 import Log from "./components/Admin/LogTable";
 import Dashboard from "./components/common/Dashboard";
 import DashboardLayout from "./components/Layout/DashboardLayout";
-import { Spin } from "antd";
-import { useSelector } from "react-redux";
 import LahoreProductTable from "./components/Lahore/LahoreProductTable";
 import LahoreTaskTable from "./components/Lahore/LahoreTaskTable";
 import DubaiProductTable from "./components/Dubai/DubaiProductTable";
 import TrackProduct from "./components/Lahore/TrackProduct";
+import AdminProductTable from "./components/Admin/AdminProductTable";
+import NotifyTable from "./components/common/NotifyTable";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,6 +31,7 @@ const router = createBrowserRouter(
 
       <Route path="/:dashboard" element={<DashboardLayout />}>
         <Route index element={<Dashboard />} />
+        
         {/* Lahore Routes */}
         <Route path="lahoreproducttable" element={<LahoreProductTable />} />
         <Route path="tasktable" element={<LahoreTaskTable />} />
@@ -42,17 +43,19 @@ const router = createBrowserRouter(
         {/* Admin Routes */}
         <Route path="employees" element={<Empolyee />} />
         <Route path="logs" element={<Log />} />
+        <Route path="productTable" element={<AdminProductTable/>}/>
+        <Route path="notification" element={<NotifyTable/>}/>
+
+
       </Route>
     </Route>
   )
 );
 
 function App() {
-  const { isLoading } = useSelector((state) => state.fetch);
 
   return (
     <>
-      {isLoading && <Spin />}
       <RouterProvider router={router} />
     </>
   );

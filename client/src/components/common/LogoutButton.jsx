@@ -1,32 +1,46 @@
-// Import necessary modules
-import React from 'react';
-import { message } from 'antd';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { logoutUser } from '../../redux/Features/auth/authSlice';
+import { logoutUser, resetLogoutState } from '../../redux/Features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { TbLogout } from "react-icons/tb";
+import { message } from 'antd';
+import { resetFetchState } from '../../redux/Features/auth/fetchSlice';
 
 
 const LogoutButton = () => {
   const dispatch = useDispatch();
   const Navigate = useNavigate();
-  const {logoutData} = useSelector((state)=> state.auth)
   const {user} = useSelector((state)=> state.fetch)
-
-
-
-  const handleLogout = () => {
-    dispatch(logoutUser(user.employee._id));
-    sessionStorage.removeItem("token");
-    Navigate('/');
+  const {logoutData} = useSelector((state)=> state.auth)
+useEffect(() => {
+  if (logoutData && logoutData.message) {
+    Navigate("/");
     message.success(logoutData.message);
-  };
+    dispatch(resetLogoutState())
+    dispatch(resetFetchState())
+  }
+}, [logoutData,Navigate,dispatch])
+
+
+
+
+  const handleLogout = useCallback(() => {
+    try {
+       dispatch(logoutUser(user.employee._id));
+      localStorage.removeItem("token");
+    } catch (error) {
+      // Handle any errors here
+      console.error("Logout failed", error);
+    }
+  }, [dispatch ,user]);
+  
+  
   
 
   return (
-    <div onClick={handleLogout} className='text-red-500 text-2xl cursor-pointer' >
-      <TbLogout />
-    </div>
+    <>
+      <TbLogout onClick={handleLogout} className='text-red-500 text-2xl cursor-pointer' />
+    </>
   );
 };
 

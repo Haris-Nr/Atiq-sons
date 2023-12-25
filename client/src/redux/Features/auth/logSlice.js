@@ -3,17 +3,22 @@ import authApi from "../../api/authApi";
 
 const initialState = {
     allLogsData: [],
-    isLoading: false,
+  isLoading: false,
+  currentPage: 1,
+  pageSize: 10,
+  totalPages: 0,
+  totalItems: 0,
 };
 
 export const allLogs = createAsyncThunk(
-    "log/logs",
-    async (_, thunkAPI) => {
+    "user/logs",
+    async (_, { getState, rejectWithValue }) => {
+        const { currentPage, pageSize } = getState().log;
         try {
-            const response = await authApi.getAllLogs();
+          const response = await authApi.getAllLogs(currentPage, pageSize);
             return response;
         } catch (error) {
-            return thunkAPI.rejectWithValue(error);
+            return rejectWithValue(error);
         }
     }
 );
@@ -21,7 +26,15 @@ export const allLogs = createAsyncThunk(
 export const logSlice = createSlice({
     name: "logs",
     initialState,
-    reducers: {},
+    reducers: {
+        setCurrentPage(state, action) {
+          state.currentPage = action.payload;
+        },
+        setPageSize(state, action) {
+          state.pageSize = action.payload;
+        },
+      },
+    
     extraReducers: (builder) => {
         builder
             .addCase(allLogs.pending, (state) => {
@@ -30,6 +43,9 @@ export const logSlice = createSlice({
             .addCase(allLogs.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.allLogsData = action.payload;
+                state.currentPage = action.payload.pageInfo.currentPage;
+                state.totalPages = action.payload.pageInfo.totalPages;
+                state.totalItems = action.payload.pageInfo.totalItems;
             })
             .addCase(allLogs.rejected, (state, action) => {
                 state.isLoading = false;
@@ -37,5 +53,6 @@ export const logSlice = createSlice({
             });
     },
 });
+export const { setCurrentPage, setPageSize } = logSlice.actions;
 
 export default logSlice.reducer;

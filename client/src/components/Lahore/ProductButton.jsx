@@ -16,6 +16,7 @@ import {
   addProduct,
 } from "../../redux/Features/Product/productSlice";
 import { Option } from "antd/es/mentions";
+import { FetchNotifications } from "../../redux/Features/Notification/notificationSlice";
 
 const props = {
   progress: {
@@ -45,6 +46,7 @@ const ProductButton = () => {
     };
     dispatch(addProduct(formData)).then(() => {
       dispatch(Productsbyemployee(employee?._id));
+      dispatch(FetchNotifications())
     });
   };
 
@@ -216,6 +218,7 @@ const ProductButton = () => {
                 message: "Rating must be a non-negative number!",
               },
               {
+                type:'number',
                 max:5,
                 message: "Rating must be a less than or equal to 5 number!",
               }

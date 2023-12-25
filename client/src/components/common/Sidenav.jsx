@@ -8,6 +8,7 @@ import { FaProductHunt } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
 import { FaPersonShelter } from "react-icons/fa6";
 import { BsPersonFill } from "react-icons/bs";
+import PropTypes from "prop-types"; 
 
 const Sidenav = ({
   collapsed,
@@ -29,6 +30,13 @@ const Sidenav = ({
   const employeeDashboard = user?.employee?.dashboard;
 
   const items = [
+    {
+      label:"Dashboard",
+      key:".",
+      path:"relative",
+      icon: < AppstoreOutlined />
+    },
+    // lahore
     employeeDashboard === "lahore" && {
       label: "Product",
       key: "lahoreproducttable",
@@ -44,11 +52,13 @@ const Sidenav = ({
       key: "trackproduct",
       icon: <FaProductHunt />,
     },
+    // dubai
     employeeDashboard === "dubai" && {
       label: "Product",
       key: "dubaiproducttable",
       icon: <FaProductHunt />,
     },
+    //admin
     employeeDashboard === "admin" && {
       label: "Employee",
       key: "employees",
@@ -57,7 +67,12 @@ const Sidenav = ({
     employeeDashboard === "admin" && {
       label: "Logs",
       key: "logs",
-      icon: <BsPersonFill />,
+      icon: <FaPersonShelter />,
+    },
+    employeeDashboard === "admin" && {
+      label: "Products",
+      key: "productTable",
+      icon: <FaProductHunt />,
     },
   ].filter(Boolean);
 
@@ -117,5 +132,14 @@ const Sidenav = ({
     </Sider>
   );
 };
+
+Sidenav.propTypes = {
+  collapsed: PropTypes.bool.isRequired, 
+  toggleCollapsed: PropTypes.func.isRequired, 
+  setCollapsed: PropTypes.func.isRequired,
+  isMobile: PropTypes.bool.isRequired,
+  user: PropTypes.object.isRequired,
+};
+
 
 export default Sidenav;

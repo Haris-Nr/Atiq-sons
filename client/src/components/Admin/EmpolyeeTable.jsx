@@ -1,11 +1,4 @@
-import {
-  Button,
-  Popconfirm,
-  Space,
-  Table,
-  Tag,
-  message,
-} from "antd";
+import { Button, Popconfirm, Space, Table, Tag, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -27,29 +20,35 @@ function Empolyee() {
   const { getEmployeedata, isLoading, deleteEmployeedata, changeStatusdata } =
     useSelector((state) => state.employee);
 
-    const [searchText, setSearchText] = useState("");
-    const searchInput = useRef(null);
+  const [searchText, setSearchText] = useState("");
+  const searchInput = useRef(null);
+  const handleSearch = (value) => {
+    setSearchText(value);
+  };
 
-    const handleSearch = (value) => {
-      setSearchText(value);
-    };
-
-    const renderColumnWithHighlight = (text) => (
-      <Highlighter
-        highlightStyle={{
-          backgroundColor: "yellow",
-          padding: 0,
-        }}
-        searchWords={[searchText]}
-        autoEscape
-        textToHighlight={text ? text.toString() : ""}
-      />
-    );
+  const renderColumnWithHighlight = (text) => (
+    <Highlighter
+      highlightStyle={{
+        backgroundColor: "yellow",
+        padding: 0,
+      }}
+      searchWords={[searchText]}
+      autoEscape
+      textToHighlight={text ? text.toString() : ""}
+    />
+  );
 
   useEffect(() => {
     dispatch(getEmployee());
   }, [dispatch]);
 
+  
+  const handleStatus = (id, newStatus) => {
+    dispatch(changeUserStatus({ id, newStatus })).then(() => {
+      dispatch(getEmployee());
+    });
+    
+  };
   useEffect(() => {
     if (changeStatusdata.success === true) {
       message.success(changeStatusdata.message);
@@ -60,28 +59,22 @@ function Empolyee() {
     }
   }, [changeStatusdata, dispatch]);
 
-  useEffect(() => {
-    if (deleteEmployeedata.success === true) {
-      message.success(deleteEmployeedata.message);
-      dispatch(resetDeleteState())
-    } else if (deleteEmployeedata.success === false) {
-      message.error(deleteEmployeedata.message);
-      dispatch(resetDeleteState())
-    }
-  }, [deleteEmployeedata,dispatch]);
 
   const handleDelete = (id) => {
     dispatch(deleteEmployee(id)).then(() => {
       dispatch(getEmployee());
     });
   };
-
-  const handleStatus = (id, newStatus) => {
-    dispatch(changeUserStatus({ id, newStatus })).then(() => {
-      dispatch(getEmployee());
-    });
-  };
-
+  useEffect(() => {
+    if (deleteEmployeedata.success === true) {
+      message.success(deleteEmployeedata.message);
+      dispatch(resetDeleteState());
+    } else if (deleteEmployeedata.success === false) {
+      message.error(deleteEmployeedata.message);
+      dispatch(resetDeleteState());
+    }
+  }, [deleteEmployeedata, dispatch]);
+ 
   const columns = [
     {
       title: "SrNo",
@@ -95,35 +88,23 @@ function Empolyee() {
       dataIndex: "fullname",
       key: "fullname",
       render: (text) => {
-        return (
-          <>
-            {renderColumnWithHighlight(text)}
-          </>
-        );
+        return <>{renderColumnWithHighlight(text)}</>;
       },
     },
     {
       title: "Email",
       dataIndex: "email",
-      key:"email",
+      key: "email",
       render: (text) => {
-        return (
-          <>
-            {renderColumnWithHighlight(text)}
-          </>
-        );
+        return <>{renderColumnWithHighlight(text)}</>;
       },
     },
     {
       title: "Phone",
       dataIndex: "mobile",
-      key:"mobile",
+      key: "mobile",
       render: (text) => {
-        return (
-          <>
-            {renderColumnWithHighlight(text)}
-          </>
-        );
+        return <>{renderColumnWithHighlight(text)}</>;
       },
     },
     {
@@ -131,11 +112,7 @@ function Empolyee() {
       dataIndex: "dashboard",
       key: "dashboard",
       render: (text) => {
-        return (
-          <>
-            {renderColumnWithHighlight(text)}
-          </>
-        );
+        return <>{renderColumnWithHighlight(text)}</>;
       },
     },
     {
@@ -190,10 +167,18 @@ function Empolyee() {
                   `${record.status === "active" ? "blocked" : "active"}`
                 )
               }
-              okText="Yes"
-              cancelText="No"
+              onCancel={() =>
+                handleStatus(
+                  record._id,
+                  `${record.status === "active" ? "blocked" : "active"}`
+                )
+              }
+              okText={`${record.status === "active" ? "" : "active"}`}
+              cancelText={`${record.status === "active" ? "blocked" : ""}`}
             >
-              <Button>status</Button>
+              <Button>{
+                record.status === "active" ? "blocked" : "active"
+              }</Button>
             </Popconfirm>
           </Space>
         );
@@ -204,21 +189,21 @@ function Empolyee() {
 
   const dataSourceWithKeys = getEmployeedata.data
     ? getEmployeedata.data
-    .filter((item) =>
-      Object.values(item)
-        .join(" ")
-        .toLowerCase()
-        .includes(searchText.toLowerCase())
-    )
-    .map((item) => ({
-      ...item,
-      key: item._id,
-    }))
-: [];
+        .filter((item) =>
+          Object.values(item)
+            .join(" ")
+            .toLowerCase()
+            .includes(searchText.toLowerCase())
+        )
+        .map((item) => ({
+          ...item,
+          key: item._id,
+        }))
+    : [];
 
   const heading = (
-    <div className="flex justify-between"> 
-       <Search
+    <div className="flex justify-between">
+      <Search
         ref={searchInput}
         size="medium"
         style={{ marginBottom: 2, width: "30%" }}

@@ -10,7 +10,7 @@ const initialState = {
     AllProductData:[],
     deleteProductData:{},
     updateProductData:{},
-    changeStatusdataData:{},
+    productStatusData:{},
     isLoading: false,
 };
 
@@ -40,7 +40,7 @@ export const Productsbyemployee = createAsyncThunk(
 
 export const SingleProduct = createAsyncThunk (
     "/product/fetchSingleProduct",
-    async (_, thunkAPI) => {
+    async (id, thunkAPI) => {
         try {
             const response = await productApi.getSingleProduct(id);
             return response;
@@ -54,7 +54,7 @@ export const AllProduct = createAsyncThunk(
     "/product/fetchallProduct",
     async (_, thunkAPI) => {
         try {
-            const response = await authApi.getAllProduct();
+            const response = await productApi.getAllProduct();
             return response;
         } catch (error) {
             return thunkAPI.rejectWithValue(error);
@@ -62,8 +62,8 @@ export const AllProduct = createAsyncThunk(
     }
 );
 
-export const deleteProduct = createAsyncThunk(
-    "user/delete",
+export const deleteProductbyId = createAsyncThunk(
+    "product/deleteproductbyid",
     async (id, thunkAPI) => {
         try {
             const response = await productApi.deleteProduct(id);
@@ -75,7 +75,7 @@ export const deleteProduct = createAsyncThunk(
 );
 
 export const updateProduct = createAsyncThunk(
-    "user/updateProduct",
+    "product/updateProduct",
     async (id, thunkAPI) => {
         try {
             const response = await productApi.updateProduct(id);
@@ -86,11 +86,11 @@ export const updateProduct = createAsyncThunk(
     }
 );
 
-export const changeProductStatus = createAsyncThunk(
-    "user/changeStatus",
+export const ProductStatus = createAsyncThunk(
+    "product/productstatus",
     async ({ id, newStatus },thunkAPI) => {
         try {
-            const response = await productApi.changeStatus(id,newStatus);
+            const response = await productApi.changeProductStatus(id,newStatus);
             return response;
         } catch (error) {
             return thunkAPI.rejectWithValue(error);
@@ -104,6 +104,12 @@ export const productSlice = createSlice({
     reducers: {
         resetProductState: (state) => {
             state.productdata = {};
+        },
+        resetDeleteState: (state) => {
+            state.deleteProductData = {};
+        },
+        resetProductStatusState: (state) => {
+            state.productStatusData = {};
         },
     },
     extraReducers:(builder)=>{
@@ -141,7 +147,7 @@ export const productSlice = createSlice({
                 state.isLoading = false;
                 state.SingleProductData = action.payload;
             })
-              .addCase(AllProduct.pending, (state) => {
+            .addCase(AllProduct.pending, (state) => {
                 state.isLoading = true;
             })
             .addCase(AllProduct.fulfilled, (state, action) => {
@@ -152,14 +158,14 @@ export const productSlice = createSlice({
                 state.isLoading = false;
                 state.AllProductData = action.payload;
             })
-            .addCase(deleteProduct.pending, (state) => {
+            .addCase(deleteProductbyId.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(deleteProduct.fulfilled, (state, action) => {
+            .addCase(deleteProductbyId.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.deleteProductData = action.payload;
             })
-            .addCase(deleteProduct.rejected, (state, action) => {
+            .addCase(deleteProductbyId.rejected, (state, action) => {
                 state.isLoading = false;
                 state.deleteProductData = action.payload;
             })
@@ -174,19 +180,19 @@ export const productSlice = createSlice({
                 state.isLoading = false;
                 state.updateProductData = action.payload;
             })
-            .addCase(changeProductStatus.pending, (state) => {
+            .addCase(ProductStatus.pending, (state) => {
                 state.isLoading = true;
             })
-            .addCase(changeProductStatus.fulfilled, (state, action) => {
+            .addCase(ProductStatus.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.changeStatusdataData = action.payload;
+                state.productStatusData = action.payload;
             })
-            .addCase(changeProductStatus.rejected, (state, action) => {
+            .addCase(ProductStatus.rejected, (state, action) => {
                 state.isLoading = false;
-                state.changeStatusdataData = action.payload;
+                state.productStatusData = action.payload;
             })
     }
 })
 
-export const { resetProductState } = productSlice.actions;
+export const { resetProductState,resetDeleteState,resetProductStatusState } = productSlice.actions;
 export default productSlice.reducer;

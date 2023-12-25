@@ -6,6 +6,10 @@ const notificationSchema = new Schema(
       type: String,
       required: true,
     },
+    whichUser:{
+      type: Schema.Types.ObjectId,
+      required:true
+    },
     message: {
       type: String,
       required: true,
@@ -23,6 +27,9 @@ const notificationSchema = new Schema(
         type: Boolean,
         default: false,
     },
+    image:{
+      type: String,
+  },
   },
   {
     timestamps: true,

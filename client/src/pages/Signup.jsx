@@ -36,7 +36,7 @@ const Signup = () => {
 
     useEffect(() => {
         setClientReady(true);
-        const token = sessionStorage.getItem("token");
+        const token = localStorage.getItem("token");
         if (token) {
             navigate("/");
         }

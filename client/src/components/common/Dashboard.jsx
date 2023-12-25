@@ -24,6 +24,9 @@ const Dashboard = () => {
     const currentHour = new Date().getHours();
     setPeriodOfDay(currentHour === 12 ? "noon" : getPeriodOfDay(currentHour));
   }, []);
+
+  
+
   return (
     <>
       <div
@@ -80,7 +83,7 @@ const Dashboard = () => {
                       }}
                     />
                   }
-                  title={"Employee"}
+                  title={`Employee`}
                 />
                 <DashboardCard
                   icon={
@@ -103,6 +106,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+      {/* <ProductOrder/> */}
     </>
   );
 };

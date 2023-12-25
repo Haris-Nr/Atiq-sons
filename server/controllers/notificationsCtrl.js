@@ -15,7 +15,7 @@ const newNotification = async (req, res) => {
       message: error.message,
     });
   }
-};
+};1
 
 // all Notification by particular employee
 const allNotification = async (req, res) => {
@@ -72,9 +72,27 @@ const seenNotification = async (req, res) => {
   }
 };
 
+// delete all notifications
+const deleteAllNotifications = async (req, res) => {
+  try {
+    await Notification.deleteMany({});
+    res.status(200).send({
+      success: true,
+      message: "All notifications have been deleted",
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   newNotification,
   allNotification,
   deleteNotification,
   seenNotification,
+  deleteAllNotifications,
 };

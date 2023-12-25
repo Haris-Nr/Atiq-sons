@@ -18,7 +18,11 @@ export const fetchUser = createAsyncThunk("user/fetch", async (_, thunkAPI) => {
 export const fetchSlice = createSlice({
     name: "fetch",
     initialState,
-    reducers: {},
+    reducers: {
+        resetFetchState: (state) => {
+            state.user = {};
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchUser.pending, (state) => {
@@ -34,4 +38,5 @@ export const fetchSlice = createSlice({
             });
     },
 });
+export const { resetFetchState } = fetchSlice.actions;
 export default fetchSlice.reducer;

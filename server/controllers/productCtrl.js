@@ -1,12 +1,7 @@
 const Product = require("../models/productModels");
 const Notification = require("../models/notificationModel");
 const cloudinary = require("../config/cloudinary");
-
-
-
-
-
-
+const User = require("../models/userModel");
 
 // add product
 const createProduct = async (req, res) => {
@@ -32,6 +27,21 @@ const createProduct = async (req, res) => {
 
     await newProduct.save();
 
+    const user = await User.find(newProduct.createdBy);
+
+    const admins = await User.find({ role: "admin"});
+    admins.forEach(async (admin) => {
+        const newNotification = new Notification({
+          user: user[0]._id,
+          message: `New product added by ${user[0].fullname}`,
+          title: "New Product",
+          onClick: `/admin`,
+          seen: false, 
+          image:`${newProduct.image}` 
+        });
+        await newNotification.save();
+    });
+
     res.status(201).send({
       success: true,
       message: "Product created successfully",
@@ -49,9 +59,10 @@ const fetchProducts =  async (req, res) => {
   try {
     const products = await Product.find({ createdBy: req.body.createdBy })
       .populate("createdBy").sort({ createdAt: -1 });
-      if(!products){
-        return null
-      }
+     
+    if (!products) {
+      throw new Error("No products found");
+   }
     res.send({
       success: true,
       data: products,
@@ -66,14 +77,21 @@ const fetchProducts =  async (req, res) => {
 
 
 // all products
-const allProduct = async (req,res)=>{
+const allProduct = async (req, res) => {
   try {
-    
-    const products = await Product.find()
+    const products = await Product.find().sort({ createdAt: -1 });
+
+    const productsWithSellerInfo = await Promise.all(products.map(async (product) => {
+      const seller = await User.findById(product.createdBy);
+      return {
+        ...product.toObject(),
+        seller: seller ? seller.fullname : "Unknown Seller",
+      };
+    }));
 
     res.send({
       success: true,
-      data: products,
+      data: productsWithSellerInfo, 
     });
   } catch (error) {
     res.send({
@@ -81,7 +99,8 @@ const allProduct = async (req,res)=>{
       message: error.message,
     });
   }
-}
+};
+
 
 
 
@@ -124,14 +143,17 @@ const changeStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const updatedProduct =  await Product.findByIdAndUpdate(req.params.id, { status });
-
+    
+    const admins = await User.find({ role: "admin"});
+    console.log(admins)
     // send notification to seller 
     const newNotification = new Notification({
-      user: updatedProduct.createdBy,
-      message: `Your product ${updatedProduct.title} has been ${status}`,
+      user: admins._id,
+      message: `Your product ${updatedProduct.productName} has been ${status}`,
       title: "Product Status Updated",
       onClick: `/profile`,
-      seen: false,  
+      seen: false,
+      image:`${updatedProduct.image}`  
     });
     await newNotification.save(); 
 

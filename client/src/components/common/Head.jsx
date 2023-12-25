@@ -1,14 +1,16 @@
 import React from "react";
-import { Badge, Button, Flex, Typography } from "antd";
+import { Button, Flex, Typography } from "antd";
 import { TfiAlignRight, TfiAlignLeft } from "react-icons/tfi";
 import { Header } from "antd/es/layout/layout";
 import LogoutButton from "./LogoutButton";
 import Notifi from "./Notifi";
+import PropTypes from 'prop-types';
 
 
 const Head = ({ collapsed, toggleCollapsed, isMobile, user }) => {
-  const { employee } = user;
 
+
+  const { employee } = user;
   const headerStyle = {
     position: "fixed",
     zIndex: 1,
@@ -44,17 +46,8 @@ const Head = ({ collapsed, toggleCollapsed, isMobile, user }) => {
               "Dashboard"}
           </Typography.Text>
         </Flex>
-        <Flex justify="center" align="center" gap={6} className="">
-          <Badge
-            count={1}
-            overflowCount={10}
-            size="small"
-            style={{
-              backgroundColor: "red",
-            }}
-          >
-            <Notifi/>
-          </Badge>
+        <Flex justify="center" align="center" gap={16} className="mt-2 space-x-4 -mr-5">
+         <Notifi/>
           <Flex vertical justify="center" wrap="wrap">
             <Typography.Text className="text-lg font-bold">
               {employee?.fullname.charAt(0).toUpperCase() +
@@ -70,5 +63,19 @@ const Head = ({ collapsed, toggleCollapsed, isMobile, user }) => {
     </Header>
   );
 };
+
+Head.propTypes = {
+  collapsed: PropTypes.bool,
+  toggleCollapsed: PropTypes.func,
+  isMobile: PropTypes.bool,
+  user: PropTypes.shape({
+    employee: PropTypes.shape({
+      fullname: PropTypes.string,
+      role: PropTypes.string,
+      dashboard: PropTypes.string,
+    }),
+  }),
+};
+
 
 export default Head;

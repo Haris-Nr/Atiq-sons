@@ -1,10 +1,10 @@
 import React, {  useRef, useState } from "react";
-import {  Table, Input, Tag, Menu, Space, Dropdown, Button } from "antd";
+import {  Table, Input, Tag, Menu, Dropdown, Button } from "antd";
 import { DownOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 
-const LahoreProductTable = () => {
+const ProductOrder = () => {
  
   const [searchText, setSearchText] = useState("");
   const searchInput = useRef(null);
@@ -170,4 +170,4 @@ const LahoreProductTable = () => {
   );
 };
 
-export default LahoreProductTable;
+export default ProductOrder;

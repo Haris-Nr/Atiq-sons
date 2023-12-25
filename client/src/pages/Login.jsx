@@ -13,17 +13,16 @@ const Login = () => {
   const {loginData} = useSelector((state)=> state.auth)
   const {user} = useSelector((state)=> state.fetch)
 
-
   const [clientReady, setClientReady] = useState(false);
 
 
 
   useEffect(() => {
     setClientReady(true);
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     if (token) {
       if (user?.employee?.dashboard) {
-        navigate(`/${user?.employee?.dashboard}dashboard`);
+        navigate(`/${user?.employee?.dashboard}`);
       }
     } else {
       navigate("/");
@@ -36,15 +35,17 @@ const Login = () => {
   };
   
 
+  
+
   useEffect(() => {    
     try {
         if (loginData.success === true) {
-          sessionStorage.setItem("token",loginData.token)
+          localStorage.setItem("token",loginData.token)
             dispatch(fetchUser())
             message.success(loginData.message);
             dispatch(resetLoginState())
             if (user?.employee?.dashboard) {
-              navigate(`/${user?.employee?.dashboard}dashboard`);
+              navigate(`/${user?.employee?.dashboard}`);
             }
         } else if(loginData.success === false) {
           message.error(loginData.message);

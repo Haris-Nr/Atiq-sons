@@ -1,108 +1,100 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoNotificationsOutline } from 'react-icons/io5';
-import { Tag,Dropdown, Space, Divider } from 'antd';
-import {
-  DollarCircleOutlined,
-  ShoppingCartOutlined,
-  ShoppingOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { Dropdown, Space, Badge, Avatar } from 'antd';
+import { useDispatch, useSelector } from "react-redux";
+import { FetchNotifications } from '../../redux/Features/Notification/notificationSlice';
+import { Link } from 'react-router-dom';
+import moment from "moment"
+import { UserOutlined } from '@ant-design/icons';
 
-const items = [
+
+const Notifi = () => {
+
+  const dispatch = useDispatch()
+  const { getNotificationdata } = useSelector((state)=> state.notifications)
+  const [visibleNotifications, setVisibleNotifications] = useState([]);
+
+  useEffect(()=>{
+    dispatch(FetchNotifications())
+  },[dispatch])
+
+  useEffect(() => {
+    // Update visibleNotifications when getNotificationdata changes
+    if (Array.isArray(getNotificationdata?.data)) {
+      const latestNotifications = getNotificationdata?.data.slice(0, 3); // Show only the latest 3
+      setVisibleNotifications(latestNotifications);
+    }
+  }, [getNotificationdata]);
+
+
+  const notificationItems = visibleNotifications.map((notification) => ([
   {
     label: (
-      <div className='flex justify-between items-center p-3'>
-        <h1 className='font-bold'>Notification(03)</h1>
-        <a style={{ color:"#504BE4" }}>Clear All</a>
+      <Link to={notification.onClick}>
+      <div className='flex justify-start space-x-5 items-center'>
+        {notification.image?
+          <Avatar src={<img src={notification.image} alt="avatar" />}/>:
+          <Avatar icon={<UserOutlined />} />
+          
+        }
+        {notification.title}
+        <span>{notification.message}<br/>{moment(notification.createdAt).fromNow()}</span>
+        <Badge status="processing" />
       </div>
+        </Link>
     ),
-    key: '0',
+    key: notification._id,
   },
   {
     type: 'divider',
   },
-  {
-    label: <div className='flex justify-start space-x-5 items-center'>
- <DollarCircleOutlined
-    className="text-sm md:text-2xl lg:p-4"
-    style={{
-      color: "green",
-      backgroundColor: "#F8F8FB",
-      borderRadius: 40,
-    }}
-  />
-  <span>
-You have requested to withdrawal <br />
-2 hrs ago
-  </span>
-    </div>,
+]));
 
-    key: '1',
-  },
-  {
-    type: 'divider',
-  },
-  {
-    label: 
-    <div className='flex justify-start space-x-5 items-center'>
- <UserOutlined
-    className="text-sm md:text-2xl lg:p-4"
-    style={{
-      color: "purple",
-      backgroundColor: "#F8F8FB",
-      borderRadius: 40,
-    }}
-  />
-  <span className=''>
-  A new user added in AtiqAons <br/>
-  3 hrs ago
-  </span>
-    </div>,
-    key: '2',
-  },
-  {
-    type: 'divider',
-  },
-  {
-    label:  <div className='flex justify-start space-x-5 items-center'>
-    <DollarCircleOutlined
-        className="text-sm md:text-2xl lg:p-4"
-        style={{
-          color: "green",
-          backgroundColor: "#F8F8FB",
-          borderRadius: 40,
-        }}
-      />
-      <span className=''>
-      You have requested to withdrawal<br/>
-      3 hrs ago
-      </span>
-        </div>,
-    key: '3',
-  },
-  {
-    label: (
-      <div style={{ color:"#504BE4" }} className='text-center hover:underline p-3'>
-        <a href="">See All Notification</a>
-      </div>
-    ),
-  }
-];
-
-const Notifi = () => (
+const flattenedNotificationItems = [].concat(...notificationItems);
+  return(
   <Dropdown
     overlayStyle={{ minWidth: '400px' }}
     menu={{
-      items,
+      items: [
+        {
+          label: (
+            <div className='flex justify-between items-center p-3'>
+              <h1 className='font-bold text-xl'>Notifications</h1>
+              <a style={{ color: "#504BE4" }}>Clear All</a>
+            </div>
+          ),
+          key: '0',
+        },
+        {
+          type: 'divider',
+        },
+        ...flattenedNotificationItems,
+        {
+          label: (
+            <div style={{ color: "#504BE4" }} className='text-center hover:underline p-3'>
+              <Link to="notification">See All Notification</Link>
+            </div>
+          ),
+        }
+      ],
     }}
     trigger={['click']}
   >
     <a onClick={(e) => e.preventDefault()}>
       <Space>
+      <Badge
+            count={Array.isArray(getNotificationdata?.data)? getNotificationdata?.data.filter((notification) => !notification.seen).length:"0"}
+            overflowCount={10}
+            size="small"
+            style={{
+              backgroundColor: "red",
+            }}
+          >
         <IoNotificationsOutline className="text-2xl" />
+          </Badge>
       </Space>
     </a>
   </Dropdown>
 );
-
+}
 export default Notifi;

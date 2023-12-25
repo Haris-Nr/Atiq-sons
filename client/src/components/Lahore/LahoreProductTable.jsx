@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Rate, Table, Input, Image, Tag, Space } from "antd";
+import {  Table, Input, Image, Tag, message, Popconfirm, Space } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import ProductButton from "./ProductButton";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Productsbyemployee } from "../../redux/Features/Product/productSlice";
+import { Productsbyemployee, deleteProductbyId, resetDeleteState } from "../../redux/Features/Product/productSlice";
 import Highlighter from "react-highlight-words";
 const { Search } = Input;
 
@@ -12,7 +12,7 @@ const LahoreProductTable = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.fetch);
   const { employee } = user;
-  const { fetchProductData, isLoading } = useSelector((state) => state.product);
+  const { fetchProductData, isLoading,deleteProductData } = useSelector((state) => state.product);
 
   const [searchText, setSearchText] = useState("");
   const searchInput = useRef(null);
@@ -21,9 +21,27 @@ const LahoreProductTable = () => {
     setSearchText(value);
   };
 
+
+
   useEffect(() => {
     dispatch(Productsbyemployee(employee?._id));
   }, [dispatch, employee]);
+
+  useEffect(() => {
+    if (deleteProductData.success === true) {
+      message.success(deleteProductData.message);
+      dispatch(resetDeleteState())
+    } else if (deleteProductData.success === false) {
+      message.error(deleteProductData.message);
+      dispatch(resetDeleteState())
+    }
+  }, [deleteProductData,dispatch]);
+
+  const handleDelete = (id) => {
+    dispatch(deleteProductbyId(id)).then(() => {
+      dispatch(Productsbyemployee(employee?._id));
+    });
+  };
 
 
   const renderColumnWithHighlight = (text) => (
@@ -37,6 +55,9 @@ const LahoreProductTable = () => {
       textToHighlight={text ? text.toString() : ""}
     />
   );
+
+
+
 
   const columns = [
     {
@@ -67,40 +88,40 @@ const LahoreProductTable = () => {
       },
       width:"30%",
     },
-    {
-      title: "Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
-      render: (text) => renderColumnWithHighlight(text),
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-      render: (text, value) => {
-        return (<span>${value}</span>), renderColumnWithHighlight(text);
-      },
-    },
-    {
-      title: "Rating",
-      dataIndex: "rating",
-      key: "rating",
-      render: (text, record) => {
-        return <Rate value={record.rating} allowHalf disabled />;
-      },
-    },
+    // {
+    //   title: "Quantity",
+    //   dataIndex: "quantity",
+    //   key: "quantity",
+    //   render: (text) => renderColumnWithHighlight(text),
+    // },
+    // {
+    //   title: "Price",
+    //   dataIndex: "price",
+    //   key: "price",
+    //   render: (text, value) => {
+    //     return (<span>${value}</span>), renderColumnWithHighlight(text);
+    //   },
+    // },
+    // {
+    //   title: "Rating",
+    //   dataIndex: "rating",
+    //   key: "rating",
+    //   render: (text, record) => {
+    //     return <Rate value={record.rating} allowHalf disabled />;
+    //   },
+    // },
     {
       title: "Asin No",
       dataIndex: "asin",
       key: "asin",
       render: (text) => renderColumnWithHighlight(text),
     },
-    {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      render: (text) => renderColumnWithHighlight(text),
-    },
+    // {
+    //   title: "Category",
+    //   dataIndex: "category",
+    //   key: "category",
+    //   render: (text) => renderColumnWithHighlight(text),
+    // },
     {
       title: "Status",
       dataIndex: "status",
@@ -128,16 +149,29 @@ const LahoreProductTable = () => {
     {
       title: "Action",
       dataIndex: "action",
-      render: (_, record) => (
-        <Space size="middle">
-          <a>
+      render: (_, record) => {
+        console.log(record)
+        return(
+          <Space size="middle">
+          <Popconfirm
+            title="Are you sure to delete this product?"
+            onConfirm={() => handleDelete(record._id)}
+            okText="Yes"
+            cancelText="No"
+          >
             <DeleteOutlined />
-          </a>
-          <a>
+          </Popconfirm>
+          <Popconfirm
+            title="ok"
+            onConfirm="ok"
+            okText="ok"
+            cancelText="No"
+          >
             <EditOutlined />
-          </a>
+          </Popconfirm>
         </Space>
-      ),
+        )
+      },
     },
   ];
 

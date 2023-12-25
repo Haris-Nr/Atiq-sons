@@ -4,6 +4,7 @@ import fetchReducer from './Features/auth/fetchSlice'
 import employeeReducer from './Features/Employees/employeeSlice'
 import productReducer from './Features/Product/productSlice'
 import logReducer from './Features/auth/logSlice'
+import notifyReducer from './Features/Notification/notificationSlice'
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     log:logReducer,
     employee:employeeReducer,
     product:productReducer,
+    notifications:notifyReducer
   },
 });

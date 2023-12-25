@@ -37,9 +37,10 @@ const logout = async (userId) => {
     return data;
 }
 
-const getAllLogs = async () => {
+const getAllLogs = async (page,limit) => {
     try {
-        const {data} = await axiosInstance.get(`log/logs`);
+        const queryParams = `?page=${page}&limit=${limit}`;
+        const {data} = await axiosInstance.get(`log/logs${queryParams}`);
         return data;
     } catch (error) {
         throw error.response.data;
