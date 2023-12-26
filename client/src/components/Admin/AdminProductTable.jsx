@@ -86,9 +86,9 @@ const AdminProductTable = () => {
     {
       key: "image",
       title: "Thumbnail",
-      dataIndex: "image",
-      render: (link) => {
-        return <Image width={100} src={link} />;
+      dataIndex: "url",
+      render: (_,record) => {
+        return <Image width={100} src={record.image[0].url} />;
       },
     },
     {

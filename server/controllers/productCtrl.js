@@ -1,7 +1,7 @@
 const Product = require("../models/productModels");
-const Notification = require("../models/notificationModel");
 const cloudinary = require("../config/cloudinary");
 const User = require("../models/userModel");
+const { createNotification } = require("../util/notification");
 
 // add product
 const createProduct = async (req, res) => {
@@ -12,37 +12,43 @@ const createProduct = async (req, res) => {
       throw new Error("Product already in product list");
     }
 
-    let result
+    let result;
 
     try {
-      result = await cloudinary.uploader.upload(req.file.path,{
-        folder: "Atiq-sons"
+      result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "Atiq-sons",
+        use_filename: true,
+        quality: "auto",
+        fetch_format: "auto",
       });
     } catch (uploadError) {
       throw new Error("Error uploading image to Cloudinary");
     }
 
-   
-    const newProduct = new Product({...req.body,image:result.secure_url});
+    const newProduct = new Product({
+      ...req.body,
+      image: [
+        {
+          url: result.secure_url,
+          publicId: result.public_id,
+        },
+      ],
+    });
 
     await newProduct.save();
 
     const user = await User.find(newProduct.createdBy);
 
-    const admins = await User.find({ role: "admin"});
-    admins.forEach(async (admin) => {
-        const newNotification = new Notification({
-          user: user[0]._id,
-          message: `New product added by ${user[0].fullname}`,
-          title: "New Product",
-          onClick: `/admin`,
-          seen: false, 
-          image:`${newProduct.image}` 
-        });
-        await newNotification.save();
-    });
+    await createNotification(
+      "admin",
+      null,
+      `New product added by ${user[0].fullname}`,
+      "New Product",
+      user[0]._id,
+      `${newProduct.image[0].url}`
+    );
 
-    res.status(201).send({
+    res.status(201).json({
       success: true,
       message: "Product created successfully",
     });
@@ -55,66 +61,98 @@ const createProduct = async (req, res) => {
 };
 
 //fetch all products by specific employee
-const fetchProducts =  async (req, res) => {
+const fetchProducts = async (req, res) => {
   try {
-    const products = await Product.find({ createdBy: req.body.createdBy })
-      .populate("createdBy").sort({ createdAt: -1 });
-     
-    if (!products) {
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const skipIndex = (page - 1) * limit;
+
+    if (!req.body.createdBy) {
+      throw new Error("Creator ID (createdBy) must be provided");
+    }
+
+    const query = { createdBy: req.body.createdBy };
+
+    const totalCount = await Product.countDocuments(query);
+
+    const products = await Product.find(query)
+      .populate("createdBy")
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .skip(skipIndex);
+
+    if (!products.length) {
       throw new Error("No products found");
-   }
-    res.send({
+    }
+
+    res.json({
       success: true,
       data: products,
+      pageInfo: {
+        totalItems: totalCount,
+        currentPage: page,
+        itemsPerPage: limit,
+        totalPages: Math.ceil(totalCount / limit),
+      },
     });
   } catch (error) {
-    res.send({
+    res.json({
       success: false,
       message: error.message,
     });
   }
 };
-
 
 // all products
 const allProduct = async (req, res) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
 
-    const productsWithSellerInfo = await Promise.all(products.map(async (product) => {
-      const seller = await User.findById(product.createdBy);
-      return {
-        ...product.toObject(),
-        seller: seller ? seller.fullname : "Unknown Seller",
-      };
-    }));
-
-    res.send({
+    res.json({
       success: true,
-      data: productsWithSellerInfo, 
+      data: products,
     });
   } catch (error) {
-    res.send({
+    res.json({
       success: false,
       message: error.message,
     });
   }
 };
 
-
-
-
 // delete product
 const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const product = await Product.findById(id);
+    if (!product) {
+      throw new Error("Product not found");
+    }
+
+    const publicId = product.image[0].publicId;
+
+    await cloudinary.uploader.destroy(publicId, { resource_type: "image" });
+
     await Product.findByIdAndDelete(id);
-    res.status(200).send({
+
+    const user = await User.find(product.createdBy);
+
+    await createNotification(
+      "admin",
+      null,
+      ` ${product.productName} deleted`,
+      `${user[0].fullname} deleted this Product`,
+      user[0]._id,
+      `${product.image[0].url}`
+    );
+
+    res.status(200).json({
       success: true,
       message: "Product has been deleted!",
     });
   } catch (error) {
-    res.status(500).send({
+    res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -126,12 +164,12 @@ const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
     await Product.findByIdAndUpdate(id, req.body);
-    res.send({
+    res.json({
       success: true,
       message: "Product updated successfully",
     });
   } catch (error) {
-    res.send({
+    res.json({
       success: false,
       message: error.message,
     });
@@ -142,27 +180,27 @@ const updateProduct = async (req, res) => {
 const changeStatus = async (req, res) => {
   try {
     const { status } = req.body;
-    const updatedProduct =  await Product.findByIdAndUpdate(req.params.id, { status });
-    
-    const admins = await User.find({ role: "admin"});
-    console.log(admins)
-    // send notification to seller 
-    const newNotification = new Notification({
-      user: admins._id,
-      message: `Your product ${updatedProduct.productName} has been ${status}`,
-      title: "Product Status Updated",
-      onClick: `/profile`,
-      seen: false,
-      image:`${updatedProduct.image}`  
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, {
+      status,
     });
-    await newNotification.save(); 
 
-    res.send({
+    const user = await User.find(updatedProduct.createdBy);
+    // send notification to seller
+    await createNotification(
+      null,
+      updatedProduct.createdBy,
+      `Your product ${updatedProduct.productName} has been ${status}`,
+      "Product Status Updated",
+      user[0]._id,
+      `${updatedProduct.image[0].url}`
+    );
+
+    res.json({
       success: true,
       message: "Product status updated successfully",
     });
   } catch (error) {
-    res.send({
+    res.json({
       succuess: false,
       message: error.message,
     });
@@ -172,13 +210,13 @@ const changeStatus = async (req, res) => {
 /* Get a single product by id */
 const singleProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).populate('createdBy');
-    res.send({
+    const product = await Product.findById(req.params.id).populate("createdBy");
+    res.json({
       success: true,
-      data: product
+      data: product,
     });
   } catch (error) {
-    res.send({
+    res.json({
       succuess: false,
       message: error.message,
     });

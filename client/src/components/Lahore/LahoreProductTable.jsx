@@ -4,16 +4,16 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import ProductButton from "./ProductButton";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Productsbyemployee, deleteProductbyId, resetDeleteState } from "../../redux/Features/Product/productSlice";
+import { Productsbyemployee, deleteProductbyId, resetDeleteState, setPageSize } from "../../redux/Features/Product/productSlice";
 import Highlighter from "react-highlight-words";
+import { setCurrentPage } from "../../redux/Features/auth/logSlice";
 const { Search } = Input;
 
 const LahoreProductTable = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.fetch);
   const { employee } = user;
-  const { fetchProductData, isLoading,deleteProductData } = useSelector((state) => state.product);
-
+  const { fetchProductData, isLoading,deleteProductData,totalItems, currentPage, pageSize } = useSelector((state) => state.product);
   const [searchText, setSearchText] = useState("");
   const searchInput = useRef(null);
 
@@ -24,8 +24,15 @@ const LahoreProductTable = () => {
 
 
   useEffect(() => {
-    dispatch(Productsbyemployee(employee?._id));
-  }, [dispatch, employee]);
+    if (employee?._id) {
+      dispatch(Productsbyemployee(employee?._id));
+    }
+  }, [dispatch, employee,currentPage, pageSize]);
+
+  const handleTableChange = (pagination) => {
+    dispatch(setCurrentPage(pagination.current));
+    dispatch(setPageSize(pagination.pageSize));
+  };
 
   useEffect(() => {
     if (deleteProductData.success === true) {
@@ -70,9 +77,9 @@ const LahoreProductTable = () => {
     {
       key: "image",
       title: "Thumbnail",
-      dataIndex: "image",
-      render: (link) => {
-        return <Image width={100} src={link} />;
+      dataIndex: "url",
+      render: (_,record) => {
+        return <Image width={100} src={record.image[0].url} />;
       },
     },
     {
@@ -126,31 +133,19 @@ const LahoreProductTable = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (text, { status }) => {
-        return (
-          renderColumnWithHighlight(text),
-          (
-            <Tag
-              color={`${
-                status === "pending"
-                  ? "yellow"
-                  : status === "rejected"
-                  ? "red"
-                  : "green"
-              }`}
-              key={status}
-            >
-              {status.toUpperCase()}
-            </Tag>
-          )
-        );
-      },
+      render: (text, { status }) => (
+        <>
+          
+          <Tag color={status === "pending" ? "yellow" : status === "rejected" ? "red" : "green"}>
+            {renderColumnWithHighlight(status.toUpperCase())}
+          </Tag>
+        </>
+      ),
     },
     {
       title: "Action",
       dataIndex: "action",
       render: (_, record) => {
-        console.log(record)
         return(
           <Space size="middle">
           <Popconfirm
@@ -212,11 +207,14 @@ const LahoreProductTable = () => {
         loading={isLoading}
         title={() => heading}
         columns={columns}
-        responsive="stack"
         dataSource={dataSourceWithKeys}
         pagination={{
-          pageSize: 8,
+          current: currentPage,
+          pageSize: pageSize,
+          total: totalItems,
+          showTotal: (total) => `Total ${total} items`,
         }}
+        onChange={handleTableChange}
         scroll={{
           x: 1500,
         }}

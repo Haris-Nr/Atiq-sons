@@ -14,10 +14,18 @@ var productSchema = new Schema(
         description: {
             type: String,
         },
-        image: {
-            type: String,
-            required: true,
-        },
+        image: [
+            {
+                url: {
+                    type: String,
+                    required: true,
+                },
+                publicId: {
+                    type: String,
+                    required: true,
+                },
+            }
+        ],
         asin: {
             type: Schema.Types.Mixed,
             required: true,
@@ -50,6 +58,10 @@ var productSchema = new Schema(
             default: "pending",
             required: true,
         },
+        seller:{
+            type:String,
+            required:true,
+        }
     },
     {
         timestamps: true,

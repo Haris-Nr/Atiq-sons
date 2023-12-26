@@ -13,9 +13,10 @@ const addProduct = async (productData) => {
     }
 };
 
-const fetchProductsbyemployee = async (productData) => {
+const fetchProductsbyemployee = async (productData,page,limit) => {
     try {
-        const response = await axiosInstance.post(`product/fetchProductsbyemployee`, { createdBy: productData });
+        const queryParams = `?page=${page}&limit=${limit}`;
+        const response = await axiosInstance.post(`product/fetchProductsbyemployee${queryParams}`, { createdBy: productData });
         return response.data;
     } catch (error) {
         throw error.response.data

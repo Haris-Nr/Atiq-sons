@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   Productsbyemployee,
   addProduct,
+  resetProductState,
 } from "../../redux/Features/Product/productSlice";
 import { Option } from "antd/es/mentions";
 import { FetchNotifications } from "../../redux/Features/Notification/notificationSlice";
@@ -21,16 +22,16 @@ import { FetchNotifications } from "../../redux/Features/Notification/notificati
 const props = {
   progress: {
     strokeColor: {
-      '0%': '#108ee9',
-      '100%': '#87d068',
+      "0%": "#108ee9",
+      "100%": "#87d068",
     },
     strokeWidth: 3,
     format: (percent) => percent && `${parseFloat(percent.toFixed(2))}%`,
   },
-}
+};
 
 const ProductButton = () => {
-  
+  const [fileList, setFileList] = useState([]);
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const dispatch = useDispatch();
@@ -39,14 +40,23 @@ const ProductButton = () => {
   const { productdata, isLoading } = useSelector((state) => state.product);
 
   const onFinish = async (values) => {
-    const formData = {
-      ...values,
-      createdBy: employee?._id,
-      image: values.image.file.originFileObj,
-    };
+    const formData = new FormData();
+    formData.append("createdBy", employee?._id);
+    formData.append("seller", employee?.fullname);
+
+    for (const [key, value] of Object.entries(values)) {
+      if (key !== "image") {
+        formData.append(key, value);
+      }
+    }
+
+    if (fileList.length > 0) {
+      formData.append("image", fileList[0].originFileObj);
+    }
+
     dispatch(addProduct(formData)).then(() => {
       dispatch(Productsbyemployee(employee?._id));
-      dispatch(FetchNotifications())
+      dispatch(FetchNotifications());
     });
   };
 
@@ -55,6 +65,7 @@ const ProductButton = () => {
       message.success(productdata.message);
       resetFormAndCloseModal();
       setConfirmLoading(false);
+      dispatch(resetProductState());
     } else if (productdata.success === false) {
       message.error(productdata.message);
       setConfirmLoading(false);
@@ -68,17 +79,25 @@ const ProductButton = () => {
   const formRef = useRef(null);
 
   const resetFormAndCloseModal = () => {
-    formRef.current.resetFields();
+    formRef?.current?.resetFields();
+    setFileList([]);
     setOpen(false);
   };
 
   const handleOk = () => {
-    formRef.current.submit();
-    setConfirmLoading(true);
-    if (isLoading) {
-      resetFormAndCloseModal();
-      setConfirmLoading(false);
-    }
+    formRef.current
+      .validateFields()
+      .then(() => {
+        formRef.current.submit();
+        setConfirmLoading(true);
+        if (isLoading) {
+          resetFormAndCloseModal();
+          setConfirmLoading(false);
+        }
+      })
+      .catch((errorInfo) => {
+        message.error(errorInfo);
+      });
   };
 
   const handleCancel = () => {
@@ -102,15 +121,14 @@ const ProductButton = () => {
 
   return (
     <>
-  
-        <Button
-          type="primary"
-          onClick={showModal}
-          shape="round"
-          icon={<PlusCircleOutlined />}
-        >
-          Add New Product
-        </Button>
+      <Button
+        type="primary"
+        onClick={showModal}
+        shape="round"
+        icon={<PlusCircleOutlined />}
+      >
+        Add New Product
+      </Button>
 
       <Modal
         title="Add Product"
@@ -166,8 +184,11 @@ const ProductButton = () => {
             rules={[{ required: true, message: "Please upload an image!" }]}
           >
             <Upload
-            {...props}
-             maxCount={1}
+              {...props}
+              maxCount={1}
+              fileList={fileList}
+              onChange={({ fileList: newFileList }) => setFileList(newFileList)}
+              beforeUpload={() => false} // Prevent automatic upload
             >
               <Button icon={<UploadOutlined />}>Click to Upload</Button>
             </Upload>
@@ -218,10 +239,10 @@ const ProductButton = () => {
                 message: "Rating must be a non-negative number!",
               },
               {
-                type:'number',
-                max:5,
+                type: "number",
+                max: 5,
                 message: "Rating must be a less than or equal to 5 number!",
-              }
+              },
             ]}
           >
             <InputNumber

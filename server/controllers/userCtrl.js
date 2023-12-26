@@ -2,7 +2,7 @@ const User = require("../models/userModel");
 const Log = require("../models/logModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const Notifications = require("../models/notificationModel");
+const { createNotification } = require("../util/notification");
 const secret = process.env.JWT_SECRET;
 
 // create User
@@ -20,17 +20,7 @@ const createUser = async (req, res) => {
     const newUser = new User({ ...req.body, password: hashPassword });
     await newUser.save();
 
-    const admins = await User.find({ role: "admin" });
-    admins.forEach(async (admin) => {
-      const newNotification = new Notifications({
-        user: admin._id,
-        message: `New user signup ${newUser.fullname}`,
-        title: "Signup",
-        onClick: `/admin`,
-        seen: false,
-      });
-      await newNotification.save();
-    });
+await createNotification("admin",null,`New user signup ${newUser.fullname}`, 'Signup', newUser._id);
 
     res.status(201).json({
       success: true,
@@ -79,18 +69,8 @@ const loginUser = async (req, res) => {
     });
     await logEntry.save();
 
-    const admins = await User.find({ role: "admin" });
-    admins.forEach(async (admin) => {
-      const newNotification = new Notifications({
-        user: admin._id,
-        whichUser:user._id,
-        message: `user login ${user.fullname}`,
-        title: "login",
-        onClick: `/admin`,
-        seen: false,
-      });
-      await newNotification.save();
-    });
+await createNotification("admin",null,`User login ${user.fullname}`, 'Login', user._id);
+
 
     res.status(200).json({
       success: true,
@@ -233,16 +213,19 @@ const changeStatus = async (req, res) => {
     });
   }
 };
-
+// logout
 const logout = async (req, res) => {
   try {
     const { userId } = req.body;
+
+    let user = await User.findById( userId );
 
     // Find the most recent login log entry for this user
     const latestLoginLog = await Log.findOne({
       user_id: userId,
       action: "Login",
     }).sort({ createdAt: -1 });
+
     if (!latestLoginLog) {
       throw new Error("Login log not found");
     }
@@ -253,8 +236,8 @@ const logout = async (req, res) => {
     latestLoginLog.logstatus = "Inactive";
     await latestLoginLog.save();
 
-    // Clear token or session data if needed
-    // ...
+await createNotification("admin",null,`User logout ${user.fullname}`, 'Logout', userId);
+
 
     res.status(200).json({
       success: true,
@@ -267,6 +250,8 @@ const logout = async (req, res) => {
     });
   }
 };
+
+
 
 module.exports = {
   createUser,
