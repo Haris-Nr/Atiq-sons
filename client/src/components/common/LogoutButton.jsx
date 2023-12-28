@@ -39,7 +39,7 @@ const LogoutButton = () => {
     <>
       <TbLogout
         onClick={handleLogout}
-        className="text-red-500 text-2xl cursor-pointer"
+        className='text-red-500 text-2xl cursor-pointer my-3'
       />
     </>
   );

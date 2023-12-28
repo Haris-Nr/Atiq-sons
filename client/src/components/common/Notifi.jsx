@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IoNotificationsOutline } from "react-icons/io5";
-import { Dropdown, Space, Badge, Avatar } from "antd";
+import { Dropdown, Badge, Avatar } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
   FetchNotifications,
@@ -8,8 +8,10 @@ import {
 } from "../../redux/Features/Notification/notificationSlice";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import { UserOutlined } from "@ant-design/icons";
-const Notifi = () => {
+import { UserOutlined } from '@ant-design/icons';
+import PropTypes from "prop-types";
+const Notifi = ({headerMobile}) => {
+
   const dispatch = useDispatch();
   const { getNotificationdata } = useSelector((state) => state.notifications);
   const [visibleNotifications, setVisibleNotifications] = useState([]);
@@ -40,20 +42,32 @@ const Notifi = () => {
             handleSeenNotify(notification._id);
           }}
         >
-          <div className="flex justify-start space-x-5 items-center">
-            {notification.image ? (
-              <Avatar src={<img src={notification.image} alt="avatar" />} />
-            ) : (
-              <Avatar icon={<UserOutlined />} />
-            )}
-            {notification.title}
-            <span>
-              {notification.message}
-              <br />
-              {moment(notification.createdAt).fromNow()}
-            </span>
-            <Badge status="default" />
-          </div>
+         <div className='flex justify-between items-center'>
+            <div className='flex space-x-5'>
+              <div className='my-auto'>
+            {notification.image ? 
+              <Avatar src={<img src={notification.image} alt="avatar" />} /> : 
+             <Avatar icon={
+              <UserOutlined
+                className="p-[0.4rem]"
+                style={{
+                  color: "purple",
+                  backgroundColor: "#F8F8FB",
+                  borderRadius: 40,
+                }}
+              />} />
+            }
+             </div>
+            <div>
+            <span className='block font-bold'>{notification.title}</span>
+                <span className='block'>{notification.message}</span>
+                <span className='block text-gray-400 text-xs mx-1'>{moment(notification.createdAt).fromNow()}</span>
+              </div>
+            </div>
+                        <div>
+                        <Badge status="default" color='#6560F0' style={{ fontSize: '24px' }} />
+                      </div>
+                    </div>
         </Link>
       ),
       key: notification._id,
@@ -66,7 +80,7 @@ const Notifi = () => {
   const flattenedNotificationItems = [].concat(...notificationItems);
   return (
     <Dropdown
-      overlayStyle={{ minWidth: "400px" }}
+      overlayStyle={{ minWidth: headerMobile ? 316 : 400 }}
       menu={{
         items: [
           {
@@ -94,10 +108,10 @@ const Notifi = () => {
           },
         ],
       }}
+      placement={`${headerMobile ? 'bottom' : 'bottomRight'}`}
       trigger={["click"]}
     >
-      <a onClick={(e) => e.preventDefault()}>
-        <Space>
+      <span onClick={(e) => e.preventDefault()}>
           <Badge
             count={
               Array.isArray(getNotificationdata?.data)
@@ -109,14 +123,19 @@ const Notifi = () => {
             overflowCount={10}
             size="small"
             style={{
-              backgroundColor: "red",
+              backgroundColor: "#6560F0",
+              margin: "2px"
             }}
           >
-            <IoNotificationsOutline className="text-2xl" />
+            <IoNotificationsOutline className="text-2xl cursor-pointer" />
           </Badge>
-        </Space>
-      </a>
+      </span>
     </Dropdown>
   );
 };
+
+Notifi.propTypes = {
+  headerMobile:PropTypes.bool,
+};
+
 export default Notifi;

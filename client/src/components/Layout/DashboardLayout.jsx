@@ -12,6 +12,7 @@ import { fetchUser } from "../../redux/Features/auth/fetchSlice";
 const DashboardLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1440);
+  const [headerMobile, setHeaderMobile] = useState(window.innerWidth <= 640);
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.fetch);
   const dispatch = useDispatch();
@@ -32,7 +33,8 @@ const DashboardLayout = () => {
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 1440);
-      if (window.innerWidth <= 1440) {
+      setHeaderMobile(window.innerWidth <= 640);
+      if (window.innerWidth <= 1440, window.innerWidth >= 640) {
         setCollapsed(true);
       }
     };
@@ -42,7 +44,7 @@ const DashboardLayout = () => {
   }, []);
 
   const toggleCollapsed = () => {
-    if (isMobile) {
+    if (isMobile,headerMobile) {
       setCollapsed(!collapsed);
     } else {
       setCollapsed(collapsed ? false : true);
@@ -73,6 +75,7 @@ const DashboardLayout = () => {
             toggleCollapsed={toggleCollapsed}
             isMobile={isMobile}
             user={user}
+            headerMobile={headerMobile}
           />
           <Content
             style={{ marginTop: 64, margin: "64px 0px 0px 0px", padding: 14 }}

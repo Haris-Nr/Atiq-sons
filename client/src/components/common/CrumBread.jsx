@@ -40,6 +40,7 @@ const CrumBread = () => {
         itemRender={itemRender}
         items={items}
         style={{ margin: "20px 0" }}
+        className="pt-12 sm:pt-6"
       />
     </>
   );

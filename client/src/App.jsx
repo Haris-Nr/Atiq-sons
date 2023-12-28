@@ -20,6 +20,7 @@ import TrackProduct from "./components/Lahore/TrackProduct";
 import AdminProductTable from "./components/Admin/AdminProductTable";
 import NotifyTable from "./components/common/NotifyTable";
 import UserInfo from "./components/Admin/UserInfo";
+import SingleProduct from "./components/Lahore/SingleProduct";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -37,6 +38,7 @@ const router = createBrowserRouter(
         <Route path="lahoreproducttable" element={<LahoreProductTable />} />
         <Route path="tasktable" element={<LahoreTaskTable />} />
         <Route path="trackproduct" element={<TrackProduct />} />
+        <Route path="singleproduct" element={<SingleProduct />}/>
 
         {/* Lahore Routes */}
         <Route path="dubaiproducttable" element={<DubaiProductTable />} />
@@ -48,6 +50,7 @@ const router = createBrowserRouter(
         <Route path="productTable" element={<AdminProductTable/>}/>
         <Route path="notification" element={<NotifyTable/>}/>
         <Route path="notification/:id"element={<UserInfo/>}/>
+        
 
 
       </Route>

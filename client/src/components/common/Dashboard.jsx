@@ -94,7 +94,8 @@ const Dashboard = () => {
                       }}
                     />
                   }
-                  title={`Employee ${userCount}`}
+                  title={`Employee`}
+                  value={`${userCount}`}
                 />
                 <DashboardCard
                   icon={
