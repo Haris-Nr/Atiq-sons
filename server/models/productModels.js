@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-var productSchema = new Schema(
+const productSchema = new Schema(
     {
         productName: {
             type: String,
@@ -62,6 +62,13 @@ var productSchema = new Schema(
             type:String,
             required:true,
         },
+        tracking:{
+            type:String,
+            enum:["tracking","tracked","pending"],
+            default:"pending",
+            required:true,
+
+        }
     },
     {
         timestamps: true,
