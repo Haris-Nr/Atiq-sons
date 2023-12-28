@@ -9,34 +9,41 @@ const Notifications = require("../models/notificationModel");
  * @param {string} title - The title of the notification.
  * @param {ObjectId} actionUserId - The ID of the user who triggered the action.
  */
-const createNotification = async (role, userId, message, title, actionUserId,image) => {
+const createNotification = async (
+  role,
+  userId,
+  message,
+  title,
+  actionUserId,
+  image,
+  onClick
+) => {
   try {
     let users = [];
 
     if (userId) {
       // If a specific user ID is provided, target only that user
-      users = await User.find({ _id: userId });
+      users = [userId];
     } else if (role) {
       // If no specific user ID is provided, target all users with the specified role
-      users = await User.find({ role: role });
+      const adminUsers = await User.find({ role: role }).select("_id");
+      users = adminUsers.map((user) => user._id);
     }
 
-    const notificationPromises = users.map(async (user) => {
+    if (users.length > 0) {
       const newNotification = new Notifications({
-        user: user._id,
+        user: users,
         whichUser: actionUserId,
         message: message,
         title: title,
-        onClick: `/user`,
+        onClick: onClick,
         seen: false,
-        image:image
+        image: image,
       });
       await newNotification.save();
-    });
-
-    await Promise.all(notificationPromises);
+    }
   } catch (error) {
-    console.error('Error creating notifications:', error);
+    console.error("Error creating notifications:", error);
   }
 };
 

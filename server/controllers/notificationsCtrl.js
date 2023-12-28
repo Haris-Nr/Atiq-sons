@@ -56,13 +56,16 @@ const deleteNotification = async (req, res) => {
 //Seen or read all notifications by user
 const seenNotification = async (req, res) => {
   try {
-    await Notification.updateMany(
-      { user: req.body.userId, seen: false },
+    const notificationId = req.body.notificationId;
+
+    await Notification.updateOne(
+      { _id: notificationId, user: req.body.userId, seen: false },
       { $set: { seen: true } }
     );
+    
     res.send({
       success: true,
-      message: "All Notifications marked as read/seen",
+      message: "Notification marked as read/seen",
     });
   } catch (error) {
     res.send({
@@ -71,6 +74,7 @@ const seenNotification = async (req, res) => {
     });
   }
 };
+
 
 // delete all notifications
 const deleteAllNotifications = async (req, res) => {
@@ -87,6 +91,8 @@ const deleteAllNotifications = async (req, res) => {
     });
   }
 };
+
+
 
 
 module.exports = {

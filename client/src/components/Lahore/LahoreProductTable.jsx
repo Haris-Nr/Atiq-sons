@@ -1,10 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import {  Table, Input, Image, Tag, message, Popconfirm, Space } from "antd";
+import { Table, Input, Image, Tag, message, Popconfirm, Space } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import ProductButton from "./ProductButton";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Productsbyemployee, deleteProductbyId, resetDeleteState, setPageSize } from "../../redux/Features/Product/productSlice";
+import {
+  Productsbyemployee,
+  deleteProductbyId,
+  resetDeleteState,
+  setPageSize,
+} from "../../redux/Features/Product/productSlice";
 import Highlighter from "react-highlight-words";
 import { setCurrentPage } from "../../redux/Features/auth/logSlice";
 const { Search } = Input;
@@ -13,7 +18,14 @@ const LahoreProductTable = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.fetch);
   const { employee } = user;
-  const { fetchProductData, isLoading,deleteProductData,totalItems, currentPage, pageSize } = useSelector((state) => state.product);
+  const {
+    fetchProductData,
+    isLoading,
+    deleteProductData,
+    totalItems,
+    currentPage,
+    pageSize,
+  } = useSelector((state) => state.product);
   const [searchText, setSearchText] = useState("");
   const searchInput = useRef(null);
 
@@ -21,13 +33,11 @@ const LahoreProductTable = () => {
     setSearchText(value);
   };
 
-
-
   useEffect(() => {
     if (employee?._id) {
       dispatch(Productsbyemployee(employee?._id));
     }
-  }, [dispatch, employee,currentPage, pageSize]);
+  }, [dispatch, employee, currentPage, pageSize]);
 
   const handleTableChange = (pagination) => {
     dispatch(setCurrentPage(pagination.current));
@@ -37,19 +47,18 @@ const LahoreProductTable = () => {
   useEffect(() => {
     if (deleteProductData.success === true) {
       message.success(deleteProductData.message);
-      dispatch(resetDeleteState())
+      dispatch(resetDeleteState());
     } else if (deleteProductData.success === false) {
       message.error(deleteProductData.message);
-      dispatch(resetDeleteState())
+      dispatch(resetDeleteState());
     }
-  }, [deleteProductData,dispatch]);
+  }, [deleteProductData, dispatch]);
 
   const handleDelete = (id) => {
     dispatch(deleteProductbyId(id)).then(() => {
       dispatch(Productsbyemployee(employee?._id));
     });
   };
-
 
   const renderColumnWithHighlight = (text) => (
     <Highlighter
@@ -63,9 +72,6 @@ const LahoreProductTable = () => {
     />
   );
 
-
-
-
   const columns = [
     {
       title: "SrNo",
@@ -78,7 +84,7 @@ const LahoreProductTable = () => {
       key: "image",
       title: "Thumbnail",
       dataIndex: "url",
-      render: (_,record) => {
+      render: (_, record) => {
         return <Image width={100} src={record.image[0].url} />;
       },
     },
@@ -93,7 +99,7 @@ const LahoreProductTable = () => {
           </Link>
         );
       },
-      width:"30%",
+      width: "30%",
     },
     // {
     //   title: "Quantity",
@@ -135,8 +141,15 @@ const LahoreProductTable = () => {
       key: "status",
       render: (text, { status }) => (
         <>
-          
-          <Tag color={status === "pending" ? "yellow" : status === "rejected" ? "red" : "green"}>
+          <Tag
+            color={
+              status === "pending"
+                ? "yellow"
+                : status === "rejected"
+                ? "red"
+                : "green"
+            }
+          >
             {renderColumnWithHighlight(status.toUpperCase())}
           </Tag>
         </>
@@ -146,26 +159,21 @@ const LahoreProductTable = () => {
       title: "Action",
       dataIndex: "action",
       render: (_, record) => {
-        return(
+        return (
           <Space size="middle">
-          <Popconfirm
-            title="Are you sure to delete this product?"
-            onConfirm={() => handleDelete(record._id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <DeleteOutlined />
-          </Popconfirm>
-          <Popconfirm
-            title="ok"
-            onConfirm="ok"
-            okText="ok"
-            cancelText="No"
-          >
-            <EditOutlined />
-          </Popconfirm>
-        </Space>
-        )
+            <Popconfirm
+              title="Are you sure to delete this product?"
+              onConfirm={() => handleDelete(record._id)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <DeleteOutlined />
+            </Popconfirm>
+            <Popconfirm title="ok" onConfirm="ok" okText="ok" cancelText="No">
+              <EditOutlined />
+            </Popconfirm>
+          </Space>
+        );
       },
     },
   ];

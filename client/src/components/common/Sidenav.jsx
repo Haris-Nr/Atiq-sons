@@ -8,7 +8,7 @@ import { FaProductHunt } from "react-icons/fa";
 import { FaTasks } from "react-icons/fa";
 import { FaPersonShelter } from "react-icons/fa6";
 import { BsPersonFill } from "react-icons/bs";
-import PropTypes from "prop-types"; 
+import PropTypes from "prop-types";
 
 const Sidenav = ({
   collapsed,
@@ -31,16 +31,16 @@ const Sidenav = ({
 
   const items = [
     {
-      label:"Dashboard",
-      key:".",
-      path:"relative",
-      icon: < AppstoreOutlined />
+      label: "Dashboard",
+      key: ".",
+      path: "relative",
+      icon: <AppstoreOutlined />,
     },
     // lahore
     employeeDashboard === "lahore" && {
       label: "Product",
       key: "lahoreproducttable",
-      icon: < FaProductHunt />,
+      icon: <FaProductHunt />,
     },
     employeeDashboard === "lahore" && {
       label: "Task",
@@ -134,12 +134,11 @@ const Sidenav = ({
 };
 
 Sidenav.propTypes = {
-  collapsed: PropTypes.bool.isRequired, 
-  toggleCollapsed: PropTypes.func.isRequired, 
+  collapsed: PropTypes.bool.isRequired,
+  toggleCollapsed: PropTypes.func.isRequired,
   setCollapsed: PropTypes.func.isRequired,
   isMobile: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
 };
-
 
 export default Sidenav;

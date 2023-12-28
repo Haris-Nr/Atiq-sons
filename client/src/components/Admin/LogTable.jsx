@@ -1,12 +1,18 @@
 import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect} from "react";
+import { useEffect } from "react";
 import moment from "moment";
-import { allLogs, setCurrentPage, setPageSize } from "../../redux/Features/auth/logSlice";
+import {
+  allLogs,
+  setCurrentPage,
+  setPageSize,
+} from "../../redux/Features/auth/logSlice";
 
 const LogTable = () => {
   const dispatch = useDispatch();
-  const { allLogsData, totalItems, currentPage, pageSize } = useSelector((state) => state.log);
+  const { allLogsData, totalItems, currentPage, pageSize } = useSelector(
+    (state) => state.log
+  );
 
   useEffect(() => {
     dispatch(allLogs());
@@ -58,10 +64,7 @@ const LogTable = () => {
       title: "Logout Time",
       dataIndex: "logoutTime",
       render: (text) => {
-        return(
-          text?
-          moment(text).format("HH:mm:ss"):"00:00:00"
-        );
+        return text ? moment(text).format("HH:mm:ss") : "00:00:00";
       },
       key: "logoutTime",
     },

@@ -7,8 +7,10 @@ import {
 } from "@ant-design/icons";
 import DashboardCard from "./DashboardCard";
 import { useSelector } from "react-redux";
+import socket from "../../redux/api/socket";
 
 const Dashboard = () => {
+  const [userCount, setUserCount] = useState(0);
   const { user } = useSelector((state) => state.fetch);
   const { employee } = user;
   const getPeriodOfDay = (hour) =>
@@ -25,7 +27,16 @@ const Dashboard = () => {
     setPeriodOfDay(currentHour === 12 ? "noon" : getPeriodOfDay(currentHour));
   }, []);
 
-  
+  useEffect(()=>{
+
+    socket.connect();
+
+    socket.on('userCount', (count) => {
+      setUserCount(count);
+  });
+
+
+  },[])
 
   return (
     <>
@@ -83,7 +94,7 @@ const Dashboard = () => {
                       }}
                     />
                   }
-                  title={`Employee`}
+                  title={`Employee ${userCount}`}
                 />
                 <DashboardCard
                   icon={

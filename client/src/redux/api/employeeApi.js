@@ -28,10 +28,20 @@ const changeStatus = async (id, newStatus) => {
     }
 };
 
+const getEmployeeDetails = async (id) => {
+    try {
+        const { data } = await axiosInstance.get(`user/getemployeedetails/${id}`);
+        return data;
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
 const employeeApi = {
     getEmployee,
     deleteEmployee,
     changeStatus,
+    getEmployeeDetails,
 };
 
 export default employeeApi;

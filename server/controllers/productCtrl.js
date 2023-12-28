@@ -45,7 +45,8 @@ const createProduct = async (req, res) => {
       `New product added by ${user[0].fullname}`,
       "New Product",
       user[0]._id,
-      `${newProduct.image[0].url}`
+      `${newProduct.image[0].url}`,
+      `/products`
     );
 
     res.status(201).json({
@@ -136,15 +137,26 @@ const deleteProduct = async (req, res) => {
 
     await Product.findByIdAndDelete(id);
 
-    const user = await User.find(product.createdBy);
+    const user = await User.findById(req.body.userId);
+
+    let employe;
+
+    let admin;
+
+    if (user.role === "admin") {
+      employe = product.createdBy;
+    } else if (user.role === "employee") {
+      admin = "admin";
+    }
 
     await createNotification(
-      "admin",
-      null,
+      admin ? admin : null,
+      employe ? employe : null,
       ` ${product.productName} deleted`,
-      `${user[0].fullname} deleted this Product`,
-      user[0]._id,
-      `${product.image[0].url}`
+      `${user.fullname} deleted this Product`,
+      user._id,
+      `${product.image[0].url}`,
+      `/product`
     );
 
     res.status(200).json({
@@ -184,15 +196,17 @@ const changeStatus = async (req, res) => {
       status,
     });
 
-    const user = await User.find(updatedProduct.createdBy);
+    // const user = await User.find(updatedProduct.createdBy);
+    const admin = await User.findById(req.body.userId);
     // send notification to seller
     await createNotification(
       null,
       updatedProduct.createdBy,
-      `Your product ${updatedProduct.productName} has been ${status}`,
+      `Your product ${updatedProduct.productName} has been ${status} by ${admin.fullname}`,
       "Product Status Updated",
-      user[0]._id,
-      `${updatedProduct.image[0].url}`
+      admin._id,
+      `${updatedProduct.image[0].url}`,
+      `/product`
     );
 
     res.json({

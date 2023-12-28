@@ -18,11 +18,11 @@ const notificationSchema = new Schema(
       type: String,
       required: true,
     },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: "users",
-        required: true
-     },
+     user: [{ 
+      type: Schema.Types.ObjectId,
+       ref: 'users',
+       required: true
+       }],
      seen:{
         type: Boolean,
         default: false,

@@ -14,11 +14,13 @@ module.exports = (server) => {
     io.on('connection', (socket) => {
         console.log('A user connected ' + socket.id);
         loggedInEmployeeCount++
+        console.log("++" +loggedInEmployeeCount)
         socket.emit('userCount', loggedInEmployeeCount);
 
 
        socket.on('disconnect', () => {
         loggedInEmployeeCount--;
+        console.log("--" + loggedInEmployeeCount)
         });
        
     });

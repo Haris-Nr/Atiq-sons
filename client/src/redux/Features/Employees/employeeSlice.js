@@ -5,6 +5,7 @@ const initialState = {
     getEmployeedata: [],
     deleteEmployeedata:{},
     changeStatusdata:{},
+    employeeDetails:{},
     isLoading: false,
 };
 
@@ -44,6 +45,19 @@ export const changeUserStatus = createAsyncThunk(
     }
 );
 
+export const getEmployeeDetails = createAsyncThunk(
+    "user/getEmployeeDetails",
+    async (id, thunkAPI) => {
+        try {
+            const response = await employeeApi.getEmployeeDetails(id);
+            return response;
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error);
+        }
+    }
+);
+
+
 export const employeeSlice = createSlice({
     name: "employee",
     initialState,
@@ -77,7 +91,7 @@ export const employeeSlice = createSlice({
             })
             .addCase(deleteEmployee.rejected, (state, action) => {
                 state.isLoading = false;
-                state.deleteEmployeedata = action.payload;
+                state.deleteEmployeedata = action.error;
             })
             .addCase(changeUserStatus.pending, (state) => {
                 state.isLoading = true;
@@ -88,7 +102,18 @@ export const employeeSlice = createSlice({
             })
             .addCase(changeUserStatus.rejected, (state, action) => {
                 state.isLoading = false;
-                state.changeStatusdata = action.payload;
+                state.changeStatusdata = action.error;
+            })
+            .addCase(getEmployeeDetails.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getEmployeeDetails.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.employeeDetails = action.payload;
+            })
+            .addCase(getEmployeeDetails.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error;
             });
     },
 });

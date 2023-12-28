@@ -12,6 +12,7 @@ const {
     fetchUser,
     changeStatus,
     logout,
+    getEmployeeDetails,
 } = require("../controllers/userCtrl");
 
 router.post("/signup", createUser);
@@ -19,6 +20,7 @@ router.post("/login", loginUser);
 router.patch("/resetpassword", resetPassword);
 router.get("/allusers", authMiddleware, adminCheck, getAllUsers);
 router.get("/getemployee", authMiddleware, adminCheck, getEmployee);
+router.get("/getemployeedetails/:id", authMiddleware, adminCheck, getEmployeeDetails);
 router.delete("/delete/:id", authMiddleware, adminCheck, deleteEmployee);
 router.patch("/changestatus/:id", authMiddleware, adminCheck, changeStatus);
 router.get("/currentuser", authMiddleware, fetchUser);

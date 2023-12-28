@@ -73,29 +73,27 @@ const EmployeeButton = () => {
   const formRef = useRef(null);
 
   const resetFormAndCloseModal = () => {
-    formRef.current.resetFields()
+    formRef.current.resetFields();
     setOpen(false);
   };
 
   const handleOk = () => {
     formRef.current.submit();
-   
   };
   const handleCancel = () => {
     resetFormAndCloseModal();
   };
   return (
     <>
-    
-        <Button
-          type="primary"
-          onClick={showModal}
-          shape="round"
-          icon={<PlusCircleOutlined />}
-        >
-          Add New Employee
-        </Button>
-     
+      <Button
+        type="primary"
+        onClick={showModal}
+        shape="round"
+        icon={<PlusCircleOutlined />}
+      >
+        Add New Employee
+      </Button>
+
       <Modal
         title="Add New Employee"
         open={open}

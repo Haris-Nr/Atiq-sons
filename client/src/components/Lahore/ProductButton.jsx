@@ -19,17 +19,6 @@ import {
 import { Option } from "antd/es/mentions";
 import { FetchNotifications } from "../../redux/Features/Notification/notificationSlice";
 
-const props = {
-  progress: {
-    strokeColor: {
-      "0%": "#108ee9",
-      "100%": "#87d068",
-    },
-    strokeWidth: 3,
-    format: (percent) => percent && `${parseFloat(percent.toFixed(2))}%`,
-  },
-};
-
 const ProductButton = () => {
   const [fileList, setFileList] = useState([]);
   const [open, setOpen] = useState(false);
@@ -184,11 +173,10 @@ const ProductButton = () => {
             rules={[{ required: true, message: "Please upload an image!" }]}
           >
             <Upload
-              {...props}
               maxCount={1}
               fileList={fileList}
               onChange={({ fileList: newFileList }) => setFileList(newFileList)}
-              beforeUpload={() => false} // Prevent automatic upload
+              beforeUpload={() => false}
             >
               <Button icon={<UploadOutlined />}>Click to Upload</Button>
             </Upload>

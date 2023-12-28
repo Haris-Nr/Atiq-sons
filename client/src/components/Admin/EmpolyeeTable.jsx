@@ -1,4 +1,4 @@
-import { Button, Popconfirm, Space, Table, Tag, message } from "antd";
+import { Space, Table, Tag, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -12,9 +12,11 @@ import moment from "moment";
 import EmployeeButton from "./EmployeeButton";
 import Highlighter from "react-highlight-words";
 import Search from "antd/es/input/Search";
+import { Link } from "react-router-dom";
+import ChangeStatusButton from "../common/ChangeStatusButton";
+import DeleteButton from "../common/DeleteButton";
 
 function Empolyee() {
-
   const dispatch = useDispatch();
 
   const { getEmployeedata, isLoading, deleteEmployeedata, changeStatusdata } =
@@ -42,12 +44,10 @@ function Empolyee() {
     dispatch(getEmployee());
   }, [dispatch]);
 
-  
   const handleStatus = (id, newStatus) => {
     dispatch(changeUserStatus({ id, newStatus })).then(() => {
       dispatch(getEmployee());
     });
-    
   };
   useEffect(() => {
     if (changeStatusdata.success === true) {
@@ -58,7 +58,6 @@ function Empolyee() {
       dispatch(resetStatusState());
     }
   }, [changeStatusdata, dispatch]);
-
 
   const handleDelete = (id) => {
     dispatch(deleteEmployee(id)).then(() => {
@@ -74,7 +73,7 @@ function Empolyee() {
       dispatch(resetDeleteState());
     }
   }, [deleteEmployeedata, dispatch]);
- 
+
   const columns = [
     {
       title: "SrNo",
@@ -87,8 +86,14 @@ function Empolyee() {
       title: "FullName",
       dataIndex: "fullname",
       key: "fullname",
-      render: (text) => {
-        return <>{renderColumnWithHighlight(text)}</>;
+      render: (text, record) => {
+        return (
+          <>
+            <Link to={`${record._id}`} key={record._id}>
+              {renderColumnWithHighlight(text)}
+            </Link>
+          </>
+        );
       },
     },
     {
@@ -149,37 +154,13 @@ function Empolyee() {
       render: (text, record) => {
         return (
           <Space size="middle">
-            <Popconfirm
-              title="Are you sure to delete this employee?"
-              onConfirm={() => handleDelete(record._id)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button>Delete</Button>
-            </Popconfirm>
-            <Popconfirm
-              title={`Are you sure to ${
-                record.status === "active" ? "blocked" : "active"
-              }  this employee?`}
-              onConfirm={() =>
-                handleStatus(
-                  record._id,
-                  `${record.status === "active" ? "blocked" : "active"}`
-                )
-              }
-              onCancel={() =>
-                handleStatus(
-                  record._id,
-                  `${record.status === "active" ? "blocked" : "active"}`
-                )
-              }
-              okText={`${record.status === "active" ? "" : "active"}`}
-              cancelText={`${record.status === "active" ? "blocked" : ""}`}
-            >
-              <Button>{
-                record.status === "active" ? "blocked" : "active"
-              }</Button>
-            </Popconfirm>
+            <DeleteButton onConfirmDelete={() => handleDelete(record._id)} />
+            <ChangeStatusButton
+              itemType="employee"
+              Id={record._id}
+              currentStatus={record.status}
+              onChangeStatus={handleStatus}
+            />
           </Space>
         );
       },

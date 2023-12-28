@@ -20,7 +20,15 @@ const createUser = async (req, res) => {
     const newUser = new User({ ...req.body, password: hashPassword });
     await newUser.save();
 
-await createNotification("admin",null,`New user signup ${newUser.fullname}`, 'Signup', newUser._id);
+    await createNotification(
+      "admin",
+      null,
+      `New user signup ${newUser.fullname}`,
+      "Signup",
+      newUser._id,
+      null,
+      `employees/${newUser._id}`
+    );
 
     res.status(201).json({
       success: true,
@@ -69,8 +77,15 @@ const loginUser = async (req, res) => {
     });
     await logEntry.save();
 
-await createNotification("admin",null,`User login ${user.fullname}`, 'Login', user._id);
-
+    await createNotification(
+      `${user.role === "admin" ? null : "admin"}`,
+      null,
+      `User login ${user.fullname}`,
+      "Login",
+      user._id,
+      null,
+      `${user._id}`
+    );
 
     res.status(200).json({
       success: true,
@@ -107,9 +122,7 @@ const getAllUsers = async (req, res) => {
 // getEmployee
 const getEmployee = async (req, res) => {
   try {
-    const employees = await User.find({ role: "employee" })
-      .select("-password")
-      .select("-confirmpassword");
+    const employees = await User.find({ role: "employee" }).select("-password");
     res.status(200).json({
       success: true,
       data: employees,
@@ -130,10 +143,7 @@ const resetPassword = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      throw new Error("User not found");
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -213,31 +223,39 @@ const changeStatus = async (req, res) => {
     });
   }
 };
+
 // logout
 const logout = async (req, res) => {
   try {
     const { userId } = req.body;
 
-    let user = await User.findById( userId );
+    let user = await User.findById(userId);
 
     // Find the most recent login log entry for this user
-    const latestLoginLog = await Log.findOne({
+    const LoginLog = await Log.findOne({
       user_id: userId,
       action: "Login",
     }).sort({ createdAt: -1 });
 
-    if (!latestLoginLog) {
+    if (!LoginLog) {
       throw new Error("Login log not found");
     }
 
     // Update the log entry with the logout time
-    latestLoginLog.logoutTime = new Date();
-    latestLoginLog.action = "Logout";
-    latestLoginLog.logstatus = "Inactive";
-    await latestLoginLog.save();
+    LoginLog.logoutTime = new Date();
+    LoginLog.action = "Logout";
+    LoginLog.logstatus = "Inactive";
+    await LoginLog.save();
 
-await createNotification("admin",null,`User logout ${user.fullname}`, 'Logout', userId);
-
+    await createNotification(
+      `${user.role === "admin" ? null : "admin"}`,
+      null,
+      `User logout ${user.fullname}`,
+      "Logout",
+      userId,
+      null,
+      `employees/${user._id}`
+    );
 
     res.status(200).json({
       success: true,
@@ -251,7 +269,40 @@ await createNotification("admin",null,`User logout ${user.fullname}`, 'Logout', 
   }
 };
 
+// getEmployeeDetails
+const getEmployeeDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    const loginLogs = await Log.find({
+      user_id: id,
+    });
+    const filteredLogs = loginLogs.map((log) => ({
+      action: log.action,
+      logStatus: log.logstatus,
+    }));
+
+    const employee = await User.findById(id)
+      .select("-password")
+      .select("-confirmpassword");
+
+    if (!employee) {
+      throw new Error("Employee not found");
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Employee details fetched successfully",
+      employee: employee,
+      logs: filteredLogs[0],
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   createUser,
@@ -263,4 +314,5 @@ module.exports = {
   fetchUser,
   changeStatus,
   logout,
+  getEmployeeDetails,
 };

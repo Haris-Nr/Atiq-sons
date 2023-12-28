@@ -34,14 +34,23 @@ export const DeleteNotification = async (id) => {
   }
 };
 
-/* read/seen/visited all notifications by user */
-export const SeenAllNotifications = async () => {
+export const SeenSingleNotification = async (notificationId) => {
   try {
-    const response = await axiosInstance.put(
-      "notification/seenAllNotifications"
+    const response = await axiosInstance.patch(
+      "notification/seenNotification",
+      { notificationId: notificationId }
     );
     return response.data;
   } catch (error) {
-    return error.response.data;
+    return error.response ? error.response.data : error.message;
+  }
+};
+
+export const DeleteAllNotifications = async () => {
+  try {
+    const response = await axiosInstance.delete('notification/deleteAll');
+    return response.data;
+  } catch (error) {
+    return error.response ? error.response.data : error.message;
   }
 };
