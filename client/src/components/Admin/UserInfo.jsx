@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
-import { Badge, Button, Descriptions } from "antd";
+import { Badge, Descriptions, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { getEmployeeDetails } from "../../redux/Features/Employees/employeeSlice";
+import { changeUserStatus, deleteEmployee, getEmployeeDetails, resetDeleteState, resetStatusState } from "../../redux/Features/Employees/employeeSlice";
 import { useParams } from "react-router-dom";
 import moment from "moment";
+import ChangeStatusButton from "../common/ChangeStatusButton";
+import DeleteButton from "../common/DeleteButton";
 
 const UserInfo = () => {
   const dispatch = useDispatch();
@@ -14,14 +16,41 @@ const UserInfo = () => {
       dispatch(getEmployeeDetails(id));
     }
   }, [dispatch, id]);
-  const { employeeDetails } = useSelector((state) => state.employee);
+  const { employeeDetails, deleteEmployeedata, changeStatusdata } = useSelector((state) => state.employee);
   const employee = employeeDetails?.employee;
   const log = employeeDetails.logs;
 
-  const handleButtonClick = (buttonType) => {
-    console.log(`Button clicked: ${buttonType}`);
-    // Add your button click handling logic here
+  const handleStatus = (id, newStatus) => {
+    dispatch(changeUserStatus({ id, newStatus })).then(() => {
+      dispatch(getEmployeeDetails(id));
+    });
   };
+
+  useEffect(() => {
+    if (changeStatusdata.success === true) {
+      message.success(changeStatusdata.message);
+      dispatch(resetStatusState());
+    } else if (changeStatusdata.success === false) {
+      message.error(changeStatusdata.message);
+      dispatch(resetStatusState());
+    }
+  }, [changeStatusdata, dispatch]);
+
+  const handleDelete = (id) => {
+    dispatch(deleteEmployee(id)).then(() => {
+      dispatch(getEmployeeDetails(id));
+    });
+  };
+
+  useEffect(() => {
+    if (deleteEmployeedata.success === true) {
+      message.success(deleteEmployeedata.message);
+      dispatch(resetDeleteState());
+    } else if (deleteEmployeedata.success === false) {
+      message.error(deleteEmployeedata.message);
+      dispatch(resetDeleteState());
+    }
+  }, [deleteEmployeedata, dispatch]);
 
   const items = [
     {
@@ -93,15 +122,13 @@ const UserInfo = () => {
       items={items}
       extra={
         <>
-          <Button type="primary" onClick={() => handleButtonClick("Edit")}>
-            Edit
-          </Button>
-          <Button type="default" onClick={() => handleButtonClick("Delete")}>
-            Delete
-          </Button>
-          <Button type="dashed" onClick={() => handleButtonClick("Refresh")}>
-            Refresh
-          </Button>
+          <ChangeStatusButton
+              itemType="employee"
+              Id={id}
+              currentStatus={employee?.status}
+              onChangeStatus={handleStatus}
+            />
+            <DeleteButton onConfirmDelete={() => handleDelete(id)} />
         </>
       }
     />

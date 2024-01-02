@@ -8,6 +8,7 @@ import Foot from "../common/Foot";
 import { useDispatch, useSelector } from "react-redux";
 const { Content } = Layout;
 import { fetchUser } from "../../redux/Features/auth/fetchSlice";
+import socket from "../../redux/api/socket";
 
 const DashboardLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -17,6 +18,8 @@ const DashboardLayout = () => {
   const { user } = useSelector((state) => state.fetch);
   const dispatch = useDispatch();
 
+ 
+
   useEffect(() => {
     try {
       const token = localStorage.getItem("token");
@@ -24,6 +27,7 @@ const DashboardLayout = () => {
         navigate("/");
       } else {
         dispatch(fetchUser());
+        socket.connect();
       }
     } catch (error) {
       message.error(error.message);
@@ -56,6 +60,7 @@ const DashboardLayout = () => {
   } = theme.useToken();
   return (
     <>
+     
       <Layout hasSider>
         <Sidenav
           collapsed={collapsed}

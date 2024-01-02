@@ -69,6 +69,24 @@ const changeProductStatus = async (id, newStatus) => {
     }
 };
 
+const getTrackProduct = async (data) => {
+    try {
+        const response = await axiosInstance.post(`product/trackProduct`,data);
+        return response;
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
+const changeTrackStatus = async (id, newStatus) => {
+    try {
+        const response = await axiosInstance.patch(`product/changeTrackStatus/${id}`, { tracking: newStatus });
+        return response.data;
+    } catch (error) {
+        throw error.response.data;
+    }
+};
+
 
 
 const productApi = {
@@ -79,6 +97,8 @@ const productApi = {
     deleteProduct,
     changeProductStatus,
     updateProduct,
+    getTrackProduct,
+    changeTrackStatus
 };
 
 export default productApi;

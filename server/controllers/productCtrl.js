@@ -1,6 +1,7 @@
 const Product = require("../models/productModels");
 const cloudinary = require("../config/cloudinary");
 const User = require("../models/userModel");
+const Track = require("../models/trackModels");
 const { createNotification } = require("../util/notification");
 
 // add product
@@ -38,8 +39,10 @@ const createProduct = async (req, res) => {
     await newProduct.save();
 
     const user = await User.find(newProduct.createdBy);
+    const io = req.app.get('io');
 
     await createNotification(
+      io,
       "admin",
       null,
       `New product added by ${user[0].fullname}`,
@@ -148,8 +151,11 @@ const deleteProduct = async (req, res) => {
     } else if (user.role === "employee") {
       admin = "admin";
     }
+    const io = req.app.get('io');
+
 
     await createNotification(
+      io,
       admin ? admin : null,
       employe ? employe : null,
       ` ${product.productName} deleted`,
@@ -199,7 +205,10 @@ const changeStatus = async (req, res) => {
     // const user = await User.find(updatedProduct.createdBy);
     const admin = await User.findById(req.body.userId);
     // send notification to seller
+    const io = req.app.get('io');
+
     await createNotification(
+      io,
       null,
       updatedProduct.createdBy,
       `Your product ${updatedProduct.productName} has been ${status} by ${admin.fullname}`,
@@ -237,6 +246,66 @@ const singleProduct = async (req, res) => {
   }
 };
 
+/// change track status 
+const changeTrackStatus = async (req, res) => {
+  try {
+    const { tracking } = req.body;
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, {
+      tracking,
+    });
+
+    // const user = await User.find(updatedProduct.createdBy);
+    const admin = await User.findById(req.body.userId);
+    // send notification to seller
+    const io = req.app.get('io');
+    await createNotification(
+      io,
+      null,
+      updatedProduct.createdBy,
+      `Your product ${updatedProduct.productName} has been ${tracking} by ${admin.fullname}`,
+      "Product Status Updated",
+      admin._id,
+      `${updatedProduct.image[0].url}`,
+      `/product`
+    );
+
+    res.json({
+      success: true,
+      message: "Product Tracking Start successfully",
+    });
+  } catch (error) {
+    res.json({
+      succuess: false,
+      message: error.message,
+    });
+  }
+};
+
+// track product
+const trackProduct = async (req, res) => {
+  try {
+    const { productName, date, quantity,  } = req.body;
+
+    const newTrack = new Track({
+      productName: productName,
+      date: date,
+      quantity: quantity,
+    });
+
+    // Save the track record to the database
+    const savedTrack = await newTrack.save();
+  res.json({
+    success: true,
+    data: savedTrack,
+  });
+} catch (error) {
+  res.json({
+    succuess: false,
+    message: error.message,
+  });
+  }
+};
+
 module.exports = {
   createProduct,
   fetchProducts,
@@ -245,4 +314,6 @@ module.exports = {
   changeStatus,
   singleProduct,
   allProduct,
+  changeTrackStatus,
+  trackProduct
 };

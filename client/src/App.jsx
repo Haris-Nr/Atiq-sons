@@ -14,13 +14,17 @@ import Log from "./components/Admin/LogTable";
 import Dashboard from "./components/common/Dashboard";
 import DashboardLayout from "./components/Layout/DashboardLayout";
 import LahoreProductTable from "./components/Lahore/LahoreProductTable";
-import LahoreTaskTable from "./components/Lahore/LahoreTaskTable";
 import DubaiProductTable from "./components/Dubai/DubaiProductTable";
 import TrackProduct from "./components/Lahore/TrackProduct";
 import AdminProductTable from "./components/Admin/AdminProductTable";
 import NotifyTable from "./components/common/NotifyTable";
 import UserInfo from "./components/Admin/UserInfo";
 import SingleProduct from "./components/Lahore/SingleProduct";
+import { notification } from "antd";
+import { useEffect } from "react";
+import socket from "./redux/api/socket";
+import SingleProductPage from "./components/Lahore/SingleProduct";
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,7 +40,6 @@ const router = createBrowserRouter(
         
         {/* Lahore Routes */}
         <Route path="lahoreproducttable" element={<LahoreProductTable />} />
-        <Route path="tasktable" element={<LahoreTaskTable />} />
         <Route path="trackproduct" element={<TrackProduct />} />
         <Route path="singleproduct" element={<SingleProduct />}/>
 
@@ -48,6 +51,7 @@ const router = createBrowserRouter(
         <Route path="employees/:id"element={<UserInfo/>}/>
         <Route path="logs" element={<Log />} />
         <Route path="productTable" element={<AdminProductTable/>}/>
+        <Route path="productTable/:id" element={<SingleProductPage />}/>
         <Route path="notification" element={<NotifyTable/>}/>
         <Route path="notification/:id"element={<UserInfo/>}/>
         
@@ -59,9 +63,26 @@ const router = createBrowserRouter(
 );
 
 function App() {
+  
+  const [api, contextHolder] = notification.useNotification();
+  useEffect(() => {
+    socket.on('newNotification', (notification) => {
+      api.open({
+        message: notification.title,
+        description: notification.message,
+        duration: 0,
+        placement:"bottomRight"
+      });
+    });
+  
+    return () => {
+      socket.off('newNotification');
+    };
+  }, [api]);
 
   return (
     <>
+    {contextHolder}
       <RouterProvider router={router} />
     </>
   );

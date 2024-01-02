@@ -20,7 +20,10 @@ const createUser = async (req, res) => {
     const newUser = new User({ ...req.body, password: hashPassword });
     await newUser.save();
 
+    const io = req.app.get('io');
+
     await createNotification(
+      io,
       "admin",
       null,
       `New user signup ${newUser.fullname}`,
@@ -48,36 +51,33 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     let { email, password } = req.body;
-
     let user = await User.findOne({ email });
-
     if (!user) {
       throw new Error("User not found");
     }
-
     const validPassword = await bcrypt.compare(password, user.password);
-
     if (!validPassword) {
       throw new Error("Password is incorrect");
     }
-
     if (user.status !== "active") {
       throw new Error(
         `Mr. ${user.fullname} your account is blocked, please contact the admin`
       );
     }
-
     const token = jwt.sign({ userId: user._id }, secret, { expiresIn: "1d" });
-
+    
     const logEntry = new Log({
       user_id: user._id,
       action: "Login",
       loginTime: new Date(),
-      logstatus: "Active",
+      // logstatus: "Online",
     });
     await logEntry.save();
 
+    const io = req.app.get('io');
+
     await createNotification(
+      io,
       `${user.role === "admin" ? null : "admin"}`,
       null,
       `User login ${user.fullname}`,
@@ -244,10 +244,13 @@ const logout = async (req, res) => {
     // Update the log entry with the logout time
     LoginLog.logoutTime = new Date();
     LoginLog.action = "Logout";
-    LoginLog.logstatus = "Inactive";
+    // LoginLog.logstatus = "Offline";
     await LoginLog.save();
 
+    const io = req.app.get('io');
+
     await createNotification(
+      io,
       `${user.role === "admin" ? null : "admin"}`,
       null,
       `User logout ${user.fullname}`,
@@ -276,7 +279,7 @@ const getEmployeeDetails = async (req, res) => {
 
     const loginLogs = await Log.find({
       user_id: id,
-    });
+    }).sort({ createdAt: -1 });
     const filteredLogs = loginLogs.map((log) => ({
       action: log.action,
       logStatus: log.logstatus,

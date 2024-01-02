@@ -4,11 +4,13 @@ import productApi from "../../api/productApi";
 const initialState = {
   productdata: {},
   fetchProductData: [],
-  SingleProductData: [],
+  SingleProductData: {},
   AllProductData: [],
   deleteProductData: {},
   updateProductData: {},
   productStatusData: {},
+  trackStatusData: {},
+  TrackProductData: {},
   currentPage: 1,
   pageSize: 10,
   totalPages: 0,
@@ -32,8 +34,12 @@ export const Productsbyemployee = createAsyncThunk(
   "product/Productsbyemployee",
   async (productDataId, { getState, rejectWithValue }) => {
     try {
-        const { currentPage, pageSize } = getState().product;
-      const response = await productApi.fetchProductsbyemployee(productDataId,currentPage,pageSize);
+      const { currentPage, pageSize } = getState().product;
+      const response = await productApi.fetchProductsbyemployee(
+        productDataId,
+        currentPage,
+        pageSize
+      );
       return response;
     } catch (error) {
       return rejectWithValue(error);
@@ -101,6 +107,31 @@ export const ProductStatus = createAsyncThunk(
   }
 );
 
+export const TrackingProduct = createAsyncThunk(
+  "/product/trackProduct",
+  async (data, thunkAPI) => {
+    try {
+      const response = await productApi.getTrackProduct(data);
+      console.log(response);
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const TrackStatus = createAsyncThunk(
+  "product/changeTrackStatus",
+  async ({ id, newStatus }, thunkAPI) => {
+    try {
+      const response = await productApi.changeTrackStatus(id, newStatus);
+      return response;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 export const productSlice = createSlice({
   name: "product",
   initialState,
@@ -114,12 +145,15 @@ export const productSlice = createSlice({
     resetProductStatusState: (state) => {
       state.productStatusData = {};
     },
+    resetTrackStatusState: (state) => {
+      state.trackStatusData = {};
+    },
     setCurrentPage(state, action) {
-        state.currentPage = action.payload;
-      },
-      setPageSize(state, action) {
-        state.pageSize = action.payload;
-      },
+      state.currentPage = action.payload;
+    },
+    setPageSize(state, action) {
+      state.pageSize = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -202,10 +236,39 @@ export const productSlice = createSlice({
       .addCase(ProductStatus.rejected, (state, action) => {
         state.isLoading = false;
         state.productStatusData = action.payload;
+      })
+      .addCase(TrackingProduct.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(TrackingProduct.fulfilled, (state, action) => {
+        console.log(action);
+        state.isLoading = false;
+        state.TrackProductData = action.payload;
+      })
+      .addCase(TrackingProduct.rejected, (state, action) => {
+        state.isLoading = false;
+        state.TrackProductData = action.payload;
+      })
+      .addCase(TrackStatus.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(TrackStatus.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.trackStatusData = action.payload;
+      })
+      .addCase(TrackStatus.rejected, (state, action) => {
+        state.isLoading = false;
+        state.trackStatusData = action.payload;
       });
   },
 });
 
-export const { resetProductState, resetDeleteState, resetProductStatusState,setCurrentPage, setPageSize } =
-  productSlice.actions;
+export const {
+  resetProductState,
+  resetDeleteState,
+  resetProductStatusState,
+  setCurrentPage,
+  setPageSize,
+  resetTrackStatusState,
+} = productSlice.actions;
 export default productSlice.reducer;

@@ -8,7 +8,8 @@ const path = require("path");
 require("dotenv").config();
 const dbConnect = require("./config/dbConnect");
 dbConnect();
-socketIO(server);
+const io = socketIO(server);
+app.set('io', io);
 
 app.use(cors());
 app.use(express.json());

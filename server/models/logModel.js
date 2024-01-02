@@ -16,8 +16,8 @@ const logSchema = new Schema(
     },
     logstatus: {
       type: String,
-      enum: ["Active", "Inactive"],
-      default: "Inactive",
+      enum: ["Online", "Offline"],
+      default: "Offline",
     },
     loginTime: {
       type: Date,

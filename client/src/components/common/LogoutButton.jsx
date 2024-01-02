@@ -10,6 +10,7 @@ import { message } from "antd";
 import { resetFetchState } from "../../redux/Features/auth/fetchSlice";
 import socket from "../../redux/api/socket";
 
+
 const LogoutButton = () => {
   const dispatch = useDispatch();
   const Navigate = useNavigate();
@@ -26,9 +27,9 @@ const LogoutButton = () => {
 
   const handleLogout = useCallback(() => {
     try {
-      dispatch(logoutUser(user.employee._id)).then(()=>{
+      dispatch(logoutUser(user.employee._id)).then(() => {
         localStorage.removeItem("token");
-        socket.disconnect();
+        socket.disconnect()
       });
     } catch (error) {
       message.error("Logout failed", error);
@@ -39,7 +40,7 @@ const LogoutButton = () => {
     <>
       <TbLogout
         onClick={handleLogout}
-        className='text-red-500 text-2xl cursor-pointer my-3'
+        className="text-red-500 text-2xl cursor-pointer my-3"
       />
     </>
   );

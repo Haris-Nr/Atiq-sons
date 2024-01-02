@@ -2,7 +2,6 @@ import { Button, Table, message } from "antd";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  FetchNotifications,
   deleteAllNotify,
   deleteNotify,
   resetdeleteNotificationStatusState,
@@ -10,16 +9,21 @@ import {
 } from "../../redux/Features/Notification/notificationSlice";
 import DeleteButton from "./DeleteButton";
 import { Link } from "react-router-dom";
+import socket from "../../redux/api/socket";
 
 const NotifyTable = () => {
   const dispatch = useDispatch();
-  const { getNotificationdata, deleteNotificationStatus } = useSelector(
+  const { deleteNotificationStatus,notify } = useSelector(
     (state) => state.notifications
   );
 
+  const { user } = useSelector((state) => state.fetch);
+
+  let userId = user?.employee?._id
+
   const handleDelete = (id) => {
     dispatch(deleteNotify(id)).then(() => {
-      dispatch(FetchNotifications());
+      socket.emit('fetchNotifications', userId);
     });
   };
   useEffect(() => {
@@ -34,11 +38,18 @@ const NotifyTable = () => {
 
   const handlSeen = (id) => {
     dispatch(seenNotify(id)).then(()=>{
-      dispatch(FetchNotifications())
+      socket.emit('fetchNotifications', userId);
     });
   };
 
   const columns = [
+    {
+      title: "SrNo",
+      key: "srNo",
+      render: (text, record, index) => {
+        return index + 1;
+      },
+    },
     {
       title: "Title",
       dataIndex: "title",
@@ -88,7 +99,7 @@ const NotifyTable = () => {
 
   const deleteALl = () =>{
     dispatch(deleteAllNotify()).then(()=>{
-      dispatch(FetchNotifications())
+      socket.emit('fetchNotifications', userId);
     })
   }
   
@@ -100,14 +111,22 @@ const NotifyTable = () => {
     </div>
   );
 
+  const dataSourceWithKeys = notify
+  ? notify
+      .map((item,index) => ({
+        ...item,
+        key: index++,
+      }))
+  : [];
+
   return (
     <div>
       {" "}
       <Table
        title={() => heading}
         columns={columns}
-        dataSource={getNotificationdata.data}
-        pagination={false}
+        dataSource={dataSourceWithKeys}
+        pagination={true}
         scroll={{
           x: 1100,
         }}

@@ -1,6 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Button, Form, Input, Popconfirm, Table, DatePicker } from "antd";
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Button, Form, Input, Popconfirm, Table, DatePicker } from 'antd';
+import { useDispatch } from "react-redux";
+import { TrackingProduct } from "../../redux/Features/Product/productSlice";
+
 const EditableContext = React.createContext(null);
+
 const EditableRow = ({ index, ...props }) => {
   const [form] = Form.useForm();
   return (
@@ -11,6 +15,7 @@ const EditableRow = ({ index, ...props }) => {
     </Form>
   );
 };
+
 const EditableCell = ({
   title,
   editable,
@@ -23,18 +28,21 @@ const EditableCell = ({
   const [editing, setEditing] = useState(false);
   const inputRef = useRef(null);
   const form = useContext(EditableContext);
+
   useEffect(() => {
     if (editing) {
       inputRef.current.focus();
     }
   }, [editing]);
+
   const toggleEdit = () => {
     setEditing(!editing);
     form.setFieldsValue({
       [dataIndex]: record[dataIndex],
     });
   };
-  const save = async () => {
+
+  const handleSaveInternal = async () => {
     try {
       const values = await form.validateFields();
       toggleEdit();
@@ -43,9 +51,19 @@ const EditableCell = ({
         ...values,
       });
     } catch (errInfo) {
-      console.log("Save failed:", errInfo);
+      console.log('Save failed:', errInfo);
     }
   };
+
+  const validateQuantity = (rule, value, callback) => {
+    const pattern = /^[0-9]*$/; // Only allow numbers
+    if (!pattern.test(value)) {
+      callback('Please enter a valid quantity (numbers only).');
+    } else {
+      callback();
+    }
+  };
+
   let childNode = children;
   if (editable) {
     childNode = editing ? (
@@ -59,9 +77,20 @@ const EditableCell = ({
             required: true,
             message: `${title} is required.`,
           },
+          dataIndex === 'quantity' && {
+            validator: validateQuantity,
+          },
         ]}
       >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
+        {dataIndex === 'date' ? (
+          <DatePicker
+            ref={inputRef}
+            onPressEnter={handleSaveInternal}
+            onBlur={handleSaveInternal}
+          />
+        ) : (
+          <Input ref={inputRef} onPressEnter={handleSaveInternal} onBlur={handleSaveInternal} />
+        )}
       </Form.Item>
     ) : (
       <div
@@ -77,84 +106,93 @@ const EditableCell = ({
   }
   return <td {...restProps}>{childNode}</td>;
 };
+
 const TrackProduct = () => {
+  const dispatch = useDispatch();
+
   const [dataSource, setDataSource] = useState([
     {
       key: "0",
-      name: "Edward King 0",
-      date: <DatePicker />,
-      address: "London, Park Lane no. 0",
-    },
-    {
-      key: "1",
-      name: "Edward King 1",
-      date: <DatePicker />,
-      address: "London, Park Lane no. 1",
+      productName: 'Enter Product Name',
+      date: new Date(),
+      quantity: 'Enter Product Quantity',
     },
   ]);
-  const [count, setCount] = useState(2);
-  const handleSubmit = (key) => {
-    const submittedData = dataSource.find((item) => item.key === key);
 
-    if (submittedData) {
-      console.log("Submitted Data:", submittedData);
-    }
-  };
+  const [count, setCount] = useState(1);
+
   const defaultColumns = [
     {
-      title: "name",
-      dataIndex: "name",
+      title: "Name",
+      dataIndex: "productName",
       width: "30%",
       editable: true,
     },
     {
       title: "Date",
       dataIndex: "date",
+      // editable: true,
+      render: (_, record) => record.date.toISOString().split('T')[0],
     },
     {
-      title: "address",
-      dataIndex: "address",
+      title: "Quantity",
+      dataIndex: "quantity",
+      editable: true,
     },
     {
-      title: "operation",
+      title: "Operation",
       dataIndex: "operation",
-      render: (_, record) =>
+      render: (_, record) => (
         dataSource.length >= 1 ? (
-          <Popconfirm
-            title="Sure to submit?"
-            onConfirm={() => handleSubmit(record.key)}
-          >
-            <Button>submit</Button>
+          <Popconfirm title="Sure to submit?" onConfirm={() => dispatch(TrackingProduct(record))}>
+            <a>submit</a>
           </Popconfirm>
-        ) : null,
+        ) : null
+      ),
     },
   ];
+
   const handleAdd = () => {
     const newData = {
       key: count,
-      name: `Edward King ${count}`,
-      date: <DatePicker />,
-      address: `London, Park Lane no. ${count}`,
+      productName: 'Enter Product Name',
+      date: new Date(),
+      quantity: 'Enter Product Quantity',
     };
     setDataSource([...dataSource, newData]);
     setCount(count + 1);
   };
+
   const handleSave = (row) => {
-    const newData = [...dataSource];
-    const index = newData.findIndex((item) => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, {
-      ...item,
-      ...row,
-    });
-    setDataSource(newData);
+    try {
+      const formattedDate = row.date ? row.date.toISOString() : null;
+      dispatch(
+        TrackingProduct({
+          ...row,
+          date: formattedDate,
+        })
+      );
+
+      const newData = [...dataSource];
+      const index = newData.findIndex((item) => row.key === item.key);
+      const item = newData[index];
+      newData.splice(index, 1, {
+        ...item,
+        ...row,
+      });
+      setDataSource(newData);
+    } catch (err) {
+      console.error('Error saving data to MongoDB:', err);
+    }
   };
+
   const components = {
     body: {
       row: EditableRow,
       cell: EditableCell,
     },
   };
+
   const columns = defaultColumns.map((col) => {
     if (!col.editable) {
       return col;
@@ -170,8 +208,10 @@ const TrackProduct = () => {
       }),
     };
   });
+
   return (
     <div>
+      
       <Button
         onClick={handleAdd}
         type="primary"
@@ -183,12 +223,16 @@ const TrackProduct = () => {
       </Button>
       <Table
         components={components}
-        rowClassName={() => "editable-row"}
+        rowClassName={() => 'editable-row'}
         bordered
         dataSource={dataSource}
         columns={columns}
+        scroll={{
+          x: 1500 // Make sure to use curly braces {} to create an object
+        }}
       />
     </div>
   );
 };
+
 export default TrackProduct;

@@ -94,47 +94,43 @@ const LahoreProductTable = () => {
       key: "productName",
       render: (text, record) => {
         return (
-          <Link to={record.url} target="_blank">
+          <Link to={`${record._id}`} key={record._id}>
             {renderColumnWithHighlight(text)}
           </Link>
         );
       },
       width: "30%",
     },
-    // {
-    //   title: "Quantity",
-    //   dataIndex: "quantity",
-    //   key: "quantity",
-    //   render: (text) => renderColumnWithHighlight(text),
-    // },
-    // {
-    //   title: "Price",
-    //   dataIndex: "price",
-    //   key: "price",
-    //   render: (text, value) => {
-    //     return (<span>${value}</span>), renderColumnWithHighlight(text);
-    //   },
-    // },
-    // {
-    //   title: "Rating",
-    //   dataIndex: "rating",
-    //   key: "rating",
-    //   render: (text, record) => {
-    //     return <Rate value={record.rating} allowHalf disabled />;
-    //   },
-    // },
     {
       title: "Asin No",
       dataIndex: "asin",
       key: "asin",
       render: (text) => renderColumnWithHighlight(text),
     },
-    // {
-    //   title: "Category",
-    //   dataIndex: "category",
-    //   key: "category",
-    //   render: (text) => renderColumnWithHighlight(text),
-    // },
+    {
+      title: "Track Progress",
+      dataIndex: "tracking",
+      key: "tracking",
+      render: (text, { tracking }) => {
+        return (
+          renderColumnWithHighlight(text),
+          (
+            <Tag
+              color={`${
+                tracking === "pending"
+                  ? "yellow"
+                  : tracking === "tracked"
+                  ? "purple"
+                  : "green"
+              }`}
+              key={tracking}
+            >
+              {tracking.toUpperCase()}
+            </Tag>
+          )
+        );
+      },
+    },
     {
       title: "Status",
       dataIndex: "status",

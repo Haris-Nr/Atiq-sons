@@ -3,35 +3,57 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { Dropdown, Badge, Avatar } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  FetchNotifications,
   seenNotify,
+  setNotifications,
 } from "../../redux/Features/Notification/notificationSlice";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { UserOutlined } from '@ant-design/icons';
 import PropTypes from "prop-types";
+import socket from "../../redux/api/socket";
+
 const Notifi = ({headerMobile}) => {
 
   const dispatch = useDispatch();
-  const { getNotificationdata } = useSelector((state) => state.notifications);
+  const { notify } = useSelector((state) => state.notifications);
   const [visibleNotifications, setVisibleNotifications] = useState([]);
+  // const [notify, setNotify] = useState([])
 
-  useEffect(() => {
-    dispatch(FetchNotifications());
-  }, [dispatch]);
+  console.log(notify)
 
-  const handleSeenNotify = (id) => {
-    dispatch(seenNotify(id)).then(() => {
-      dispatch(FetchNotifications());
+  const { user } = useSelector((state) => state.fetch);
+
+  let userId = user?.employee?._id
+
+
+  socket.on('notifications', (notifications) => {
+    dispatch(setNotifications((notifications)))
+  });
+
+  useEffect(()=>{
+    socket.emit('fetchNotifications', userId);
+
+    socket.on('newNotification', () => {
+      // Re-fetch notifications
+      socket.emit('fetchNotifications',userId);
+  });
+  },[userId])
+
+ 
+
+  const handleSeenNotify = (notificationId) => {
+    dispatch(seenNotify(notificationId)).then(() => {
+      socket.emit("seenChange",notificationId,userId)
+      socket.emit('fetchNotifications', userId);
     });
   };
 
   useEffect(() => {
-    if (Array.isArray(getNotificationdata?.data)) {
-      const latestNotifications = getNotificationdata?.data.slice(0, 3);
+    if (Array.isArray(notify)) {
+      const latestNotifications = notify.slice(0,3).filter(notification=>notification.seen == false)
       setVisibleNotifications(latestNotifications);
     }
-  }, [getNotificationdata]);
+  }, [notify]);
 
   const notificationItems = visibleNotifications.map((notification) => [
     {
@@ -114,8 +136,8 @@ const Notifi = ({headerMobile}) => {
       <span onClick={(e) => e.preventDefault()}>
           <Badge
             count={
-              Array.isArray(getNotificationdata?.data)
-                ? getNotificationdata?.data.filter(
+              Array.isArray(notify)
+                ? notify.filter(
                     (notification) => !notification.seen
                   ).length
                 : "0"

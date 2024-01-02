@@ -5,9 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser, resetLoginState } from "../redux/Features/auth/authSlice";
 import { fetchUser } from "../redux/Features/auth/fetchSlice";
-import socket from "../redux/api/socket";
 const Login = () => {
-
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,8 +28,7 @@ const Login = () => {
   }, [navigate, user, dispatch]);
 
   const onFinish = (values) => {
-    dispatch(loginUser(values))
-    socket.connect();
+    dispatch(loginUser(values));
   };
 
   useEffect(() => {

@@ -10,6 +10,7 @@ const Notifications = require("../models/notificationModel");
  * @param {ObjectId} actionUserId - The ID of the user who triggered the action.
  */
 const createNotification = async (
+  io,
   role,
   userId,
   message,
@@ -41,6 +42,17 @@ const createNotification = async (
         image: image,
       });
       await newNotification.save();
+
+        // Emit notification to specific user or role
+      if (userId) {
+        io.to(userId.toString()).emit('newNotification', newNotification);
+      } else if (role) {
+        // Emit to all users with the specified role
+        const usersWithRole = await User.find({ role: role }).select("_id");
+        usersWithRole.forEach((user) => {
+            io.to(user._id.toString()).emit('newNotification', newNotification);
+        });
+      }
     }
   } catch (error) {
     console.error("Error creating notifications:", error);

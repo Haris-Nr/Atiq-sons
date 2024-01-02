@@ -6,13 +6,16 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import DashboardCard from "./DashboardCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import socket from "../../redux/api/socket";
+import { getEmployee } from "../../redux/Features/Employees/employeeSlice";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
   const [userCount, setUserCount] = useState(0);
   const { user } = useSelector((state) => state.fetch);
   const { employee } = user;
+  const { getEmployeedata } = useSelector((state) => state.employee);
   const getPeriodOfDay = (hour) =>
     hour >= 5 && hour < 12
       ? "morning"
@@ -21,22 +24,42 @@ const Dashboard = () => {
       : "evening";
 
   const [periodOfDay, setPeriodOfDay] = useState("");
+  useEffect(() => {
+    dispatch(getEmployee());
+  }, [dispatch]);
+
+  const employeeLength = getEmployeedata.length || 0;
 
   useEffect(() => {
+
     const currentHour = new Date().getHours();
     setPeriodOfDay(currentHour === 12 ? "noon" : getPeriodOfDay(currentHour));
-  }, []);
-
-  useEffect(()=>{
 
     socket.connect();
 
-    socket.on('userCount', (count) => {
+    // Listen for user count updates
+    const handleUserCountUpdate = (count) => {
       setUserCount(count);
-  });
+    };
+
+    socket.on('userCounts', handleUserCountUpdate);
+
+    // Cleanup function to remove the listener
+    return () => {
+      socket.off('userCounts', handleUserCountUpdate);
+      socket.disconnect();
+    };
 
 
-  },[])
+  }, []);
+
+
+  // socket.on('userCounts', (count) => {
+  //   console.log(count)
+  //   setUserCount(count);
+  // });
+
+
 
   return (
     <>
@@ -67,6 +90,7 @@ const Dashboard = () => {
                     />
                   }
                   title="Tasks"
+                  // value={`${userCount}`}
                 />
                 <DashboardCard
                   icon={
@@ -80,6 +104,7 @@ const Dashboard = () => {
                     />
                   }
                   title={"Product"}
+                  // value={`${userCount}`}
                 />
               </div>
               <div className="flex justify-center gap-3">
@@ -95,7 +120,7 @@ const Dashboard = () => {
                     />
                   }
                   title={`Employee`}
-                  value={`${userCount}`}
+                  value={`${employeeLength}/${userCount}`}
                 />
                 <DashboardCard
                   icon={
@@ -109,6 +134,7 @@ const Dashboard = () => {
                     />
                   }
                   title={"Revenue"}
+                  // value={`${userCount}`}
                 />
               </div>
             </div>

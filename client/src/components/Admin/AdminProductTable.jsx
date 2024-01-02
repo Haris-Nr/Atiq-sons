@@ -7,18 +7,22 @@ import ProductButton from "../Lahore/ProductButton";
 import {
   AllProduct,
   ProductStatus,
+  TrackStatus,
   deleteProductbyId,
   resetDeleteState,
   resetProductStatusState,
+  resetTrackStatusState
 } from "../../redux/Features/Product/productSlice";
 import { Link } from "react-router-dom";
 import DeleteButton from "../common/DeleteButton";
 import ChangeStatusButton from "../common/ChangeStatusButton";
+import ChangeTrackStatusButton from "../common/ChangeTrackStatusButton";
 
 const AdminProductTable = () => {
+
   const dispatch = useDispatch();
 
-  const { AllProductData, isLoading, deleteProductData, productStatusData } =
+  const { AllProductData, isLoading, deleteProductData, productStatusData,trackStatusData } =
     useSelector((state) => state.product);
 
   const [searchText, setSearchText] = useState("");
@@ -48,6 +52,7 @@ const AdminProductTable = () => {
       dispatch(AllProduct());
     });
   };
+
   useEffect(() => {
     if (deleteProductData.success === true) {
       message.success(deleteProductData.message);
@@ -73,6 +78,22 @@ const AdminProductTable = () => {
     }
   }, [productStatusData, dispatch]);
 
+  const handleTrack = (id, newStatus) => {
+    dispatch(TrackStatus({ id, newStatus })).then(() => {
+      dispatch(AllProduct());
+    });
+  };
+
+  useEffect(() => {
+    if (trackStatusData.success === true) {
+      message.success(trackStatusData.message);
+      dispatch(resetTrackStatusState());
+    } else if (trackStatusData.success === false) {
+      message.error(trackStatusData.message);
+      dispatch(resetTrackStatusState());
+    }
+  }, [trackStatusData, dispatch]);
+
   const columns = [
     {
       title: "SrNo",
@@ -95,7 +116,7 @@ const AdminProductTable = () => {
       key: "productName",
       render: (text, record) => {
         return (
-          <Link to={record.url} target="_blank">
+          <Link to={`${record._id}`} key={record._id}>
             {renderColumnWithHighlight(text)}
           </Link>
         );
@@ -139,6 +160,29 @@ const AdminProductTable = () => {
       },
     },
     {
+      title: "Track Progress",
+      dataIndex: "tracking",
+      key: "tracking",
+      render: (text, { tracking }) => {
+        return (
+          renderColumnWithHighlight(text),
+          (
+            <Tag
+              color={`${tracking === "pending"
+                  ? "yellow"
+                  : tracking === "tracked"
+                    ? "purple"
+                    : "green"
+                }`}
+              key={tracking}
+            >
+              {tracking.toUpperCase()}
+            </Tag>
+          )
+        );
+      },
+    },
+    {
       title: "Action",
       dataIndex: "action",
       render: (_, record) => (
@@ -149,6 +193,12 @@ const AdminProductTable = () => {
             Id={record._id}
             currentStatus={record.status}
             onChangeStatus={handleStatus}
+          />
+           <ChangeTrackStatusButton
+            itemType="product"
+            Id={record._id}
+            currentStatus={record.tracking}
+            onChangeStatus={handleTrack}
           />
         </Space>
       ),

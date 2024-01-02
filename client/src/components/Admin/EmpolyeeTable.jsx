@@ -19,8 +19,7 @@ import DeleteButton from "../common/DeleteButton";
 function Empolyee() {
   const dispatch = useDispatch();
 
-  const { getEmployeedata, isLoading, deleteEmployeedata, changeStatusdata } =
-    useSelector((state) => state.employee);
+  const { getEmployeedata, isLoading, deleteEmployeedata, changeStatusdata } = useSelector((state) => state.employee);
 
   const [searchText, setSearchText] = useState("");
   const searchInput = useRef(null);
@@ -64,6 +63,7 @@ function Empolyee() {
       dispatch(getEmployee());
     });
   };
+  
   useEffect(() => {
     if (deleteEmployeedata.success === true) {
       message.success(deleteEmployeedata.message);

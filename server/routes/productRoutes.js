@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 const adminCheck = require("../middlewares/adminCheck");
-const { createProduct, deleteProduct, updateProduct, fetchProducts, changeStatus, singleProduct, allProduct} = require('../controllers/productCtrl');
+const { createProduct, deleteProduct, updateProduct, fetchProducts, changeStatus, singleProduct, allProduct,trackProduct,changeTrackStatus} = require('../controllers/productCtrl');
 const multer = require("multer");
 const path = require('path');
 
@@ -22,6 +22,8 @@ router.patch("/updateProduct/:id", authMiddleware,updateProduct);
 router.get("/fetchSingleProduct/:id", authMiddleware,singleProduct) 
 router.patch("/changeProductStatus/:id", authMiddleware,adminCheck,changeStatus)
 router.get("/fetchallProduct",authMiddleware,adminCheck,allProduct)
+router.post("/trackProduct",authMiddleware,trackProduct) 
+router.patch("/changeTrackStatus/:id", authMiddleware,adminCheck,changeTrackStatus)
 
 
 

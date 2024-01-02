@@ -47,11 +47,6 @@ const Sidenav = ({
       key: "tasktable",
       icon: <FaTasks />,
     },
-    employeeDashboard === "lahore" && {
-      label: "Tack Product",
-      key: "trackproduct",
-      icon: <FaProductHunt />,
-    },
     // dubai
     employeeDashboard === "dubai" && {
       label: "Product",
