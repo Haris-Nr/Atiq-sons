@@ -70,7 +70,7 @@ const loginUser = async (req, res) => {
       user_id: user._id,
       action: "Login",
       loginTime: new Date(),
-      // logstatus: "Online",
+      logstatus: "Online",
     });
     await logEntry.save();
 
@@ -244,7 +244,7 @@ const logout = async (req, res) => {
     // Update the log entry with the logout time
     LoginLog.logoutTime = new Date();
     LoginLog.action = "Logout";
-    // LoginLog.logstatus = "Offline";
+    LoginLog.logstatus = "Offline";
     await LoginLog.save();
 
     const io = req.app.get('io');

@@ -87,6 +87,7 @@ const ProductButton = () => {
       .catch((errorInfo) => {
         message.error(errorInfo);
       });
+      dispatch(Productsbyemployee(employee?._id));
   };
 
   const handleCancel = () => {

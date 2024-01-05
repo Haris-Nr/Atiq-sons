@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { SingleProduct } from "../../redux/Features/Product/productSlice";
 import { useParams } from "react-router-dom";
 import { Button, Tag } from "antd";
-import TrackProduct from "./TrackProduct";
+import TrackProduct from "../Lahore/TrackProduct";
 
 
 const SingleProductPage = () => {
     const dispatch = useDispatch();
     let { id } = useParams();
+    
+console.log(id)
 
     useEffect(() => {
         if (id) {

@@ -49,7 +49,7 @@ const createProduct = async (req, res) => {
       "New Product",
       user[0]._id,
       `${newProduct.image[0].url}`,
-      `/products`
+      `${newProduct._id}`,
     );
 
     res.status(201).json({
@@ -162,7 +162,7 @@ const deleteProduct = async (req, res) => {
       `${user.fullname} deleted this Product`,
       user._id,
       `${product.image[0].url}`,
-      `/product`
+      `${product._id}`,
     );
 
     res.status(200).json({
@@ -202,7 +202,6 @@ const changeStatus = async (req, res) => {
       status,
     });
 
-    // const user = await User.find(updatedProduct.createdBy);
     const admin = await User.findById(req.body.userId);
     // send notification to seller
     const io = req.app.get('io');
@@ -215,7 +214,7 @@ const changeStatus = async (req, res) => {
       "Product Status Updated",
       admin._id,
       `${updatedProduct.image[0].url}`,
-      `/product`
+      `${updatedProduct._id}`,
     );
 
     res.json({
@@ -254,7 +253,6 @@ const changeTrackStatus = async (req, res) => {
       tracking,
     });
 
-    // const user = await User.find(updatedProduct.createdBy);
     const admin = await User.findById(req.body.userId);
     // send notification to seller
     const io = req.app.get('io');
@@ -262,11 +260,11 @@ const changeTrackStatus = async (req, res) => {
       io,
       null,
       updatedProduct.createdBy,
-      `Your product ${updatedProduct.productName} has been ${tracking} by ${admin.fullname}`,
+      `Your product ${updatedProduct.productName} add in ${tracking} state by ${admin.fullname}`,
       "Product Status Updated",
       admin._id,
       `${updatedProduct.image[0].url}`,
-      `/product`
+      `${updatedProduct._id}`,
     );
 
     res.json({
@@ -292,7 +290,6 @@ const trackProduct = async (req, res) => {
       quantity: quantity,
     });
 
-    // Save the track record to the database
     const savedTrack = await newTrack.save();
   res.json({
     success: true,
@@ -306,6 +303,39 @@ const trackProduct = async (req, res) => {
   }
 };
 
+const getIntrackingProduct = async (req, res) => {
+  try {
+    if (!req.body.createdBy) {
+      throw new Error("Creator ID (createdBy) must be provided");
+    }
+
+    const query = {
+      createdBy: req.body.createdBy,
+      tracking: "tracking", // Filter for products in tracking status
+    };
+
+
+    const trackingProducts = await Product.find(query)
+      .populate("createdBy")
+      .sort({ createdAt: -1 });
+
+    if (!trackingProducts.length) {
+      throw new Error("No tracking products found");
+    }
+
+    res.json({
+      success: true,
+      data: trackingProducts,
+    });
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   createProduct,
   fetchProducts,
@@ -315,5 +345,6 @@ module.exports = {
   singleProduct,
   allProduct,
   changeTrackStatus,
-  trackProduct
+  trackProduct,
+  getIntrackingProduct
 };

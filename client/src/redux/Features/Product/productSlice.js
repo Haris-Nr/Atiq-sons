@@ -11,6 +11,7 @@ const initialState = {
   productStatusData: {},
   trackStatusData: {},
   TrackProductData: {},
+  IntrackingProductdata: [],
   currentPage: 1,
   pageSize: 10,
   totalPages: 0,
@@ -128,6 +129,20 @@ export const TrackStatus = createAsyncThunk(
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const getIntrackingProduct = createAsyncThunk(
+  "product/intrackingProduct",
+  async (productDataId, { rejectWithValue }) => {
+    try {
+      const response = await productApi.getIntrackingProduct(
+        productDataId,
+      );
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
     }
   }
 );
@@ -259,7 +274,19 @@ export const productSlice = createSlice({
       .addCase(TrackStatus.rejected, (state, action) => {
         state.isLoading = false;
         state.trackStatusData = action.payload;
-      });
+      })
+      .addCase(getIntrackingProduct.pending, (state) => {
+        state.isLoading = true;
+    })
+    .addCase(getIntrackingProduct.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.IntrackingProductdata = action.payload;
+    })
+    .addCase(getIntrackingProduct.rejected, (state, action) => {
+        state.isLoading = false;
+        state.IntrackingProductdata = action.error;
+    })
+
   },
 });
 

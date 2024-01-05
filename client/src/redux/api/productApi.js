@@ -87,6 +87,16 @@ const changeTrackStatus = async (id, newStatus) => {
     }
 };
 
+const getIntrackingProduct = async (productData) => {
+    try {
+        const {data} = await axiosInstance.post(`product/intrackingProduct`,{ createdBy: productData });
+        return data;
+    } catch (error) {
+        throw error.response.data;
+    }
+    
+};
+
 
 
 const productApi = {
@@ -98,7 +108,8 @@ const productApi = {
     changeProductStatus,
     updateProduct,
     getTrackProduct,
-    changeTrackStatus
+    changeTrackStatus,
+    getIntrackingProduct
 };
 
 export default productApi;

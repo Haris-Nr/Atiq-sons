@@ -1,104 +1,30 @@
-import { Button, Space, Table, Tag, Typography } from "antd";
+import { Button, Space, Table, Tag } from "antd";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from "react";
+import { TasksForEmployee } from "../../redux/Features/Task/taskSlice";
 
-const Task = () => {
-  const dataSource = [
-    {
-      key: "1",
-      task: "Mike lorem latin 1 task task task task task task task task task task task task task task task task task",
-      date: "2/23/2023",
-      status: "incomplete",
-    },
-    {
-      key: "2",
-      task: "John",
-      date: 42,
-      status: "10 Downing Street",
-    },
-    {
-      key: "3",
-      task: "Mike lorem latin 1 task task task task task task task task task task task task task task task task task",
-      date: "2/23/2023",
-      status: "incomplete",
-    },
-    {
-      key: "4",
-      task: "John",
-      date: 42,
-      status: "10 Downing Street",
-    },
-    {
-      key: "5",
-      task: "Mike lorem latin 1 task task task task task task task task task task task task task task task task task",
-      date: "2/23/2023",
-      status: "incomplete",
-    },
-    {
-      key: "6",
-      task: "John",
-      date: 42,
-      status: "10 Downing Street",
-    },
-    {
-      key: "7",
-      task: "Mike lorem latin 1 task task task task task task task task task task task task task task task task task",
-      date: "2/23/2023",
-      status: "incomplete",
-    },
-    {
-      key: "8",
-      task: "John",
-      date: 42,
-      status: "10 Downing Street",
-    },
-    {
-      key: "9",
-      task: "Mike lorem latin 1 task task task task task task task task task task task task task task task task task",
-      date: "2/23/2023",
-      status: "incomplete",
-    },
-    {
-      key: "10",
-      task: "John",
-      date: 42,
-      status: "10 Downing Street",
-    },
-    {
-      key: "11",
-      task: "Mike lorem latin 1 task task task task task task task task task task task task task task task task task",
-      date: "2/23/2023",
-      status: "incomplete",
-    },
-    {
-      key: "12",
-      task: "John",
-      date: 42,
-      status: "10 Downing Street",
-    },
-  ];
+const TaskTable = () => {
+    const dispatch = useDispatch()
+    const { fetchtaskData } = useSelector((state)=>state.task)
+
+    useEffect(()=>{
+        dispatch(TasksForEmployee())
+    },[dispatch])
+
 
   const columns = [
     {
       title: "Task",
-      dataIndex: "task",
-      width: 300,
-      className:
-        "text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer",
+      dataIndex: "taskDetails",
     },
     {
       title: "Due Date",
-      dataIndex: "date",
-      width: 50,
-      className:
-        "text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer",
+      dataIndex: "dueDate",
     },
     {
       title: "Status",
       dataIndex: "status",
-      className:
-        "text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer",
-
-      width: 50,
       render: (_, { status }) => (
         <>
           <Tag color="red">{status.toUpperCase()}</Tag>
@@ -107,10 +33,6 @@ const Task = () => {
     },
     {
       title: "Action",
-      className:
-        "text-md  tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600 cursor-pointer",
-
-      width: 50,
       render: (text, record) => (
         <Space size="middle">
           <Button>
@@ -121,13 +43,14 @@ const Task = () => {
     },
   ];
 
+  const dataSourceWithKeys = fetchtaskData?.data
+  ? fetchtaskData?.data.map((item,index) => ({ ...item, key: index++ }))
+  : [];
+
   return (
-    <div>
-      <Typography.Title level={4}>Tasks</Typography.Title>
       <Table
-        className="bg-blue-400"
         columns={columns}
-        dataSource={dataSource}
+        dataSource={dataSourceWithKeys}
         pagination={{
           pageSize: 8,
         }}
@@ -135,7 +58,6 @@ const Task = () => {
           x: 1500,
         }}
       />
-    </div>
   );
 };
-export default Task;
+export default TaskTable;

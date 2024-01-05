@@ -9,9 +9,9 @@ import {
   deleteProductbyId,
   resetDeleteState,
   setPageSize,
+  setCurrentPage,
 } from "../../redux/Features/Product/productSlice";
 import Highlighter from "react-highlight-words";
-import { setCurrentPage } from "../../redux/Features/auth/logSlice";
 const { Search } = Input;
 
 const LahoreProductTable = () => {

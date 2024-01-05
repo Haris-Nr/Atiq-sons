@@ -81,6 +81,29 @@ module.exports = (server) => {
       { $set: { logstatus: "Online" } },
       { new: true }
     );
+
+
+    // socket.on("emitAllLogs", async (userId) => {
+    //   try {
+    //     const allLogs = await Log.find({
+    //       user_id: userId,
+    //     })
+    //       .sort({ createdAt: -1 })
+    //       const filter = allLogs.map((log) => ({
+    //         action: log.action,
+    //         logStatus: log.logstatus,
+    //       }));
+    //       console.log(filter[0])
+
+    //       onlineAdmins.forEach((admin) => {
+    //     io.to(admin.socketId).emit('allLogs', filter);
+    //   });
+
+    //   } catch (error) {
+    //     console.error("Error emitting logs:", error);
+    //   }
+    // });
+
     
     socket.on('fetchNotifications', async (userId) => {
         try {
@@ -119,6 +142,7 @@ module.exports = (server) => {
       await Log.findOneAndUpdate(
         {
           user_id: user._id,
+          action: "Login",
         },
         { $set: { logstatus: "Offline" } },
         { new: true }

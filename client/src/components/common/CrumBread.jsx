@@ -8,13 +8,18 @@ const CrumBread = () => {
   const { pathname } = location;
   const pathnames = pathname.split("/").filter((item) => item);
   const { employeeDetails } = useSelector((state) => state.employee);
-
+  const { SingleProductData } = useSelector((state) => state.product);
+console.log(SingleProductData)
   const isObjectId = (item) => {
     return /^[0-9a-fA-F]{24}$/.test(item);
   };
   const getTitle = (item) => {
     if (isObjectId(item)) {
-      return employeeDetails?.employee?.fullname;
+      if (employeeDetails?.employee?._id === item) {
+        return employeeDetails.employee.fullname;
+      } else if(SingleProductData.data._id === item){
+        return SingleProductData.data.productName;
+      }
     }
     return item.charAt(0).toUpperCase() + item.slice(1);
   };

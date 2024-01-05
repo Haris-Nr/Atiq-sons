@@ -5,6 +5,7 @@ import employeeReducer from './Features/Employees/employeeSlice'
 import productReducer from './Features/Product/productSlice'
 import logReducer from './Features/auth/logSlice'
 import notifyReducer from './Features/Notification/notificationSlice'
+import taskReducer from './Features/Task/taskSlice'
 // import socketReducer from './Features/socket/socketSlice'
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
     employee:employeeReducer,
     product:productReducer,
     notifications:notifyReducer,
+    task: taskReducer,
     // socket: socketReducer,
   },
 });

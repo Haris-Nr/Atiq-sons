@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-
 const taskSchema = new Schema(
   {
     taskDetails: {
@@ -14,11 +13,13 @@ const taskSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["incomplete","complete"],
+      enum: ["incomplete", "complete"],
       default: "incomplete",
-      required: true,
-  },
-   
+    },
+    dueDate: {
+      type: Date, 
+      required:true,
+    },
   },
   {
     timestamps: true,

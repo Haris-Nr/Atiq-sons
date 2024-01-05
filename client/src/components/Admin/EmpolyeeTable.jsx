@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 import ChangeStatusButton from "../common/ChangeStatusButton";
 import DeleteButton from "../common/DeleteButton";
 
-function Empolyee() {
+function EmpolyeeTable() {
   const dispatch = useDispatch();
 
   const { getEmployeedata, isLoading, deleteEmployeedata, changeStatusdata } = useSelector((state) => state.employee);
@@ -215,4 +215,4 @@ function Empolyee() {
     </div>
   );
 }
-export default Empolyee;
+export default EmpolyeeTable;

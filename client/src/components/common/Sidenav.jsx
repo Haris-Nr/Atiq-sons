@@ -36,6 +36,7 @@ const Sidenav = ({
       path: "relative",
       icon: <AppstoreOutlined />,
     },
+
     // lahore
     employeeDashboard === "lahore" && {
       label: "Product",
@@ -44,15 +45,27 @@ const Sidenav = ({
     },
     employeeDashboard === "lahore" && {
       label: "Task",
-      key: "tasktable",
+      key: "task",
       icon: <FaTasks />,
     },
+    employeeDashboard === "lahore" && {
+      label: "InTracking",
+      key: "intrackingtable",
+      icon: <FaProductHunt />,
+    },
+
     // dubai
     employeeDashboard === "dubai" && {
       label: "Product",
       key: "dubaiproducttable",
       icon: <FaProductHunt />,
     },
+    employeeDashboard === "dubai" && {
+      label: "Task",
+      key: "task",
+      icon: <FaTasks />,
+    },
+    
     //admin
     employeeDashboard === "admin" && {
       label: "Employee",
@@ -68,6 +81,11 @@ const Sidenav = ({
       label: "Products",
       key: "productTable",
       icon: <FaProductHunt />,
+    },
+    employeeDashboard === "admin" &&  {
+      label: "Task",
+      key: "admintask",
+      icon: <FaTasks />,
     },
   ].filter(Boolean);
 
