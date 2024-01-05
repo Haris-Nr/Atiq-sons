@@ -30,7 +30,7 @@ const createUser = async (req, res) => {
       "Signup",
       newUser._id,
       null,
-      `${newUser._id}`
+      `user/${newUser._id}`
     );
 
     res.status(201).json({
@@ -84,7 +84,7 @@ const loginUser = async (req, res) => {
       "Login",
       user._id,
       null,
-      `${user._id}`
+      `user/${user._id}`
     );
 
     res.status(200).json({
@@ -257,7 +257,7 @@ const logout = async (req, res) => {
       "Logout",
       userId,
       null,
-      `${user._id}`
+      `user/${user._id}`
     );
 
     res.status(200).json({

@@ -9,7 +9,7 @@ const CrumBread = () => {
   const pathnames = pathname.split("/").filter((item) => item);
   const { employeeDetails } = useSelector((state) => state.employee);
   const { SingleProductData } = useSelector((state) => state.product);
-console.log(SingleProductData)
+
   const isObjectId = (item) => {
     return /^[0-9a-fA-F]{24}$/.test(item);
   };
@@ -17,8 +17,8 @@ console.log(SingleProductData)
     if (isObjectId(item)) {
       if (employeeDetails?.employee?._id === item) {
         return employeeDetails.employee.fullname;
-      } else if(SingleProductData.data._id === item){
-        return SingleProductData.data.productName;
+      } else if(SingleProductData?.data?._id === item){
+        return SingleProductData?.data?.productName;
       }
     }
     return item.charAt(0).toUpperCase() + item.slice(1);

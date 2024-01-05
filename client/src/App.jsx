@@ -59,6 +59,7 @@ const router = createBrowserRouter(
         {/* common */}
         <Route path="task" element={<TaskTable />} />
         <Route path="notification" element={<NotifyTable />} />
+        <Route path="notification/:id" element={<SingleProductPage />} />
 
 
         {/* Lahore Routes */}
@@ -76,7 +77,7 @@ const router = createBrowserRouter(
         <Route path="logs" element={<LogTable />} />
         <Route path="productTable" element={<AdminProductTable />} />
         <Route path="productTable/:id" element={<SingleProductPage />} />
-        <Route path="notification/:id" element={<UserInfo />} />
+        <Route path="notification/user/:id" element={<UserInfo />} />
         <Route path="adminTask" element={<AdminTaskTable />} />
       </Route>
     </Route>

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { SingleProduct } from "../../redux/Features/Product/productSlice";
 import { useParams } from "react-router-dom";
 import { Button, Tag } from "antd";
-import TrackProduct from "../Lahore/TrackProduct";
 
 
 const SingleProductPage = () => {
@@ -19,6 +18,7 @@ console.log(id)
     }, [dispatch, id]);
     const { SingleProductData } = useSelector((state) => state.product);
     const product = SingleProductData?.data;
+    console.log(SingleProductData)
 
 
 
@@ -56,9 +56,6 @@ console.log(id)
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="mt-5">
-                <TrackProduct />
             </div>
         </>
     )
